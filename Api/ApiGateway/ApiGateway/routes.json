@@ -1,0 +1,18 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/graphql",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "jsonplaceholder.typicode.com",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/graphql",
+      "DelegatingHandlers": [
+        "GraphQlDelegatingHandler"
+      ]
+    }
+  ]
+}
