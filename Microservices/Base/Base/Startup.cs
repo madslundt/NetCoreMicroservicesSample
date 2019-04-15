@@ -18,14 +18,14 @@ using System.IO;
 using StructureMap;
 using Hangfire;
 using Base.Hangfire;
-using FluentValidation.AspNetCore;
 using Swashbuckle.AspNetCore.Swagger;
+using FluentValidation.AspNetCore;
 
 namespace Base
 {
     public static class Startup
     {
-        public static IServiceProvider ConfigureServices(this IServiceCollection services, ConfigureServicesOptions options)
+        public static IServiceProvider ConfigureServices(this IServiceCollection services, Type type, ConfigureServicesOptions options)
         {
             services.AddMediatR(typeof(Startup));
             services.AddOptions();
@@ -52,8 +52,8 @@ namespace Base
             services.AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); })
                 .AddMetrics()
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-                //.AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining(type); });
 
             IContainer container = new Container();
             container.Configure(config =>
@@ -74,7 +74,7 @@ namespace Base
             }
 
             var controllers = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(type => typeof(ControllerBase).IsAssignableFrom(type))
+                .Where(t => typeof(ControllerBase).IsAssignableFrom(t))
                 .ToList();
 
             var sp = services.BuildServiceProvider();
@@ -120,9 +120,8 @@ namespace Base
         {
             if (options.Environment.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
-                //app.UseBrowserLink();
-                //app.UseDatabaseErrorPage();
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
 
             app.UseStaticFiles();

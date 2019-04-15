@@ -30,11 +30,11 @@ namespace TestBase
             // Services
             services.AddMediatR();
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            services.AddMvc().AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
+            services.AddMvc().AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining(typeof(TestBase<T>)); });
 
 
             // Database
-            _db = new T(DatabaseContextMock<T>.InMemoryDatabase());
+            _db = DatabaseContextMock<T>.InMemoryDatabase();
 
 
             // Global objects
