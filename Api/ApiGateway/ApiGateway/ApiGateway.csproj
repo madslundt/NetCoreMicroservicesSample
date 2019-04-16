@@ -8,9 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GraphQL" Version="2.4.0" />
+    <PackageReference Include="GraphQL.FluentValidation" Version="0.4.1" />
+    <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="GraphQL.Server.Ui.Playground" Version="3.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.8" />
+    <PackageReference Include="Ocelot" Version="13.5.0" />
+    <PackageReference Include="Ocelot.Provider.Consul" Version="13.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Base\Base\Base.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GraphQL\NewFolder\" />
   </ItemGroup>
 
 </Project>

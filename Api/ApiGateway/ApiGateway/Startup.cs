@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using ApiGateway.GraphQL;
+using Base;
+using GQL = GraphQL;
+using GraphQL;
+using GraphQL.Http;
+using GraphQL.Server;
+using GraphQL.Server.Ui.Playground;
+using GraphQL.Types;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
@@ -36,11 +39,31 @@ namespace ApiGateway
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services, ILogger<Startup> logger)
         {
+            // GraphQL
+            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+
+            services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
+            services.AddSingleton<IDocumentWriter, DocumentWriter>();
+
+            services.AddGraphQL(o =>
+            {
+                o.ExposeExceptions = true;
+                o.ComplexityConfiguration = new GQL.Validation.Complexity.ComplexityConfiguration { MaxDepth = 15 };
+            })
+            .AddGraphTypes(ServiceLifetime.Singleton);
+            services.AddSingleton<ISchema, RootSchema>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddOcelot().AddConsul();
+            services
+                .AddOcelot()
+                .AddDelegatingHandler<GraphQLDelegatingHandler>()
+                .AddConsul();
 
             services.AddCors();
 
@@ -63,14 +86,23 @@ namespace ApiGateway
                     ValidateAudience = false
                 };
             });
+
+            services.ConfigureServices(new ConfigureServicesOptions
+            {
+                Configuration = Configuration,
+                Logger = logger
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.Configure();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
             }
             else
             {
@@ -88,6 +120,8 @@ namespace ApiGateway
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.UseGraphQL<Schema>();
         }
     }
 }

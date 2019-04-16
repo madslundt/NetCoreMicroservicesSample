@@ -39,6 +39,8 @@ namespace Base
                 config.Populate(services);
             });
 
+            services.AddMvc().AddMetrics();
+
             metrics.ReportRunner.RunAllAsync();
 
             var controllers = Assembly.GetExecutingAssembly().GetTypes()
@@ -79,7 +81,7 @@ namespace Base
 
     public class ConfigureServicesOptions
     {
-        public IConfigurationRoot Configuration { get; set; }
+        public IConfiguration Configuration { get; set; }
         public ILogger Logger { get; set; }
     }
 }
