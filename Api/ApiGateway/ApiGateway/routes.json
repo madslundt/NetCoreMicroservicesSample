@@ -3,16 +3,21 @@
     {
       "DownstreamPathTemplate": "/",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "yourgraphqlhost.com",
-          "Port": 80
-        }
-      ],
       "UpstreamPathTemplate": "/graphql",
+      "UpstreamHttpMethod": [ "Post" ],
       "DelegatingHandlers": [
         "GraphQLDelegatingHandler"
       ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/users/{postId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/users/{postId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "user",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     }
   ]
 }

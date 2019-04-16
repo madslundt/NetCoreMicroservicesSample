@@ -9,6 +9,7 @@
     <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="3.0.0" />
     <PackageReference Include="App.Metrics.AspNetCore.Reporting" Version="3.0.0" />
     <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="3.0.0" />
+    <PackageReference Include="Consul" Version="0.7.2.6" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.2.2" />
     <PackageReference Include="Hangfire" Version="1.7.0" />
     <PackageReference Include="MediatR" Version="6.0.0" />

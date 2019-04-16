@@ -15,6 +15,14 @@ using Hangfire;
 using MicroserviceBase.Hangfire;
 using Swashbuckle.AspNetCore.Swagger;
 using FluentValidation.AspNetCore;
+using Consul;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using System.Linq;
+using Microsoft.Extensions.Configuration;
+using Steeltoe.Discovery.Client;
 
 namespace MicroserviceBase
 {
@@ -26,6 +34,8 @@ namespace MicroserviceBase
 
             services.AddMediatR(typeof(T));
             services.AddOptions();
+
+            services.AddDiscoveryClient(options.Configuration);
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(MetricsBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
@@ -87,6 +97,8 @@ namespace MicroserviceBase
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
             });
+
+            app.UseDiscoveryClient();
 
             if (options.HangfireOptions != null)
             {
