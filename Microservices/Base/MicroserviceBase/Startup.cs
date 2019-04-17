@@ -8,29 +8,21 @@ using MicroserviceBase.Validation;
 using MicroserviceBase.Filter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
-using System.Reflection;
-using System.IO;
 using StructureMap;
 using Hangfire;
 using MicroserviceBase.Hangfire;
 using Swashbuckle.AspNetCore.Swagger;
 using FluentValidation.AspNetCore;
-using Consul;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using System.Linq;
-using Microsoft.Extensions.Configuration;
 using Steeltoe.Discovery.Client;
+using Base;
 
 namespace MicroserviceBase
 {
     public static class Startup
     {
-        public static IServiceProvider ConfigureServices<T>(this IServiceCollection services, ConfigureServicesOptions options)
+        public static IServiceProvider ConfigureMicroServices<T>(this IServiceCollection services, ConfigureServicesOptions options)
         {
-            services.ConfigureServices<T>(options);
+            services.ConfigureServices(options);
 
             services.AddMediatR(typeof(T));
             services.AddOptions();
@@ -63,28 +55,28 @@ namespace MicroserviceBase
                 services.AddHangfireServer();
             }
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info
-                {
-                    Version = "v1",
-                    Title = "API",
-                    Description = "API v1",
-                    TermsOfService = "None",
-                });
-                c.CustomSchemaIds(x => x.FullName);
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new Info
+            //    {
+            //        Version = "v1",
+            //        Title = "API",
+            //        Description = "API v1",
+            //        TermsOfService = "None",
+            //    });
+            //    c.CustomSchemaIds(x => x.FullName);
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-            });
+            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //    c.IncludeXmlComments(xmlPath);
+            //});
 
             return container.GetInstance<IServiceProvider>();
         }
 
-        public static void Configure(this IApplicationBuilder app, ConfigureOptions options)
+        public static void ConfigureMicro(this IApplicationBuilder app, ConfigureOptions options)
         {
-            app.Configure(options);
+            app.Configure();
 
             if (options.Environment.IsDevelopment())
             {
@@ -92,11 +84,11 @@ namespace MicroserviceBase
                 app.UseDatabaseErrorPage();
             }
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
-            });
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+            //});
 
             app.UseDiscoveryClient();
 
@@ -109,6 +101,8 @@ namespace MicroserviceBase
                     app.UseHangfireDashboard("/hangfire", options.HangfireDashboardOptions);
                 }
             }
+
+            app.UseMvc();
         }
     }
 

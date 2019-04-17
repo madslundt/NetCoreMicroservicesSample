@@ -19,27 +19,30 @@ using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
+using System;
 
 namespace ApiGateway
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, ILogger<Startup> logger)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile(path: $"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddJsonFile(path: $"routes.json", optional: false, reloadOnChange: true)
+                .AddJsonFile(path: "routes.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables();
 
+            _logger = logger;
             Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
+        private readonly ILogger<Startup> _logger;
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, ILogger<Startup> logger)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // GraphQL
             services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
@@ -62,35 +65,35 @@ namespace ApiGateway
 
             services
                 .AddOcelot()
-                .AddDelegatingHandler<GraphQLDelegatingHandler>()
+                //.AddDelegatingHandler<GraphQLDelegatingHandler>()
                 .AddConsul();
 
-            services.AddCors();
+            //services.AddCors();
 
-            var key = Encoding.ASCII.GetBytes("THIS_IS_A_RANDOM_SECRET_2e7a1e80-16ee-4e52-b5c6-5e8892453459");
+            //var key = Encoding.ASCII.GetBytes("THIS_IS_A_RANDOM_SECRET_2e7a1e80-16ee-4e52-b5c6-5e8892453459");
 
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer("ApiSecurity", x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+            //services.AddAuthentication(x =>
+            //{
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //.AddJwtBearer("ApiSecurity", x =>
+            //{
+            //    x.RequireHttpsMetadata = false;
+            //    x.SaveToken = true;
+            //    x.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(key),
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false
+            //    };
+            //});
 
-            services.ConfigureServices(new ConfigureServicesOptions
+            return services.ConfigureServices(new ConfigureServicesOptions
             {
                 Configuration = Configuration,
-                Logger = logger
+                Logger = _logger
             });
         }
 
@@ -108,20 +111,19 @@ namespace ApiGateway
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-                app.UseCors(b => b
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials()
-                );
+                //app.UseCors(b => b
+                //    .AllowAnyOrigin()
+                //    .AllowAnyMethod()
+                //    .AllowAnyHeader()
+                //    .AllowCredentials()
+                //);
             }
 
-            app.UseOcelot().Wait();
+            app.UseGraphQL<Schema>();
+            app.UseOcelot();
 
             app.UseHttpsRedirection();
             app.UseMvc();
-
-            app.UseGraphQL<Schema>();
         }
     }
 }

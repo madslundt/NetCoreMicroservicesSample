@@ -1,5 +1,4 @@
-﻿using Base;
-using MicroserviceBase;
+﻿using MicroserviceBase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +24,7 @@ namespace Api
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            return services.ConfigureServices<Startup>(new MicroserviceBase.ConfigureServicesOptions
+            return services.ConfigureMicroServices<Startup>(new ConfigureServicesOptions
             {
                 Configuration = Configuration
             });
@@ -33,7 +32,7 @@ namespace Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.Configure(new ConfigureOptions
+            app.ConfigureMicro(new ConfigureOptions
             {
                 Environment = env
             });

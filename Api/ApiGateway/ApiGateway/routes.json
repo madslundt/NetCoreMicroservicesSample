@@ -10,11 +10,11 @@
       ]
     },
     {
-      "DownstreamPathTemplate": "/api/users/{postId}",
+      "DownstreamPathTemplate": "/api/users/{userId}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/users/{postId}",
+      "UpstreamPathTemplate": "/users/{userId}",
       "UpstreamHttpMethod": [ "Get" ],
-      "ServiceName": "user",
+      "ServiceName": "UserService",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       }

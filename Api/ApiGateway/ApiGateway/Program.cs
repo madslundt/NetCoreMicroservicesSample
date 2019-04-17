@@ -7,20 +7,11 @@ namespace ApiGateway
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
-
-            host.Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args)
-                .ConfigureKestrel((context, options) =>
-                {
-                    // Set properties and call methods on options
-                })
-                .UseStartup<Startup>()
-                .Build();
-        }
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
     }
 }
