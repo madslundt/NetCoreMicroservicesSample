@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api
 {
-    [Route("api/users")]
+    [Route("api/test")]
     public class UserController : Controller
     {
         private readonly IMediator _mediator;
@@ -15,12 +15,12 @@ namespace Api
             _mediator = mediator;
         }
 
-        [HttpGet, Route("{userId}")]
-        public async Task<IActionResult> GetUser([FromQuery] Guid userId)
+        [HttpGet, Route("")]
+        public async Task<IActionResult> GetUser()
         {
             //var query = new GetU
 
-            return Ok();
+            return Ok("Test");
         }
     }
 }

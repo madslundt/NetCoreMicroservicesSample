@@ -20,6 +20,7 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
 using System;
+using Ocelot.Administration;
 
 namespace ApiGateway
 {
@@ -31,17 +32,18 @@ namespace ApiGateway
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile(path: $"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddJsonFile(path: "routes.json", optional: false, reloadOnChange: true)
+                .AddJsonFile(path: "ocelot.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables();
 
             _logger = logger;
+            _env = env;
             Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
         private readonly ILogger<Startup> _logger;
+        private readonly IHostingEnvironment _env;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // GraphQL
@@ -60,35 +62,39 @@ namespace ApiGateway
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services
-                .AddOcelot()
-                //.AddDelegatingHandler<GraphQLDelegatingHandler>()
-                .AddConsul();
+                .AddOcelot(Configuration)
+                .AddDelegatingHandler<GraphQLDelegatingHandler>()
+                .AddConsul()
+                .AddConfigStoredInConsul()
+                .AddAdministration("/administration", "secret");
 
-            //services.AddCors();
+            if (_env.IsProduction())
+            {
+                services.AddCors();
+            }
 
-            //var key = Encoding.ASCII.GetBytes("THIS_IS_A_RANDOM_SECRET_2e7a1e80-16ee-4e52-b5c6-5e8892453459");
+            var key = Encoding.ASCII.GetBytes("THIS_IS_A_RANDOM_SECRET_2e7a1e80-16ee-4e52-b5c6-5e8892453459");
 
-            //services.AddAuthentication(x =>
-            //{
-            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //.AddJwtBearer("ApiSecurity", x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = new SymmetricSecurityKey(key),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false
-            //    };
-            //});
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer("ApiSecurity", x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             return services.ConfigureServices(new ConfigureServicesOptions
             {
@@ -98,7 +104,7 @@ namespace ApiGateway
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.Configure();
 
@@ -109,20 +115,19 @@ namespace ApiGateway
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-                //app.UseCors(b => b
-                //    .AllowAnyOrigin()
-                //    .AllowAnyMethod()
-                //    .AllowAnyHeader()
-                //    .AllowCredentials()
-                //);
+                app.UseHttpsRedirection();
+                app.UseCors(b => b
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                );
             }
 
+            await app.UseOcelot();
             app.UseGraphQL<Schema>();
-            app.UseOcelot();
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
