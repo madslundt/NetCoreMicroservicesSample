@@ -18,18 +18,15 @@ namespace ApiGateway.GraphQL
 {
     public class GraphQLDelegatingHandler : DelegatingHandler
     {
-        private readonly GraphQLSettings _settings;
         private readonly IDocumentExecuter _executer;
         private readonly IDocumentWriter _writer;
         private readonly ISchema _schema;
 
         public GraphQLDelegatingHandler(
-            GraphQLSettings settings,
             IDocumentExecuter executer,
             IDocumentWriter writer,
             ISchema schema)
         {
-            _settings = settings;
             _executer = executer;
             _writer = writer;
             _schema = schema;

@@ -5,27 +5,33 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/test",
       "UpstreamHttpMethod": [ "Get" ],
-      "ServiceName": "userservice",
+      //"ServiceName": "userservice",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/",
-      "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/graphql",
-      "UpstreamHttpMethod": [ "Post" ],
-      "FileCacheOptions": { "TtlSeconds": 15 },
-      "DelegatingHandlers": [
-        "GraphQLDelegatingHandler"
-      ],
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 8080
-        }
-      ]
+      },
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 5000
+          }
+        ]
     }
+    //{
+    //  "DownstreamPathTemplate": "/",
+    //  "DownstreamScheme": "http",
+    //  "UpstreamPathTemplate": "/graphql",
+    //  "UpstreamHttpMethod": [ "Post" ],
+    //  "FileCacheOptions": { "TtlSeconds": 15 },
+    //  "DelegatingHandlers": [
+    //    "GraphQLDelegatingHandler"
+    //  ],
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "localhost",
+    //      "Port": 8080
+    //    }
+    //  ]
+    //}
   ]
 }

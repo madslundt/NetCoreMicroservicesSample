@@ -21,26 +21,20 @@ using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
 using System;
 using Ocelot.Administration;
+using ApiGateway.Infrastructure.GraphQL;
 
 namespace ApiGateway
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env, ILogger<Startup> logger)
+        public Startup(IConfiguration config, IHostingEnvironment env, ILogger<Startup> logger)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile(path: $"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddJsonFile(path: "ocelot.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables();
-
             _logger = logger;
             _env = env;
-            Configuration = builder.Build();
+            _config = config;
         }
 
-        public IConfiguration Configuration { get; }
+        public readonly IConfiguration _config;
         private readonly ILogger<Startup> _logger;
         private readonly IHostingEnvironment _env;
 
@@ -62,14 +56,10 @@ namespace ApiGateway
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             services
-                .AddOcelot(Configuration)
+                .AddOcelot()
                 .AddDelegatingHandler<GraphQLDelegatingHandler>()
-                .AddConsul()
-                .AddConfigStoredInConsul()
-                .AddAdministration("/administration", "secret");
+                .AddConsul();
 
             if (_env.IsProduction())
             {
@@ -98,13 +88,12 @@ namespace ApiGateway
 
             return services.ConfigureServices(new ConfigureServicesOptions
             {
-                Configuration = Configuration,
+                Configuration = _config,
                 Logger = _logger
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.Configure();
 
@@ -125,10 +114,9 @@ namespace ApiGateway
                 );
             }
 
-            await app.UseOcelot();
             app.UseGraphQL<Schema>();
 
-            app.UseMvc();
+            app.UseOcelot();
         }
     }
 }

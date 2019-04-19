@@ -39,7 +39,7 @@ namespace Base
                 config.Populate(services);
             });
 
-            services.AddMvc().AddMetrics();
+            services.AddMetrics();
 
             metrics.ReportRunner.RunAllAsync();
 
