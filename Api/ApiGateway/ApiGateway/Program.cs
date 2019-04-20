@@ -42,9 +42,9 @@ namespace ApiGateway
                 {
                     config
                         .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                        .AddJsonFile("appsettings.json", true, true)
-                        .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                        .AddJsonFile("ocelot.json")
+                        .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+                        .AddJsonFile(path: $"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile(path: "ocelot.json", optional: false, reloadOnChange: true)
                         .AddEnvironmentVariables();
                 })
                 .UseStartup<Startup>();

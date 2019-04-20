@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
@@ -57,8 +58,12 @@ namespace ApiGateway
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services
-                .AddOcelot()
+                .AddOcelot(_config)
                 .AddDelegatingHandler<GraphQLDelegatingHandler>()
+                .AddCacheManager(x =>
+                {
+                    x.WithDictionaryHandle();
+                })
                 .AddConsul();
 
             if (_env.IsProduction())

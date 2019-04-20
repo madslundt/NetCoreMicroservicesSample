@@ -5,33 +5,61 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/test",
       "UpstreamHttpMethod": [ "Get" ],
-      //"ServiceName": "userservice",
+      "ServiceName": "UserService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      },
-        "DownstreamHostAndPorts": [
-          {
-            "Host": "localhost",
-            "Port": 5000
-          }
-        ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/graphql",
+      "UpstreamHttpMethod": [ "Post" ],
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "DelegatingHandlers": [
+        "GraphQLDelegatingHandler"
+      ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8080
+        }
+      ]
     }
-    //{
-    //  "DownstreamPathTemplate": "/",
-    //  "DownstreamScheme": "http",
-    //  "UpstreamPathTemplate": "/graphql",
-    //  "UpstreamHttpMethod": [ "Post" ],
-    //  "FileCacheOptions": { "TtlSeconds": 15 },
-    //  "DelegatingHandlers": [
-    //    "GraphQLDelegatingHandler"
-    //  ],
-    //  "DownstreamHostAndPorts": [
-    //    {
-    //      "Host": "localhost",
-    //      "Port": 8080
-    //    }
-    //  ]
-    //}
-  ]
+  ],
+
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "UseServiceDiscovery": true,
+    "DownstreamScheme": "http",
+    "ServiceDiscoveryProvider": {
+      "Type": "Consul",
+      "Host": "localhost",
+      "Port": 8500
+    }
+  },
+  "RateLimitOptions": {
+    "ClientWhitelist": [],
+    "EnableRateLimiting": true,
+    "Period": "1s",
+    "HttpStatusCode": 428,
+    "QuotaExceededMessage": "Too many requests...",
+    "PeriodTimespan": 1,
+    "Limit": 1
+  },
+
+  "HttpHandlerOptions": {
+    "UseTracing": true
+  },
+  "LoadBalancerOptions": {
+    "Type": "LeastConnection",
+    "Key": null,
+    "Expiry": 0
+  },
+  "QoSOptions": {
+    "ExceptionsAllowedBeforeBreaking": 3,
+    "DurationOfBreak": 10000,
+    "TimeoutValue": 5000
+  }
 }
