@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace Api
+namespace Api.Controllers
 {
     [Route("api/test")]
     public class UserController : Controller
@@ -20,7 +20,7 @@ namespace Api
         {
             //var query = new GetU
 
-            return Ok("Test");
+            return Ok("Test 1");
         }
     }
 }

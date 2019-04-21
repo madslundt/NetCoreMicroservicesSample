@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\Base\MicroserviceBase\MicroserviceBase.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
+
 </Project>
