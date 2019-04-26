@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using RabbitMQ.Client;
+using System;
 
 namespace MicroserviceBase.EventBus.RabbitMQ
 {
-    interface IRabbitMQPersistentConnection
+    public interface IRabbitMQPersistentConnection
+        : IDisposable
     {
+        bool IsConnected { get; }
+
+        bool TryConnect();
+
+        IModel CreateModel();
     }
 }

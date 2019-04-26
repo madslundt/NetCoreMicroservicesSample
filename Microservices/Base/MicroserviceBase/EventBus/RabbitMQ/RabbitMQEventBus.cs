@@ -28,7 +28,7 @@ namespace MicroserviceBase.EventBus.RabbitMQ
         private IModel _consumerChannel;
         private string _queueName;
 
-        public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection, ILogger<RabbitMQEventBus> logger,
+        public RabbitMQEventBus(IRabbitMQPersistentConnection persistentConnection, ILogger<RabbitMQEventBus> logger,
             IContainer container, IEventBusSubscriptionsManager subsManager, string queueName = null, int retryCount = 5)
         {
             _persistentConnection = persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));
