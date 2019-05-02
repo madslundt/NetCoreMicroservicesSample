@@ -1,6 +1,6 @@
 ﻿using GraphQL.Types;
 
-namespace ApiGateway.GraphQL
+namespace ApiGraphQL.Queries
 {
     public class RootQuery : ObjectGraphType
     {

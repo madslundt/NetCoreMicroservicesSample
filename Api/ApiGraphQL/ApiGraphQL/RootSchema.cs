@@ -1,4 +1,6 @@
-﻿using GraphQL;
+﻿using ApiGraphQL.Mutations;
+using ApiGraphQL.Queries;
+using GraphQL;
 using GraphQL.Types;
 
 namespace ApiGraphQL

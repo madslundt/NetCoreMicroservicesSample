@@ -12,20 +12,15 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/",
+      "DownstreamPathTemplate": "/api/graphql",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/graphql",
       "UpstreamHttpMethod": [ "Post" ],
+      "ServiceName": "GraphQLService",
       "FileCacheOptions": { "TtlSeconds": 15 },
-      "DelegatingHandlers": [
-        "GraphQLDelegatingHandler"
-      ],
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 8080
-        }
-      ]
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     }
   ],
 

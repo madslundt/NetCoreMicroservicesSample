@@ -23,7 +23,7 @@ Using
 
 The architecture shows that there is one public Api (Api gateway). This is accessible for the clients.
 
-Next is the GraphQL service (this can either be an independent service or implemented into the public Api). The GraphQL resolves to one or more micro service(s) via HTTP Rest.
+Next is the GraphQL service. The GraphQL resolves to one or more micro service(s) via HTTP Rest.
 
 Each micro service has its own API that is only accessible from the Public API or GraphQL. Each micro service has one or more database (mssql, postgres, elastic search, etc.). That also means the micro services are decoupled from other micro services.
 Micro services are event based which means they can publish or subscribe to any events. By doing so one or more micro services can publish an event which can be received by one or more micro services unknown for the publisher(s).
@@ -41,11 +41,6 @@ RabbitMQ is used in this example but can easily be swapped with any other tool j
 
 Api gateway is using Ocelot to have a unified point of entry to all micro services.
 
-#### GraphQL
-
-GraphQL server can be integrated directly in the Api gateway with Ocelot, or having one or more GraphQL servers independently of Ocelot.
-By having GraphqlQL integrated directly in the Api gateway it adds some logic to the Api gateway but avoid Ocelot having an extra hop to GraphQL.
-By doing the later the GraphQL server can be scaled easily but requires an extra setup for GraphQL and an extra hop from the Api gateway.
 
 ### Microservice
 

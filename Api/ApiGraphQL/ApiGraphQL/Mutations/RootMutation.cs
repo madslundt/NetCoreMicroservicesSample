@@ -1,12 +1,14 @@
 ﻿using GraphQL.Types;
 
-namespace ApiGateway.GraphQL
+namespace ApiGraphQL.Mutations
 {
     public class RootMutation : ObjectGraphType
     {
         public RootMutation()
         {
             Name = "Mutation";
+
+
         }
     }
 }

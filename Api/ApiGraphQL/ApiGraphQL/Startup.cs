@@ -12,27 +12,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Steeltoe.Discovery.Client;
 
 namespace ApiGraphQL
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env, ILogger<Startup> logger)
+        public Startup(IConfiguration config, IHostingEnvironment env, ILogger<Startup> logger)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile(path: $"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
-            _env = env;
             _logger = logger;
+            _env = env;
+            _config = config;
         }
 
-        public IConfigurationRoot Configuration { get; }
-        private readonly IHostingEnvironment _env;
+        public readonly IConfiguration _config;
         private readonly ILogger<Startup> _logger;
+        private readonly IHostingEnvironment _env;
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -56,12 +51,11 @@ namespace ApiGraphQL
 
             return services.ConfigureServices(new ConfigureServicesOptions
             {
-                Configuration = Configuration,
+                Configuration = _config,
                 Logger = _logger
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -78,6 +72,8 @@ namespace ApiGraphQL
                     User = ctx.User
                 }
             });
+
+            app.UseDiscoveryClient();
 
             app.UseStaticFiles();
 
