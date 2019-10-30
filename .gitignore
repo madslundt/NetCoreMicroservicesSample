@@ -38,3 +38,4 @@ msbuild.wrn
 [Aa]ppsettings.[Dd]evelopment.json
 
 API/API.xml
+logs/
