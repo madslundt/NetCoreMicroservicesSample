@@ -1,5 +1,6 @@
 ﻿using Convey.CQRS.Events;
 using Convey.MessageBrokers;
+using Events;
 using System;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace MessagesService.Events
     public class UserCreated
     {
         [Message("UserCreated")]
-        public class UserCreatedEvent : IEvent
+        public class UserCreatedEvent : IUserCreated
         {
             public Guid UserId { get; }
 

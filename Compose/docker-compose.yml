@@ -1,6 +1,33 @@
 version: "3.5"
 
 services:
+  # apigateway:
+  #   build: ../API/APIGateway
+  #   container_name: apigateway
+  #   restart: unless-stopped
+  #   ports:
+  #     - '80:80'
+  #   networks:
+  #     - conveyor
+
+  # usersservice:
+  #   build: ../Src/UsersService
+  #   container_name: usersservice
+  #   restart: unless-stopped
+  #   ports:
+  #     - '81:80'
+  #   networks:
+  #     - conveyor
+
+  # messagesservice:
+  #   build: ../Src/MessagesService
+  #   container_name: messagesservice
+  #   restart: unless-stopped
+  #   ports:
+  #     - '82:80'
+  #   networks:
+  #     - conveyor
+
   consul:
     image: consul
     container_name: consul

@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagesService", "MessagesService\MessagesService.csproj", "{8B82C60A-3170-470F-8508-F5B1B47B55A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataModel", "DataModel\DataModel.csproj", "{6BF49BC7-7B5C-4115-B682-7503B95C4DC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModel", "DataModel\DataModel.csproj", "{6BF49BC7-7B5C-4115-B682-7503B95C4DC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{166F2FE5-E791-4543-A288-DB99CC1422C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTest.csproj", "{166F2FE5-E791-4543-A288-DB99CC1422C0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Events", "..\Events\Events.csproj", "{272BD54F-D914-4FEA-A8C5-0C43844D9D8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{166F2FE5-E791-4543-A288-DB99CC1422C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166F2FE5-E791-4543-A288-DB99CC1422C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{166F2FE5-E791-4543-A288-DB99CC1422C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{272BD54F-D914-4FEA-A8C5-0C43844D9D8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{272BD54F-D914-4FEA-A8C5-0C43844D9D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{272BD54F-D914-4FEA-A8C5-0C43844D9D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{272BD54F-D914-4FEA-A8C5-0C43844D9D8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

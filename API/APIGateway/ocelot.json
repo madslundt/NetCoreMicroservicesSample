@@ -1,11 +1,11 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/test",
+      "DownstreamPathTemplate": "/api/users",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/test",
-      "UpstreamHttpMethod": [ "Get" ],
-      "ServiceName": "UserService",
+      "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "Post" ],
+      "ServiceName": "users-service",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -16,7 +16,7 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/graphql",
       "UpstreamHttpMethod": [ "Post" ],
-      "ServiceName": "GraphQLService",
+      "ServiceName": "graphql-service",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
