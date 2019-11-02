@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Consul;
 
 namespace APIGateway
 {
@@ -28,9 +30,13 @@ namespace APIGateway
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.Configure(app =>
+                    webBuilder.ConfigureServices(services => services
+                        .AddOcelot()
+                        .AddConsul()
+                    )
+                    .Configure(app =>
                     {
-                        app.UseOcelot();
+                        app.UseOcelot().Wait();
                     });
                 });
     }

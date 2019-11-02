@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 using System.Threading.Tasks;
 using Users.Service.Commands;
 using Users.Service.Queries;
@@ -53,8 +54,10 @@ namespace Users.Service
                     .UseErrorHandler()
                     .UseInitializers()
                     .UseRouting()
+                    .UseEndpoints(endpoints => endpoints
+                        .Get("", ctx => ctx.Response.WriteAsync(Assembly.GetEntryAssembly().GetName().Name))
+                        .Get("ping", ctx => ctx.Response.WriteAsync("OK")))
                     .UseDispatcherEndpoints(endpoints => endpoints
-                        .Get("ping", ctx => ctx.Response.WriteAsync("OK"))
                         .Get<GetUser.Query, GetUser.Result>("users/{userId}")
                         .Post<CreateUser.Command>("users", afterDispatch: (cmd, ctx) => ctx.Response.Created($"users/{cmd.UserId}")))
                     .UseJaeger()

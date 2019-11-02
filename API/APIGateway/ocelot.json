@@ -1,10 +1,21 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/users",
+      "DownstreamPathTemplate": "/users",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/users",
       "UpstreamHttpMethod": [ "Post" ],
+      "ServiceName": "users-service",
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ping",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/users/ping",
+      "UpstreamHttpMethod": [ "Get" ],
       "ServiceName": "users-service",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
@@ -30,7 +41,7 @@
     "DownstreamScheme": "http",
     "ServiceDiscoveryProvider": {
       "Type": "Consul",
-      "Host": "localhost",
+      "Host": "consul",
       "Port": 8500
     }
   },

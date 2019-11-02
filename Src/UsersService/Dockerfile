@@ -5,6 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
 COPY ["UsersService/UsersService.csproj", "UsersService/"]
+COPY ["DataModel/DataModel.csproj", "DataModel/"]
 RUN dotnet restore "UsersService/UsersService.csproj"
 COPY . .
 WORKDIR "/src/UsersService"

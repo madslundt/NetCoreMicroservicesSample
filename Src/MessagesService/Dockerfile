@@ -6,6 +6,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
 COPY ["MessagesService/MessagesService.csproj", "MessagesService/"]
+COPY ["DataModel/DataModel.csproj", "DataModel/"]
 RUN dotnet restore "MessagesService/MessagesService.csproj"
 COPY . .
 WORKDIR "/src/MessagesService"

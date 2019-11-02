@@ -1,6 +1,11 @@
 # WIP NetCoreMicroservices
 
-Using Convey
+## Run with Docker
+This can be run with `docker-compose`.
+Simply just go to the [Compose](/Compose) folder and run `docker-compose up --build`.
+
+This will start the **APIGateway**, **UsersService**, **MessagesService** and the tools for them to run.
+You can only access APIGateway from outside on port 8080.
 
 ## Architecture
 

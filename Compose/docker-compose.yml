@@ -1,52 +1,68 @@
 version: "3.5"
 
 services:
-  # apigateway:
-  #   build: ../API/APIGateway
-  #   container_name: apigateway
-  #   restart: unless-stopped
-  #   ports:
-  #     - '80:80'
-  #   networks:
-  #     - conveyor
+  apigateway:
+    build: ../API/APIGateway
+    container_name: apigateway
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    depends_on:
+      - usersservice
+      - messagesservice
+      - consul
+    networks:
+      - usersservice
+      - messagesservice
+      - discovery
 
-  # usersservice:
-  #   build: ../Src/UsersService
-  #   container_name: usersservice
-  #   restart: unless-stopped
-  #   ports:
-  #     - '81:80'
-  #   networks:
-  #     - conveyor
+  usersservice:
+    build: ../Src/UsersService
+    container_name: usersservice
+    restart: unless-stopped
+    depends_on:
+      - consul
+      - fabio
+      - rabbitmq
+    networks:
+      - discovery
+      - logging
+      - rabbitmq
+      - usersservice
 
-  # messagesservice:
-  #   build: ../Src/MessagesService
-  #   container_name: messagesservice
-  #   restart: unless-stopped
-  #   ports:
-  #     - '82:80'
-  #   networks:
-  #     - conveyor
+  messagesservice:
+    build: ../Src/MessagesService
+    container_name: messagesservice
+    restart: unless-stopped
+    depends_on:
+      - consul
+      - fabio
+      - rabbitmq
+    networks:
+      - discovery
+      - logging
+      - rabbitmq
+      - messagesservice
 
   consul:
     image: consul
     container_name: consul
     restart: unless-stopped
+    networks:
+      - discovery
     ports:
       - 8500:8500
-    networks:
-      - conveyor
-    # volumes:
-    #   - consul:/consul/data
+    volumes:
+      - consul:/consul/data
 
   fabio:
     image: fabiolb/fabio
     container_name: fabio
     restart: unless-stopped
+    networks:
+      - discovery
     environment:
     - FABIO_REGISTRY_CONSUL_ADDR=consul:8500
-    networks:
-      - conveyor
     ports:
     - 9998:9998
     - 9999:9999
@@ -55,17 +71,19 @@ services:
     image: grafana/grafana
     container_name: grafana
     restart: unless-stopped
+    networks:
+      - metrics
     ports:
       - 3000:3000
-    networks:
-      - conveyor
-    # volumes:
-    #   - grafana:/var/lib/grafana
+    volumes:
+      - grafana:/var/lib/grafana
 
   jaeger:
     image: jaegertracing/all-in-one
     container_name: jaeger
     restart: unless-stopped
+    networks:
+      - logging
     ports:
       - 5775:5775/udp
       - 5778:5778
@@ -74,17 +92,15 @@ services:
       - 9411:9411
       - 14268:14268
       - 16686:16686
-    networks:
-      - conveyor
 
   mongo:
     image: mongo
     container_name: mongo
     restart: unless-stopped
+    networks:
+      - mongo
     ports:
       - 27017:27017
-    networks:
-      - conveyor
     volumes:
       - mongo:/data/db
 
@@ -94,8 +110,6 @@ services:
   #   restart: unless-stopped
   #   ports:
   #     - '9090:9090'
-  #   networks:
-  #     - conveyor
   #   # volumes:
   #   #   - prometheus:/prometheus
 
@@ -107,9 +121,9 @@ services:
       - 5672:5672
       - 15672:15672
     networks:
-      - conveyor
-    # volumes:
-    #   - rabbitmq:/var/lib/rabbitmq
+      - rabbitmq
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
 
   redis:
     image: redis
@@ -118,7 +132,7 @@ services:
     ports:
       - 6379:6379
     networks:
-      - conveyor
+      - redis
     volumes:
       - redis:/data
 
@@ -128,21 +142,19 @@ services:
     restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
+    networks:
+      - logging
     ports:
       - 5341:80
-    networks:
-      - conveyor
-    # volumes:
-    #   - seq:/data
+    volumes:
+      - seq:/data
 
   vault:
     image: vault
     container_name: vault
     restart: unless-stopped
-    ports:
-      - 8200:8200
     networks:
-      - conveyor
+      - storage
     environment:
       - VAULT_ADDR=http://127.0.0.1:8200
       - VAULT_DEV_ROOT_TOKEN_ID=secret
@@ -150,21 +162,28 @@ services:
       - IPC_LOCK
 
 networks:
-  conveyor:
-    name: conveyor-network
+  discovery:
+  metrics:
+  mongo:
+  rabbitmq:
+  redis:
+  logging:
+  storage:
+  usersservice:
+  messagesservice:
 
 volumes:
-  # consul:
-  #   driver: local
-  # grafana:
-  #   driver: local
+  consul:
+    driver: local
+  grafana:
+    driver: local
   mongo:
     driver: local
-  # prometheus:
-  #   driver: local
-  # rabbitmq:
-  #   driver: local
+  prometheus:
+    driver: local
+  rabbitmq:
+    driver: local
   redis:
     driver: local
-  # seq:
-  #   driver: local
+  seq:
+    driver: local
