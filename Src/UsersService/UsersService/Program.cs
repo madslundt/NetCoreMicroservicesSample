@@ -3,7 +3,6 @@ using Convey.CQRS.Commands;
 using Convey.CQRS.Events;
 using Convey.CQRS.Queries;
 using Convey.Discovery.Consul;
-using Convey.LoadBalancing.Fabio;
 using Convey.Logging;
 using Convey.MessageBrokers.CQRS;
 using Convey.MessageBrokers.RabbitMQ;
@@ -13,18 +12,21 @@ using Convey.Tracing.Jaeger;
 using Convey.Tracing.Jaeger.RabbitMQ;
 using Convey.WebApi;
 using Convey.WebApi.CQRS;
+using DataModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using System.Threading.Tasks;
-using Users.Service.Commands;
-using Users.Service.Queries;
-using static Users.Service.Events.UserCreated;
+using UsersService.Commands;
+using UsersService.Queries;
+using static UsersService.Events.UserCreated;
 
-namespace Users.Service
+namespace UsersService
 {
     public class Program
     {
@@ -33,23 +35,33 @@ namespace Users.Service
         public static IHostBuilder CreateHostBuilder(string[] args)
             => Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.ConfigureServices(services => services
-                    .AddOpenTracing()
-                    .AddConvey()
-                    .AddConsul()
-                    .AddFabio()
-                    .AddJaeger()
-                    .AddCommandHandlers()
-                    .AddEventHandlers()
-                    .AddQueryHandlers()
-                    .AddInMemoryCommandDispatcher()
-                    .AddInMemoryEventDispatcher()
-                    .AddInMemoryQueryDispatcher()
-                    .AddRedis()
-                    .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
-                    .AddMetrics()
-                    .AddWebApi()
-                    .Build())
+                webBuilder.ConfigureServices(services =>
+                {
+                    services
+                        .AddOpenTracing()
+                        .AddConvey()
+                        .AddConsul()
+                        .AddJaeger()
+                        .AddCommandHandlers()
+                        .AddEventHandlers()
+                        .AddQueryHandlers()
+                        .AddInMemoryCommandDispatcher()
+                        .AddInMemoryEventDispatcher()
+                        .AddInMemoryQueryDispatcher()
+                        .AddRedis()
+                        .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+                        .AddMetrics()
+                        .AddWebApi()
+                        .Build();
+
+                    var builder = new ConfigurationBuilder()
+                        .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+                        .AddEnvironmentVariables();
+
+                    var Configuration = builder.Build();
+
+                    services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AppConnectionString")));
+                })
                 .Configure(app => app
                     .UseErrorHandler()
                     .UseInitializers()
@@ -67,6 +79,5 @@ namespace Users.Service
                     .SubscribeEvent<UserCreatedEvent>())
                 .UseLogging();
             });
-
     }
 }

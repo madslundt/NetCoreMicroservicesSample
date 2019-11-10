@@ -7,23 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Convey" Version="0.3.96" />
-    <PackageReference Include="Convey.CQRS.Commands" Version="0.3.96" />
-    <PackageReference Include="Convey.CQRS.Events" Version="0.3.96" />
-    <PackageReference Include="Convey.CQRS.Queries" Version="0.3.96" />
-    <PackageReference Include="Convey.Discovery.Consul" Version="0.3.96" />
-    <PackageReference Include="Convey.HTTP" Version="0.3.96" />
-    <PackageReference Include="Convey.LoadBalancing.Fabio" Version="0.3.96" />
-    <PackageReference Include="Convey.Logging" Version="0.3.96" />
-    <PackageReference Include="Convey.MessageBrokers.CQRS" Version="0.3.96" />
-    <PackageReference Include="Convey.MessageBrokers.RabbitMQ" Version="0.3.96" />
-    <PackageReference Include="Convey.Metrics.AppMetrics" Version="0.3.96" />
-    <PackageReference Include="Convey.Persistence.Redis" Version="0.3.96" />
-    <PackageReference Include="Convey.Tracing.Jaeger" Version="0.3.96" />
-    <PackageReference Include="Convey.Tracing.Jaeger.RabbitMQ" Version="0.3.96" />
-    <PackageReference Include="Convey.WebApi" Version="0.3.96" />
-    <PackageReference Include="Convey.WebApi.CQRS" Version="0.3.96" />
-    <PackageReference Include="Convey.WebApi.Swagger" Version="0.3.96" />
+    <PackageReference Include="Convey" Version="0.3.106" />
+    <PackageReference Include="Convey.CQRS.Commands" Version="0.3.106" />
+    <PackageReference Include="Convey.CQRS.Events" Version="0.3.106" />
+    <PackageReference Include="Convey.CQRS.Queries" Version="0.3.106" />
+    <PackageReference Include="Convey.Discovery.Consul" Version="0.3.106" />
+    <PackageReference Include="Convey.HTTP" Version="0.3.106" />
+    <PackageReference Include="Convey.Logging" Version="0.3.106" />
+    <PackageReference Include="Convey.MessageBrokers.CQRS" Version="0.3.106" />
+    <PackageReference Include="Convey.MessageBrokers.RabbitMQ" Version="0.3.106" />
+    <PackageReference Include="Convey.Metrics.AppMetrics" Version="0.3.106" />
+    <PackageReference Include="Convey.Persistence.Redis" Version="0.3.106" />
+    <PackageReference Include="Convey.Tracing.Jaeger" Version="0.3.106" />
+    <PackageReference Include="Convey.Tracing.Jaeger.RabbitMQ" Version="0.3.106" />
+    <PackageReference Include="Convey.WebApi" Version="0.3.106" />
+    <PackageReference Include="Convey.WebApi.CQRS" Version="0.3.106" />
+    <PackageReference Include="Convey.WebApi.Swagger" Version="0.3.106" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
     <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.6.2" />

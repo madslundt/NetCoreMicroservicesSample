@@ -2,13 +2,13 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Users.Service.Queries
+namespace UsersService.Queries
 {
     public class GetUser
     {
         public class Query : IQuery<Result>
         {
-            public Guid Id { get; set; }
+            public Guid UserId { get; set; }
         }
 
         public class Result

@@ -1,4 +1,5 @@
 ﻿using Convey.CQRS.Commands;
+using DataModel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,23 @@ namespace MessagesService.Commands
 
         public class CreateUserMessageHandler : ICommandHandler<Command>
         {
+            private readonly DatabaseContext _db;
+
+            public CreateUserMessageHandler(DatabaseContext db)
+            {
+                _db = db;
+            }
             public async Task HandleAsync(Command command)
             {
-                
+                var message = new Message
+                {
+                    Id = command.MessageId,
+                    UserId = command.UserId,
+                    Text = command.Message
+                };
+
+                _db.Add(message);
+                await _db.SaveChangesAsync();
             }
         }
     }

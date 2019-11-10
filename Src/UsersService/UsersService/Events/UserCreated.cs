@@ -3,11 +3,11 @@ using Convey.MessageBrokers;
 using System;
 using System.Threading.Tasks;
 
-namespace Users.Service.Events
+namespace UsersService.Events
 {
     public class UserCreated
     {
-        [Message("UserCreated")]
+        [Message("user_created")]
         public class UserCreatedEvent : IEvent
         {
             public Guid UserId { get; }

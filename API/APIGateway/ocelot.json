@@ -23,9 +23,43 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/ping",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/messages/ping",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "messages-service",
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/{userId}/messages",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/users/{userId}/messages",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "messages-service",
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/users/{userId}/messages",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/users/{userId}/messages",
+      "UpstreamHttpMethod": [ "Post" ],
+      "ServiceName": "messages-service",
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/graphql",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/graphql",
+      "Priority": 1,
       "UpstreamHttpMethod": [ "Post" ],
       "ServiceName": "graphql-service",
       "FileCacheOptions": { "TtlSeconds": 15 },

@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 using OpenTracing;
 using System;
 using System.Threading.Tasks;
-using static Users.Service.Events.UserCreated;
+using static UsersService.Events.UserCreated;
 
-namespace Users.Service.Commands
+namespace UsersService.Commands
 {
     public class CreateUser
     {
@@ -30,11 +30,13 @@ namespace Users.Service.Commands
         {
             private readonly IBusPublisher _publisher;
             private readonly ITracer _tracer;
+            private readonly DatabaseContext _db;
 
-            public CreateUserHandler(IBusPublisher publisher, ITracer tracer)
+            public CreateUserHandler(IBusPublisher publisher, ITracer tracer, DatabaseContext db)
             {
                 _publisher = publisher;
                 _tracer = tracer;
+                _db = db;
             }
 
             public async Task HandleAsync(Command command)
@@ -45,6 +47,9 @@ namespace Users.Service.Commands
                     FirstName = command.FirstName,
                     LastName = command.LastName
                 };
+
+                _db.Add(user);
+                await _db.SaveChangesAsync();
 
                 var spanContext = _tracer.ActiveSpan.Context.ToString();
                 await _publisher.PublishAsync(new UserCreatedEvent(user.Id), spanContext: spanContext);

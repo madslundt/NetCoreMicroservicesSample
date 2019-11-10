@@ -8,13 +8,13 @@ services:
     ports:
       - 8080:80
     depends_on:
-      - usersservice
-      - messagesservice
       - consul
-    networks:
       - usersservice
       - messagesservice
+    networks:
       - discovery
+      - usersservice
+      - messagesservice
 
   usersservice:
     build: ../Src/UsersService
@@ -22,8 +22,10 @@ services:
     restart: unless-stopped
     depends_on:
       - consul
-      - fabio
       - rabbitmq
+      - jaeger
+      - seq
+      - usersservice_db
     networks:
       - discovery
       - logging
@@ -36,12 +38,40 @@ services:
     restart: unless-stopped
     depends_on:
       - consul
-      - fabio
       - rabbitmq
+      - jaeger
+      - seq
+      - messagesservice_db
     networks:
       - discovery
       - logging
       - rabbitmq
+      - messagesservice
+
+  usersservice_db:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_USER: "sa"
+      SA_PASSWORD: "pass1234!"
+      ACCEPT_EULA: "Y"
+    container_name: usersservice_db
+    ports:
+      - 1430:1433
+    restart: unless-stopped
+    networks:
+      - usersservice
+
+  messagesservice_db:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_USER: "sa"
+      SA_PASSWORD: "pass1234!"
+      ACCEPT_EULA: "Y"
+    container_name: messagesservice_db
+    ports:
+      - 1431:1433
+    restart: unless-stopped
+    networks:
       - messagesservice
 
   consul:
@@ -54,18 +84,6 @@ services:
       - 8500:8500
     volumes:
       - consul:/consul/data
-
-  fabio:
-    image: fabiolb/fabio
-    container_name: fabio
-    restart: unless-stopped
-    networks:
-      - discovery
-    environment:
-    - FABIO_REGISTRY_CONSUL_ADDR=consul:8500
-    ports:
-    - 9998:9998
-    - 9999:9999
 
   grafana:
     image: grafana/grafana
@@ -93,25 +111,14 @@ services:
       - 14268:14268
       - 16686:16686
 
-  mongo:
-    image: mongo
-    container_name: mongo
+  prometheus:
+    build: ./prometheus
+    container_name: prometheus
     restart: unless-stopped
-    networks:
-      - mongo
     ports:
-      - 27017:27017
+      - 9090:9090
     volumes:
-      - mongo:/data/db
-
-  # prometheus:
-  #   build: ./prometheus
-  #   container_name: prometheus
-  #   restart: unless-stopped
-  #   ports:
-  #     - '9090:9090'
-  #   # volumes:
-  #   #   - prometheus:/prometheus
+      - prometheus:/prometheus
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -122,19 +129,6 @@ services:
       - 15672:15672
     networks:
       - rabbitmq
-    volumes:
-      - rabbitmq:/var/lib/rabbitmq
-
-  redis:
-    image: redis
-    container_name: redis
-    restart: unless-stopped
-    ports:
-      - 6379:6379
-    networks:
-      - redis
-    volumes:
-      - redis:/data
 
   seq:
     image: datalust/seq
@@ -149,26 +143,11 @@ services:
     volumes:
       - seq:/data
 
-  vault:
-    image: vault
-    container_name: vault
-    restart: unless-stopped
-    networks:
-      - storage
-    environment:
-      - VAULT_ADDR=http://127.0.0.1:8200
-      - VAULT_DEV_ROOT_TOKEN_ID=secret
-    cap_add:
-      - IPC_LOCK
-
 networks:
   discovery:
   metrics:
-  mongo:
   rabbitmq:
-  redis:
   logging:
-  storage:
   usersservice:
   messagesservice:
 
@@ -177,13 +156,9 @@ volumes:
     driver: local
   grafana:
     driver: local
-  mongo:
-    driver: local
   prometheus:
     driver: local
   rabbitmq:
-    driver: local
-  redis:
     driver: local
   seq:
     driver: local

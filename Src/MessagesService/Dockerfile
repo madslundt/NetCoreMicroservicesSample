@@ -5,10 +5,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
-COPY ["MessagesService/MessagesService.csproj", "MessagesService/"]
-COPY ["DataModel/DataModel.csproj", "DataModel/"]
+COPY ./ .
+RUN dotnet restore "DataModel/DataModel.csproj"
 RUN dotnet restore "MessagesService/MessagesService.csproj"
-COPY . .
+
+WORKDIR "/src/DataModel"
+RUN dotnet tool install -g dotnet-ef
+# RUN "$HOME/.dotnet/tools/dotnet-ef" database update
+
 WORKDIR "/src/MessagesService"
 RUN dotnet build "MessagesService.csproj" -c Release -o /app/build
 
