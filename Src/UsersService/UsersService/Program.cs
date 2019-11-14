@@ -76,6 +76,7 @@ namespace UsersService
                     .UseInitializers()
                     .UseMetrics()
                     .UseRabbitMq()
+                    .SubscribeCommand<CreateUser.Command>()
                     .SubscribeEvent<UserCreatedEvent>())
                 .UseLogging();
             });

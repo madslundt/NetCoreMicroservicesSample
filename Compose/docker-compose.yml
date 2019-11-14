@@ -82,8 +82,6 @@ services:
       - discovery
     ports:
       - 8500:8500
-    volumes:
-      - consul:/consul/data
 
   grafana:
     image: grafana/grafana
@@ -93,8 +91,6 @@ services:
       - metrics
     ports:
       - 3000:3000
-    volumes:
-      - grafana:/var/lib/grafana
 
   jaeger:
     image: jaegertracing/all-in-one
@@ -117,8 +113,8 @@ services:
     restart: unless-stopped
     ports:
       - 9090:9090
-    volumes:
-      - prometheus:/prometheus
+    networks:
+      - metrics
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -140,8 +136,6 @@ services:
       - logging
     ports:
       - 5341:80
-    volumes:
-      - seq:/data
 
 networks:
   discovery:
@@ -150,15 +144,3 @@ networks:
   logging:
   usersservice:
   messagesservice:
-
-volumes:
-  consul:
-    driver: local
-  grafana:
-    driver: local
-  prometheus:
-    driver: local
-  rabbitmq:
-    driver: local
-  seq:
-    driver: local

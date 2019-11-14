@@ -9,7 +9,7 @@ namespace MessagesService.Events
 {
     public class UserCreated
     {
-        [Message("user_created")]
+        [Message("messages")]
         public class UserCreatedEvent : IEvent
         {
             public Guid UserId { get; }

@@ -1,13 +1,12 @@
-﻿using Convey.CQRS.Events;
-using Convey.MessageBrokers;
+﻿using MediatR;
 using System;
 using System.Threading.Tasks;
+using UsersService.Infrastructure.Event;
 
-namespace UsersService.Events
+namespace UsersService.Event
 {
     public class UserCreated
     {
-        [Message("messages")]
         public class UserCreatedEvent : IEvent
         {
             public Guid UserId { get; }
@@ -18,12 +17,14 @@ namespace UsersService.Events
             }
         }
 
-        public class UserCreatedHandler : IEventHandler<UserCreatedEvent>
+        public class Handler : IEventHandler<UserCreatedEvent>
         {
+            public Handler(IMediator mediator)
+            {
+
+            }
             public Task HandleAsync(UserCreatedEvent @event)
             {
-                Console.WriteLine($"User created {nameof(@event.UserId)} = {@event.UserId}");
-
                 return Task.CompletedTask;
             }
         }

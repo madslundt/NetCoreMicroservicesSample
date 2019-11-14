@@ -7,14 +7,10 @@ scrape_configs:
     static_configs:
       - targets: ['prometheus:9090']
 
-  - job_name: 'deliveries'
+  - job_name: 'usersservice'
     static_configs:
-      - targets: ['docker.for.win.localhost:5001']
+      - targets: ['usersservice']
 
-  - job_name: 'orders'
+  - job_name: 'messagesservice'
     static_configs:
-      - targets: ['docker.for.win.localhost:5002']
-
-  - job_name: 'pricing'
-    static_configs:
-      - targets: ['docker.for.win.localhost:5003']
+      - targets: ['messagesservice']
