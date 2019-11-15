@@ -8,13 +8,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RawRabbit;
+using RawRabbit.Configuration;
+using RawRabbit.Configuration.Exchange;
+using RawRabbit.vNext;
+using RawRabbit.vNext.Pipe;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
 using System;
 using System.Reflection;
+using UsersService.Event;
 using UsersService.Infrastructure.Filter;
-using UsersService.Pipeline;
+using UsersService.Infrastructure.Pipeline;
+using UsersService.Infrastructure.RabbitMQ;
 
 namespace UsersService
 {
@@ -51,30 +58,18 @@ namespace UsersService
 
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
 
-            //services.AddRawRabbit(new RawRabbitOptions
-            //{
-            //    ClientConfiguration = new RawRabbitConfiguration
-            //    {
-            //        Username = "guest",
-            //        Password = "guest",
-            //        Port = 5672,
-            //        VirtualHost = "/",
-            //        Hostnames = { "localhost" },
-            //        RequestTimeout = TimeSpan.FromSeconds(10),
-            //        PublishConfirmTimeout = TimeSpan.FromSeconds(1),
-            //        RecoveryInterval = TimeSpan.FromSeconds(1),
-            //        PersistentDeliveryMode = true,
-            //        AutoCloseConnection = true,
-            //        AutomaticRecovery = true,
-            //        TopologyRecovery = true,
-            //        Exchange = new GeneralExchangeConfiguration
-            //        {
-            //            Type = ExchangeType.Topic,
-            //            AutoDelete = false,
-            //            Durable = true
-            //        }
-            //    }
-            //});            
+            services.AddOptions();
+
+            var metricsConfigSection = Configuration.GetSection(nameof(RabbitOptions));
+            var rabbitOptions = new RabbitOptions();
+            Configuration.GetSection(nameof(RabbitOptions)).Bind(rabbitOptions);
+
+            services.AddRawRabbit(new RawRabbitOptions
+            {
+                ClientConfiguration = rabbitOptions
+            });
+
+            services.AddSingleton(svc => new RabbitEventListener(svc.GetRequiredService<IBusClient>(), svc.GetRequiredService<IMediator>()));
 
             services
                 .AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); })
@@ -91,6 +86,8 @@ namespace UsersService
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseRabbitSubscribe<UserCreated.UserCreatedEvent>();
 
             loggerFactory.AddSerilog();
 
