@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RawRabbit;
-using UsersService.Event;
 using UsersService.Queries;
 
 namespace UsersService.Controllers
@@ -12,12 +10,10 @@ namespace UsersService.Controllers
     public class UserController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IBusClient _busClient;
 
-        public UserController(IMediator mediator, IBusClient busClient)
+        public UserController(IMediator mediator)
         {
             _mediator = mediator;
-            _busClient = busClient;
         }
 
         [HttpGet, Route("{id}")]
@@ -26,8 +22,6 @@ namespace UsersService.Controllers
             var query = new GetUser.Query(id);
 
             var result = await _mediator.Send(query);
-
-            await _busClient.PublishAsync(new UserCreated.UserCreatedEvent(id));
 
             return Ok(result);
         }
