@@ -23,6 +23,7 @@ namespace UsersService.Event
             {
 
             }
+
             public Task HandleAsync(UserCreatedEvent @event)
             {
                 return Task.CompletedTask;

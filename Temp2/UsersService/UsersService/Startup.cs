@@ -1,22 +1,19 @@
+using DataModel;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RawRabbit;
-using RawRabbit.Configuration;
-using RawRabbit.Configuration.Exchange;
-using RawRabbit.vNext;
-using RawRabbit.vNext.Pipe;
 using Serilog;
+using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
 using System;
 using System.Reflection;
 using UsersService.Infrastructure.Filter;
-using UsersService.Infrastructure.RabbitMQ;
 using UsersService.Pipeline;
 
 namespace UsersService
@@ -39,6 +36,7 @@ namespace UsersService
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
                 {
                     AutoRegisterTemplate = true,
@@ -50,6 +48,8 @@ namespace UsersService
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
 
             //services.AddRawRabbit(new RawRabbitOptions
             //{

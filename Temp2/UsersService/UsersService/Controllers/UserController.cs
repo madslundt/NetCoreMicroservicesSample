@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using UsersService.Commands;
 using UsersService.Queries;
 
 namespace UsersService.Controllers
@@ -22,6 +23,14 @@ namespace UsersService.Controllers
             var query = new GetUser.Query(id);
 
             var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [HttpPost, Route("")]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUser.Command user)
+        {
+            var result = await _mediator.Send(user);
 
             return Ok(result);
         }

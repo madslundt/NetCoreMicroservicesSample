@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -36,15 +38,15 @@ namespace UsersService.Infrastructure.Filter
             }
         }
 
-        private readonly IHostingEnvironment _env;
-        //private readonly ILogger _logger;
+        private readonly IWebHostEnvironment _env;
+        private readonly ILogger _logger;
 
         public ExceptionFilter(
-            IHostingEnvironment env
-            /*ILogger<ExceptionFilter> logger*/)
+            IWebHostEnvironment env,
+            ILogger<ExceptionFilter> logger)
         {
             _env = env;
-            //_logger = logger;
+            _logger = logger;
         }
 
         public void OnException(ExceptionContext context)
@@ -79,18 +81,18 @@ namespace UsersService.Infrastructure.Filter
                 Context = context,
             };
 
-            //if (statusCode >= 500)
-            //{
-            //    _logger.LogCritical(logTitle, logError);
-            //}
-            //else if (statusCode == 401)
-            //{
-            //    _logger.LogInformation(logTitle, logError);
-            //}
-            //else
-            //{
-            //    _logger.LogWarning(logTitle, logError);
-            //}
+            if (statusCode >= 500)
+            {
+                _logger.LogCritical(logTitle, logError);
+            }
+            else if (statusCode == 401)
+            {
+                _logger.LogInformation(logTitle, logError);
+            }
+            else
+            {
+                _logger.LogWarning(logTitle, logError);
+            }
         }
     }
 }

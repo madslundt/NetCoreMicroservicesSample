@@ -1,146 +1,57 @@
-version: "3.5"
+version: '3.5'
 
 services:
-  apigateway:
-    build: ../API/APIGateway
-    container_name: apigateway
-    restart: unless-stopped
-    ports:
-      - 8080:80
-    depends_on:
-      - consul
-      - usersservice
-      - messagesservice
-    networks:
-      - discovery
-      - usersservice
-      - messagesservice
-
-  usersservice:
-    build: ../Src/UsersService
-    container_name: usersservice
-    restart: unless-stopped
-    depends_on:
-      - consul
-      - rabbitmq
-      - jaeger
-      - seq
-      - usersservice_db
-    networks:
-      - discovery
-      - logging
-      - rabbitmq
-      - usersservice
-
-  messagesservice:
-    build: ../Src/MessagesService
-    container_name: messagesservice
-    restart: unless-stopped
-    depends_on:
-      - consul
-      - rabbitmq
-      - jaeger
-      - seq
-      - messagesservice_db
-    networks:
-      - discovery
-      - logging
-      - rabbitmq
-      - messagesservice
-
   usersservice_db:
-    image: "mcr.microsoft.com/mssql/server"
-    environment:
-      SA_USER: "sa"
-      SA_PASSWORD: "pass1234!"
-      ACCEPT_EULA: "Y"
-    container_name: usersservice_db
-    ports:
-      - 1430:1433
-    restart: unless-stopped
-    networks:
-      - usersservice
+   image: mcr.microsoft.com/mssql/server:2017-latest
+   container_name: usersservice_db
+   environment:
+    - "ACCEPT_EULA=Y"
+    - "SA_PASSWORD=pass123!"
+   ports:
+    - "1433:1433"
+   networks:
+    - docker-network
 
-  messagesservice_db:
-    image: "mcr.microsoft.com/mssql/server"
-    environment:
-      SA_USER: "sa"
-      SA_PASSWORD: "pass1234!"
-      ACCEPT_EULA: "Y"
-    container_name: messagesservice_db
-    ports:
-      - 1431:1433
-    restart: unless-stopped
-    networks:
-      - messagesservice
+  elasticsearch:
+   image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+   container_name: elasticsearch
+   ports:
+    - "9200:9200"
+   volumes:
+    - elasticsearch-data:/usr/share/elasticsearch/data
+   networks:
+    - docker-network
 
-  consul:
-    image: consul
-    container_name: consul
-    restart: unless-stopped
-    networks:
-      - discovery
-    ports:
-      - 8500:8500
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    restart: unless-stopped
-    networks:
-      - metrics
-    ports:
-      - 3000:3000
-
-  jaeger:
-    image: jaegertracing/all-in-one
-    container_name: jaeger
-    restart: unless-stopped
-    networks:
-      - logging
-    ports:
-      - 5775:5775/udp
-      - 5778:5778
-      - 6831:6831/udp
-      - 6832:6832/udp
-      - 9411:9411
-      - 14268:14268
-      - 16686:16686
-
-  prometheus:
-    build: ./prometheus
-    container_name: prometheus
-    restart: unless-stopped
-    ports:
-      - 9090:9090
-    networks:
-      - metrics
+  kibana:
+   image: docker.elastic.co/kibana/kibana:6.2.4
+   container_name: kibana
+   ports:
+    - "5601:5601"
+   depends_on:
+    - elasticsearch
+   networks:
+    - docker-network
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
-    restart: unless-stopped
     ports:
-      - 5672:5672
-      - 15672:15672
+     - "5672:5672"
+     - "15672:15672"
     networks:
-      - rabbitmq
+     - docker-network
 
-  seq:
-    image: datalust/seq
-    container_name: seq
-    restart: unless-stopped
-    environment:
-      - ACCEPT_EULA=Y
-    networks:
-      - logging
+  consul:
+    image: consul
+    container_name: consul
     ports:
-      - 5341:80
+     - "8500:8500"
+    networks:
+     - docker-network
 
 networks:
-  discovery:
-  metrics:
-  rabbitmq:
-  logging:
-  usersservice:
-  messagesservice:
+  docker-network:
+    driver: bridge
+
+volumes:
+  elasticsearch-data:

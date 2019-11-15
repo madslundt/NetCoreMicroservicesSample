@@ -1,6 +1,9 @@
-﻿using FluentValidation;
+﻿using DataModel;
+using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,26 +27,49 @@ namespace UsersService.Queries
             public string Email { get; set; }
         }
 
-        public class GetUserValidator: AbstractValidator<Query>
+        public class Validator: AbstractValidator<Query>
         {
-            public GetUserValidator()
+            public Validator()
             {
                 RuleFor(query => query.Id).NotEmpty();
             }
         }
 
-        public class GetUserHandler : IRequestHandler<Query, Result>
+        public class Handler : IRequestHandler<Query, Result>
         {
-            public Task<Result> Handle(Query request, CancellationToken cancellationToken)
-            {
-                var result = new Result
-                {
-                    FirstName = "FirstName",
-                    LastName = "LastName",
-                    Email = "FirstName@LastName.dk"
-                };
+            private readonly DatabaseContext _db;
 
-                return Task.FromResult(result);
+            public Handler(DatabaseContext db)
+            {
+                _db = db;
+            }
+
+            public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
+            {
+                var user = await GetUser(request.Id);
+
+                if (user is null)
+                {
+                    throw new ArgumentNullException($"{nameof(user)} was not found");
+                }
+
+                return user;
+            }
+
+            private async Task<Result> GetUser(Guid id)
+            {
+                var query = from user in _db.Users
+                            where user.Id == id
+                            select new Result
+                            {
+                                Email = user.Email,
+                                FirstName = user.FirstName,
+                                LastName = user.LastName
+                            };
+
+                var result = await query.FirstOrDefaultAsync();
+
+                return result;
             }
         }
     }
