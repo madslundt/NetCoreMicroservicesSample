@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using DataModel;
 using Events.Infrastructure.Event;
 using Events.Users;
 using MediatR;
+using MessagesService.Commands;
 
 namespace MessagesService.Events
 {
@@ -15,9 +15,12 @@ namespace MessagesService.Events
         {
             _mediator = mediator;
         }
-        public Task Handle(UserCreated notification, CancellationToken cancellationToken)
+        public async Task Handle(UserCreated notification, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var text = "Welcome";
+            var command = new CreateMessage.Command(notification.UserId, text);
+
+            await _mediator.Send(command);
         }
     }
 }
