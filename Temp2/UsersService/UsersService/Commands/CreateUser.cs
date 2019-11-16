@@ -5,6 +5,8 @@ using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using UsersService.Event;
+using UsersService.Infrastructure.RabbitMQ;
 
 namespace UsersService.Commands
 {
@@ -34,16 +36,20 @@ namespace UsersService.Commands
 
         public class Handler : IRequestHandler<Command, Result>
         {
+            private readonly RabbitEventListener _rabbitEventListener;
             private readonly DatabaseContext _db;
 
-            public Handler(DatabaseContext db)
+            public Handler(RabbitEventListener rabbitEventListener, DatabaseContext db)
             {
+                _rabbitEventListener = rabbitEventListener;
                 _db = db;
             }
 
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
             {
                 var id = await CreateUser(request);
+
+                await _rabbitEventListener.DispatchAsync(new UserCreated.UserCreatedEvent(id)).ConfigureAwait(true);
 
                 var result = new Result
                 {

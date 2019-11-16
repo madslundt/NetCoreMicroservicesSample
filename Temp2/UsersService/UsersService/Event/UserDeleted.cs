@@ -6,21 +6,21 @@ using UsersService.Infrastructure.Event;
 
 namespace UsersService.Event
 {
-    public class UserCreated
+    public class UserDeleted
     {
-        public class UserCreatedEvent : IEvent
+        public class UserDeletedEvent : IEvent
         {
             public Guid UserId { get; }
 
-            public UserCreatedEvent(Guid userId)
+            public UserDeletedEvent(Guid userId)
             {
                 UserId = userId;
             }
         }
 
-        public class Handler : IEventHandler<UserCreatedEvent>
+        public class Handler : IEventHandler<UserDeletedEvent>
         {
-            public Task Handle(UserCreatedEvent @event, CancellationToken cancellationToken)
+            public Task Handle(UserDeletedEvent @event, CancellationToken cancellationToken)
             {
                 return Task.CompletedTask;
             }

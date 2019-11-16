@@ -1,9 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UsersService.Infrastructure.Event;
 
