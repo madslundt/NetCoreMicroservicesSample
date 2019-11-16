@@ -67,7 +67,7 @@ namespace MessagesService
                 ClientConfiguration = rabbitOptions
             });
 
-            services.AddSingleton(svc => new RabbitEventListener(svc.GetRequiredService<IBusClient>(), svc.GetRequiredService<IMediator>()));
+            services.AddSingleton(svc => new RabbitEventListener(svc.GetRequiredService<IBusClient>(), svc.GetRequiredService<IMediator>(), rabbitOptions));
 
             services
                 .AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); })

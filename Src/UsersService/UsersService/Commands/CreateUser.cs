@@ -1,12 +1,12 @@
 ﻿using DataModel;
 using DataModel.Models.User;
+using Events.Infrastructure.RabbitMQ;
+using Events.Users;
 using FluentValidation;
 using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using UsersService.Events;
-using UsersService.Infrastructure.RabbitMQ;
 
 namespace UsersService.Commands
 {
@@ -49,7 +49,7 @@ namespace UsersService.Commands
             {
                 var id = await CreateUser(request);
 
-                await _rabbitEventListener.DispatchAsync(new UserCreated.UserCreatedEvent(id)).ConfigureAwait(true);
+                await _rabbitEventListener.DispatchAsync(new UserCreated(id)).ConfigureAwait(true);
 
                 var result = new Result
                 {

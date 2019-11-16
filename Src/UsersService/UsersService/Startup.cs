@@ -1,4 +1,6 @@
 using DataModel;
+using Events.Infrastructure.RabbitMQ;
+using Events.Users;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -19,7 +21,6 @@ using System.Reflection;
 using UsersService.Events;
 using UsersService.Infrastructure.Filter;
 using UsersService.Infrastructure.Pipeline;
-using UsersService.Infrastructure.RabbitMQ;
 
 namespace UsersService
 {
@@ -67,7 +68,7 @@ namespace UsersService
                 ClientConfiguration = rabbitOptions
             });
 
-            services.AddSingleton(svc => new RabbitEventListener(svc.GetRequiredService<IBusClient>(), svc.GetRequiredService<IMediator>()));
+            services.AddSingleton(svc => new RabbitEventListener(svc.GetRequiredService<IBusClient>(), svc.GetRequiredService<IMediator>(), rabbitOptions));
 
             services
                 .AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); })
@@ -85,7 +86,7 @@ namespace UsersService
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRabbitSubscribe<UserCreated.UserCreatedEvent>();
+            app.UseRabbitSubscribe<UserCreated>();
 
             loggerFactory.AddSerilog();
 

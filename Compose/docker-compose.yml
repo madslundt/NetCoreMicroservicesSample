@@ -8,9 +8,16 @@ services:
     - "ACCEPT_EULA=Y"
     - "SA_PASSWORD=pass123!"
    ports:
-    - "1433:1433"
-   networks:
-    - docker-network
+    - "1431:1433"
+
+  messagesservice_db:
+   image: mcr.microsoft.com/mssql/server:2017-latest
+   container_name: messagesservice_db
+   environment:
+    - "ACCEPT_EULA=Y"
+    - "SA_PASSWORD=pass123!"
+   ports:
+    - "1432:1433"
 
   elasticsearch:
    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
