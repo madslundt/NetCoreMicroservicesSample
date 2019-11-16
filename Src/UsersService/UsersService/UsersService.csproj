@@ -20,7 +20,6 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
-    <PackageReference Include="Polly" Version="7.1.1" />
     <PackageReference Include="RawRabbit" Version="2.0.0-rc5" />
     <PackageReference Include="RawRabbit.Enrichers.RetryLater" Version="2.0.0-rc5" />
     <PackageReference Include="RawRabbit.Operations.Publish" Version="2.0.0-rc5" />

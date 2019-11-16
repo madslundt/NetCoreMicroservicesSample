@@ -1,11 +1,26 @@
 # WIP NetCoreMicroservices
 
+## Requirements
+ - **Consul**: Service discovery
+ - **Elasticsearch**: Storing logs, metrics, etc.
+ - **EntityFramework**: Database ORM
+ - **FluentValidator**: Validate each request
+ - **Kibana**: Visualizing logs, metrics, etc.
+ - **MediatR**: CQRS
+ - **RabbitMQ**: Event bus (publish/subscribe)
+ - **Serilog**: Logging provider
+ - **SQL server**: MSSQL database
+
 ## Run with Docker
 This can be run with `docker-compose`.
 Simply just go to the [Compose](/Compose) folder and run `docker-compose up --build`.
 
-This will start the **APIGateway**, **UsersService**, **MessagesService** and the tools for them to run.
-You can only access APIGateway from outside on port 8080.
+<!-- This will start the **APIGateway**, **UsersService**, **MessagesService** and the tools for them to run. -->
+<!-- You can only access APIGateway from outside on port 8080. -->
+
+This will start up sql server for usersservice, elasticsearch, kibana, rabbitmq and consul.
+
+After that you can run the services locally.
 
 ## Architecture
 
@@ -32,4 +47,4 @@ Api gateway is using Ocelot to have a unified point of entry to all micro servic
 
 ### Microservice
 
-Micro services are just REST APIs and are created without any knowledge to each other. If a micro service wants to notify another service it simply publishes an event and the services subscribing to this event can take action on it.
+Micro services are just REST APIs and are created without any knowledge to each other. If a micro service wants to notify another service it simply publishes an event and the services subscribing to this event can take action on it using publish/subscribe with RabbitMQ.
