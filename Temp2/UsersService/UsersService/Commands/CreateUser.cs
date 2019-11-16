@@ -5,7 +5,7 @@ using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using UsersService.Event;
+using UsersService.Events;
 using UsersService.Infrastructure.RabbitMQ;
 
 namespace UsersService.Commands

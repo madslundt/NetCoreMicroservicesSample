@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UsersService.Infrastructure.Event;
 
-namespace UsersService.Event
+namespace UsersService.Events
 {
     public class UserDeleted
     {
