@@ -1,6 +1,10 @@
 using DataModel;
+using Events.Infrastructure.RabbitMQ;
+using Events.Users;
 using FluentValidation.AspNetCore;
 using MediatR;
+using MessagesService.Infrastructure.Filter;
+using MessagesService.Infrastructure.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +20,8 @@ using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
 using System;
 using System.Reflection;
-using UsersService.Events;
-using UsersService.Infrastructure.Filter;
-using UsersService.Infrastructure.Pipeline;
-using UsersService.Infrastructure.RabbitMQ;
 
-namespace UsersService
+namespace MessagesService
 {
     public class Startup
     {
@@ -85,7 +85,7 @@ namespace UsersService
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRabbitSubscribe<UserCreated.UserCreatedEvent>();
+            app.UseRabbitSubscribe<UserCreated>();
 
             loggerFactory.AddSerilog();
 
