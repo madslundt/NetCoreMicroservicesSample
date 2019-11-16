@@ -15,9 +15,15 @@ namespace DataModel
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true)
+                .AddEnvironmentVariables()
                 .Build();
 
-            var connectionString = configuration.GetConnectionString("AppConnectionString");
+            var connectionString = configuration.GetConnectionString(ConnectionStringKeys.App);
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new Exception("No connection string");
+            }
 
             builder.UseSqlServer(connectionString);
 

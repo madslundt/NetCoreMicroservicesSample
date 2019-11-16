@@ -1,31 +1,75 @@
-﻿using Convey.CQRS.Queries;
+﻿using DataModel;
+using FluentValidation;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace UsersService.Queries
 {
     public class GetUser
     {
-        public class Query : IQuery<Result>
+        public class Query : IRequest<Result>
         {
-            public Guid UserId { get; set; }
+            public Guid Id { get; }
+            public Query(Guid id)
+            {
+                Id = id;
+            }
         }
 
         public class Result
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }
+            public string Email { get; set; }
         }
 
-        public class GetUserHandler : IQueryHandler<Query, Result>
+        public class Validator: AbstractValidator<Query>
         {
-            public Task<Result> HandleAsync(Query query)
+            public Validator()
             {
-                return Task.FromResult(new Result
+                RuleFor(query => query.Id).NotEmpty();
+            }
+        }
+
+        public class Handler : IRequestHandler<Query, Result>
+        {
+            private readonly DatabaseContext _db;
+
+            public Handler(DatabaseContext db)
+            {
+                _db = db;
+            }
+
+            public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
+            {
+                var user = await GetUser(request.Id);
+
+                if (user is null)
                 {
-                    FirstName = "Test",
-                    LastName = "Test"
-                });
+                    throw new ArgumentNullException($"{nameof(user)} was not found");
+                }
+
+                return user;
+            }
+
+            private async Task<Result> GetUser(Guid id)
+            {
+                var query = from user in _db.Users
+                            where user.Id == id
+                            select new Result
+                            {
+                                Email = user.Email,
+                                FirstName = user.FirstName,
+                                LastName = user.LastName
+                            };
+
+                var result = await query.FirstOrDefaultAsync();
+
+                return result;
             }
         }
     }
