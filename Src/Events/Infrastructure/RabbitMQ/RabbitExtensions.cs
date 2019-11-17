@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Events.Infrastructure.RabbitMQ
 {
@@ -14,7 +16,7 @@ namespace Events.Infrastructure.RabbitMQ
         }
         public static void UseRabbitSubscribe<T>(this IApplicationBuilder app) where T : IEvent
         {
-            app.ApplicationServices.GetRequiredService<RabbitEventListener>().SubscribeAsync<T>();
+            app.ApplicationServices.GetRequiredService<IRabbitEventListener>().SubscribeAsync<T>();
         }
     }
 }

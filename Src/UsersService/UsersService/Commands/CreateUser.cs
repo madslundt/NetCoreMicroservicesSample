@@ -36,10 +36,10 @@ namespace UsersService.Commands
 
         public class Handler : IRequestHandler<Command, Result>
         {
-            private readonly RabbitEventListener _rabbitEventListener;
+            private readonly IRabbitEventListener _rabbitEventListener;
             private readonly DatabaseContext _db;
 
-            public Handler(RabbitEventListener rabbitEventListener, DatabaseContext db)
+            public Handler(IRabbitEventListener rabbitEventListener, DatabaseContext db)
             {
                 _rabbitEventListener = rabbitEventListener;
                 _db = db;

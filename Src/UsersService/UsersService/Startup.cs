@@ -28,7 +28,7 @@ namespace UsersService
     {
         private readonly IConfigurationRoot Configuration;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -62,13 +62,14 @@ namespace UsersService
 
             var rabbitOptions = new RabbitOptions();
             Configuration.GetSection(nameof(RabbitOptions)).Bind(rabbitOptions);
+            services.Configure<RabbitOptions>(Configuration.GetSection(nameof(RabbitOptions)));
 
             services.AddRawRabbit(new RawRabbitOptions
             {
                 ClientConfiguration = rabbitOptions
             });
 
-            services.AddSingleton(svc => new RabbitEventListener(svc.GetRequiredService<IBusClient>(), svc.GetRequiredService<IMediator>(), rabbitOptions));
+            services.AddSingleton<IRabbitEventListener, RabbitEventListener>();
 
             services
                 .AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); })
@@ -86,8 +87,6 @@ namespace UsersService
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRabbitSubscribe<UserCreated>();
-
             loggerFactory.AddSerilog();
 
             app.UseRouting();
@@ -96,6 +95,9 @@ namespace UsersService
             {
                 endpoints.MapControllers();
             });
+
+
+            app.UseRabbitSubscribe<UserCreated>();
         }
     }
 }
