@@ -44,7 +44,7 @@ namespace Events.Infrastructure.RabbitMQ
                 cfg => cfg.UseSubscribeConfiguration(
                     c => c
                     .OnDeclaredExchange(GetExchangeDeclaration<T>())
-                    .FromDeclaredQueue(q => q.WithName((_rabbitOptions.Queue.Name ?? System.AppDomain.CurrentDomain.FriendlyName).Trim().Trim('_') + "_" + typeof(T).Name)))
+                    .FromDeclaredQueue(q => q.WithName((_rabbitOptions.Queue.Name ?? AppDomain.CurrentDomain.FriendlyName).Trim().Trim('_') + "_" + typeof(T).Name)))
             );
         }
 

@@ -1,3 +1,4 @@
+using Consul;
 using DataModel;
 using Elastic.Apm.NetCoreAll;
 using Events.Infrastructure.RabbitMQ;
@@ -18,6 +19,7 @@ using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
 using System;
 using System.Reflection;
+using UsersService.Infrastructure.Consul;
 using UsersService.Infrastructure.Filter;
 using UsersService.Infrastructure.Pipeline;
 
@@ -59,6 +61,15 @@ namespace UsersService
 
             services.AddOptions();
 
+            var consulOptions = new ConsulOptions();
+            Configuration.GetSection(nameof(ConsulOptions)).Bind(consulOptions);
+            services.Configure<ConsulOptions>(Configuration.GetSection(nameof(ConsulOptions)));
+            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+            {
+                var address = consulOptions.Address;
+                consulConfig.Address = new Uri(address);
+            }));
+
             var rabbitOptions = new RabbitOptions();
             Configuration.GetSection(nameof(RabbitOptions)).Bind(rabbitOptions);
             services.Configure<RabbitOptions>(Configuration.GetSection(nameof(RabbitOptions)));
@@ -79,7 +90,7 @@ namespace UsersService
                 .AddNewtonsoftJson();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -97,6 +108,7 @@ namespace UsersService
                 endpoints.MapControllers();
             });
 
+            app.RegisterWithConsul(lifetime);
 
             app.UseRabbitSubscribe<UserCreated>();
         }
