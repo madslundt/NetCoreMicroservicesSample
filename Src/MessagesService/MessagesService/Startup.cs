@@ -1,4 +1,5 @@
 using DataModel;
+using Elastic.Apm.NetCoreAll;
 using Events.Infrastructure.RabbitMQ;
 using Events.Users;
 using FluentValidation.AspNetCore;
@@ -12,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RawRabbit;
 using RawRabbit.vNext;
 using RawRabbit.vNext.Pipe;
 using Serilog;
@@ -44,7 +44,7 @@ namespace MessagesService
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
                 {
-                    AutoRegisterTemplate = true,
+                    AutoRegisterTemplate = true
                 })
             .CreateLogger();
         }
@@ -86,6 +86,9 @@ namespace MessagesService
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAllElasticApm(Configuration);
+
+
             loggerFactory.AddSerilog();
 
             app.UseRouting();
@@ -94,8 +97,6 @@ namespace MessagesService
             {
                 endpoints.MapControllers();
             });
-
-            var mediator = app.ApplicationServices.GetService<IMediator>();
 
             app.UseRabbitSubscribe<UserCreated>();
         }

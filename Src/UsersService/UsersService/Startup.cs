@@ -1,4 +1,5 @@
 using DataModel;
+using Elastic.Apm.NetCoreAll;
 using Events.Infrastructure.RabbitMQ;
 using Events.Users;
 using FluentValidation.AspNetCore;
@@ -10,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RawRabbit;
 using RawRabbit.vNext;
 using RawRabbit.vNext.Pipe;
 using Serilog;
@@ -18,7 +18,6 @@ using Serilog.Exceptions;
 using Serilog.Sinks.Elasticsearch;
 using System;
 using System.Reflection;
-using UsersService.Events;
 using UsersService.Infrastructure.Filter;
 using UsersService.Infrastructure.Pipeline;
 
@@ -86,6 +85,8 @@ namespace UsersService
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAllElasticApm(Configuration);
 
             loggerFactory.AddSerilog();
 
