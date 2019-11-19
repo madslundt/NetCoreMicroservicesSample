@@ -44,11 +44,8 @@ namespace UsersService
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
-                {
-                    AutoRegisterTemplate = true,
-                })
-            .CreateLogger();
+                .ReadFrom.Configuration(Configuration)
+                .CreateLogger();
         }
 
         public void ConfigureServices(IServiceCollection services)

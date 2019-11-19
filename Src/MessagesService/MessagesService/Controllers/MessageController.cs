@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MessagesService.Controllers
 {
-    [Route("api/messages")]
+    [Route("api")]
     public class MessageController : Controller
     {
         private readonly IMediator _mediator;
@@ -17,7 +17,7 @@ namespace MessagesService.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet, Route("{id}")]
+        [HttpGet, Route("messages/{id}")]
         public async Task<IActionResult> GetMessage([FromRoute] Guid id)
         {
             var query = new GetMessage.Query(id);
