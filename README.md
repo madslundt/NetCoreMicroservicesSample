@@ -11,16 +11,29 @@
  - **Serilog**: Logging provider
  - **SQL server**: MSSQL database
 
+## TODO
+ - [x] Docker compose
+ - [x] Service discovery
+ - [x] Logging
+ - [x] Monitoring (APM)
+ - [x] CQRS
+ - [x] Validation
+ - [x] EventBus
+ - [x] Data model
+ - [ ] API Gateway
+ - [ ] GraphQL
+ - [ ] Outbox
+ - [ ] Unit test
+ - [ ] Kubernetes
+
+
 ## Run with Docker
 This can be run with `docker-compose`.
 Simply just go to the [Compose](/Compose) folder and run `docker-compose up --build`.
 
-<!-- This will start the **APIGateway**, **UsersService**, **MessagesService** and the tools for them to run. -->
-<!-- You can only access APIGateway from outside on port 8080. -->
+This will start up SQL server, Elasticsearch, Bibana, APM server, Rabbitmq and Consul.
 
-This will start up sql server for usersservice, elasticsearch, kibana, rabbitmq and consul.
-
-After that you can run the services locally.
+After that you can run the services.
 
 ## Architecture
 
