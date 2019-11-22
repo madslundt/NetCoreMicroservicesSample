@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Events.Infrastructure.Event
+namespace Infrastructure.RabbitMQ
 {
     public interface IEvent : INotification
     { }

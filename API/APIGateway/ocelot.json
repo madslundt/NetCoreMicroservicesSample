@@ -25,7 +25,7 @@
     {
       "DownstreamPathTemplate": "/ping",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/messages/ping",
+      "UpstreamPathTemplate": "api/messages/ping",
       "UpstreamHttpMethod": [ "Get" ],
       "ServiceName": "MessagesService",
       "FileCacheOptions": { "TtlSeconds": 15 },
@@ -34,9 +34,9 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/users/{userId}/messages",
+      "DownstreamPathTemplate": "api/users/{userId}/messages",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/users/{userId}/messages",
+      "UpstreamPathTemplate": "api/users/{userId}/messages",
       "UpstreamHttpMethod": [ "Get" ],
       "ServiceName": "MessagesService",
       "FileCacheOptions": { "TtlSeconds": 15 },
@@ -45,9 +45,9 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/users/{userId}/messages",
+      "DownstreamPathTemplate": "api/users/{userId}/messages",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/users/{userId}/messages",
+      "UpstreamPathTemplate": "api/users/{userId}/messages",
       "UpstreamHttpMethod": [ "Post" ],
       "ServiceName": "MessagesService",
       "FileCacheOptions": { "TtlSeconds": 15 },

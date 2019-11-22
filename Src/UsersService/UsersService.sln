@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModel", "DataModel\Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Events", "..\Events\Events.csproj", "{F9251D74-5927-444A-B900-80183F447CA6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "..\..\Infrastructure\Infrastructure.csproj", "{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F9251D74-5927-444A-B900-80183F447CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9251D74-5927-444A-B900-80183F447CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9251D74-5927-444A-B900-80183F447CA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

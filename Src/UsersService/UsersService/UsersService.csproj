@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="Consul" Version="0.7.2.6" />
-    <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.1.2" />
     <PackageReference Include="FluentValidation" Version="8.5.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.1" />
     <PackageReference Include="MediatR" Version="7.0.0" />
@@ -18,8 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
     <PackageReference Include="RawRabbit" Version="2.0.0-rc5" />
@@ -36,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\Events\Events.csproj" />
     <ProjectReference Include="..\DataModel\DataModel.csproj" />
   </ItemGroup>

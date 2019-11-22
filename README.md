@@ -12,7 +12,6 @@
  - **SQL server**: MSSQL database
 
 ## TODO
- - [x] Docker compose
  - [x] Service discovery
  - [x] Logging
  - [x] Monitoring (APM)
@@ -23,6 +22,7 @@
  - [ ] API Gateway
  - [ ] GraphQL
  - [ ] Outbox
+ - [ ] Swagger
  - [ ] Unit test
  - [ ] Kubernetes
 
@@ -52,6 +52,7 @@ RabbitMQ is used for publish/subscribe in order to deliver a message to multiple
 
 - Api: Api gateway and graphql api.
 - Src: All micro services in their own solution.
+- Infrastructure: Infrastructure for micro services (eg. setup RabbitMQ, Consul, Logging, etc.)
 
 ### Api
 

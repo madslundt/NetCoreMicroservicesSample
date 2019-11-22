@@ -1,11 +1,11 @@
-using Consul;
 using DataModel;
 using Elastic.Apm.NetCoreAll;
-using Events.Infrastructure.RabbitMQ;
 using Events.Users;
 using FluentValidation.AspNetCore;
+using Infrastructure.Consul;
+using Infrastructure.Logging;
+using Infrastructure.RabbitMQ;
 using MediatR;
-using MessagesService.Infrastructure.Consul;
 using MessagesService.Infrastructure.Filter;
 using MessagesService.Infrastructure.Pipeline;
 using Microsoft.AspNetCore.Builder;
@@ -15,12 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RawRabbit.vNext;
-using RawRabbit.vNext.Pipe;
 using Serilog;
-using Serilog.Exceptions;
-using Serilog.Sinks.Elasticsearch;
-using System;
 using System.Reflection;
 
 namespace MessagesService
@@ -39,13 +34,7 @@ namespace MessagesService
 
             Configuration = builder.Build();
 
-            var elasticUri = Configuration["ElasticConfiguration:Uri"];
-
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .Enrich.WithExceptionDetails()
-                .ReadFrom.Configuration(Configuration)
-            .CreateLogger();
+            Log.Logger = LoggingExtensions.AddLogging(Configuration);
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -58,25 +47,9 @@ namespace MessagesService
 
             services.AddOptions();
 
-            var consulOptions = new ConsulOptions();
-            Configuration.GetSection(nameof(ConsulOptions)).Bind(consulOptions);
-            services.Configure<ConsulOptions>(Configuration.GetSection(nameof(ConsulOptions)));
-            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
-            {
-                var address = consulOptions.Address;
-                consulConfig.Address = new Uri(address);
-            }));
+            services.AddConsul(Configuration);
 
-            var rabbitOptions = new RabbitOptions();
-            Configuration.GetSection(nameof(RabbitOptions)).Bind(rabbitOptions);
-            services.Configure<RabbitOptions>(Configuration.GetSection(nameof(RabbitOptions)));
-
-            services.AddRawRabbit(new RawRabbitOptions
-            {
-                ClientConfiguration = rabbitOptions
-            });
-
-            services.AddSingleton<IRabbitEventListener, RabbitEventListener>();
+            services.AddRabbitMQ(Configuration);
 
             services
                 .AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); })
@@ -94,10 +67,9 @@ namespace MessagesService
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAllElasticApm(Configuration);
+            app.UseLogging(Configuration);
 
-
-            loggerFactory.AddSerilog();
+            loggerFactory.UseLogging();
 
             app.UseRouting();
 
@@ -106,9 +78,9 @@ namespace MessagesService
                 endpoints.MapControllers();
             });
 
-            app.RegisterWithConsul(lifetime);
+            app.UseConsul(lifetime);
 
-            app.UseRabbitSubscribe<UserCreated>();
+            app.UseRabbitMQSubscribeEvent<UserCreated>();
         }
     }
 }

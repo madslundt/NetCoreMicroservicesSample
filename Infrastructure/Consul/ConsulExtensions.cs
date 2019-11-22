@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -9,11 +10,24 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 
-namespace MessagesService.Infrastructure.Consul
+namespace Infrastructure.Consul
 {
     public static class ConsulExtensions
     {
-        public static IApplicationBuilder RegisterWithConsul(this IApplicationBuilder app, IHostApplicationLifetime lifetime)
+        public static void AddConsul(this IServiceCollection services, IConfiguration Configuration)
+        {
+            var options = new ConsulOptions();
+            Configuration.GetSection(nameof(ConsulOptions)).Bind(options);
+            services.Configure<ConsulOptions>(Configuration.GetSection(nameof(ConsulOptions)));
+
+            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+            {
+                var address = options.Address;
+                consulConfig.Address = new Uri(address);
+            }));
+        }
+
+        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
             // Retrieve Consul client from DI
             var consulClient = app.ApplicationServices

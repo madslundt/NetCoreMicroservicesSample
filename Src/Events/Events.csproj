@@ -9,14 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="7.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0-preview3.19553.2" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.0" />
-    <PackageReference Include="RawRabbit" Version="2.0.0-rc5" />
-    <PackageReference Include="RawRabbit.Operations.Publish" Version="2.0.0-rc5" />
-    <PackageReference Include="RawRabbit.Operations.Subscribe" Version="2.0.0-rc5" />
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

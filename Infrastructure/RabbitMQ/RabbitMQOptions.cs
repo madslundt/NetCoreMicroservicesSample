@@ -1,8 +1,8 @@
 ﻿using RawRabbit.Configuration;
 
-namespace Events.Infrastructure.RabbitMQ
+namespace Infrastructure.RabbitMQ
 {
-    public class RabbitOptions : RawRabbitConfiguration
+    public class RabbitMQOptions : RawRabbitConfiguration
     {
         public QueueOptions Queue { get; set; }
         public ExchangeOptions Exchange { get; set; }

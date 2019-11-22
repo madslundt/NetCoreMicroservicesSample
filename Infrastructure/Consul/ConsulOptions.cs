@@ -1,4 +1,4 @@
-﻿namespace MessagesService.Infrastructure.Consul
+﻿namespace Infrastructure.Consul
 {
     public class ConsulOptions
     {
