@@ -29,9 +29,9 @@
 
 ## Run with Docker
 This can be run with `docker-compose`.
-Simply just go to the [Compose](/Compose) folder and run `docker-compose up --build`.
+Simply go to the [Compose](/Compose) folder and run `docker-compose up --build`.
 
-This will start up SQL server, Elasticsearch, Bibana, APM server, Rabbitmq and Consul.
+This will start up SQL server, Elasticsearch, Kibana, APM server, Rabbitmq and Consul.
 
 After that you can run the services.
 
