@@ -19,7 +19,6 @@
  - [x] Validation
  - [x] EventBus
  - [x] Data model
- - [x] Consul
  - [x] API Gateway
  - [ ] GraphQL
  - [ ] Outbox
@@ -52,7 +51,9 @@ RabbitMQ is used for publish/subscribe in order to deliver a message to multiple
 ## Structure
 
 - Api: Api gateway and graphql api.
+- Compose: Docker compose to set up all surroundings (eg. RabbitMQ, SQL Server, etc.)
 - Src: All micro services in their own solution.
+- Src/Events: Contain all events sent through the event bus.
 - Infrastructure: Infrastructure for micro services (eg. setup RabbitMQ, Consul, Logging, etc.)
 
 ### Api
