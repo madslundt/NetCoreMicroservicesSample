@@ -19,7 +19,8 @@
  - [x] Validation
  - [x] EventBus
  - [x] Data model
- - [ ] API Gateway
+ - [x] Consul
+ - [x] API Gateway
  - [ ] GraphQL
  - [ ] Outbox
  - [ ] Swagger
