@@ -4,9 +4,10 @@
  - **Consul**: Service discovery
  - **Elasticsearch**: Storing logs, metrics, etc.
  - **EntityFramework**: Database ORM
- - **FluentValidator**: Validate each request
+ - **FluentValidator**: Validate requests
  - **Kibana**: Visualizing logs, metrics, etc.
  - **MediatR**: CQRS
+ - **Mongo**: MongoDB driver
  - **RabbitMQ**: Event bus (publish/subscribe)
  - **Serilog**: Logging provider
  - **SQL server**: MSSQL database
@@ -31,7 +32,7 @@
 This can be run with `docker-compose`.
 Simply go to the [Compose](/Compose) folder and run `docker-compose up --build`.
 
-This will start up SQL server, Elasticsearch, Kibana, APM server, Rabbitmq and Consul.
+This will start up SQL server, MongoDB, Elasticsearch, Kibana, APM server, RabbitMQ and Consul.
 
 After that you can run the services.
 
@@ -39,14 +40,21 @@ After that you can run the services.
 
 ![Microservices architecture](microservices_architecture.png "Microservices archivecture")
 
-The architecture shows that there is one public Api (Api gateway). This is accessible for the clients.
+The architecture shows that there is one public API (API gateway). This is accessible for the clients.
 
-Next is the GraphQL service. The GraphQL resolves to one or more micro service(s) via HTTP Rest.
+Next is the GraphQL service. The GraphQL resolves to one or more micro services via HTTP Rest.
 
-Each micro service has its own API that is only accessible from the Public API or GraphQL. Each micro service can have one or more database (mssql, postgres, etc.). That also means the micro services are decoupled from other micro services.
-Micro services are event based which means they can publish or subscribe to any events. By doing so one or more micro services can publish an event which can be received by one or more micro services unknown for the publisher(s).
+Each micro service hosts its own API that is only accessible via the Public API or GraphQL. Each micro service are within its own domain and have directly access to its own dependencies such as databases, stores, etc. This also means that a micro service can have zero, one or more database (mssql, postgres, mongo, etc.). All these dependencies are not accessible for other micro services. In fact micro services are decoupled from each other.
+Micro services are event based which means they can publish, send or subscribe to any events or commands. By doing so one or more micro services can publish an event which can be received by one or more micro services unknown for the publisher.
+
+Events are used when something has happened (eg. when a user was created the event could be called UserCreated).
+
+Commands are used to do something right away. These are used quite rarely or often not even used.
+
+*Try to use events as these are doesn't require a micro service to know what should happen with other services*
 
 RabbitMQ is used for publish/subscribe in order to deliver a message to multiple consumers.
+Outbox has also been added to make sure we save the messages before they are published via RabbitMQ (in case RabbitMQ is not running or they just can't be published). Outbox is set up to MongoDB.
 
 ## Structure
 
