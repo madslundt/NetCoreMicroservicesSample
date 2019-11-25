@@ -20,9 +20,11 @@ namespace Infrastructure.Logging
             return logger;
         }
 
-        public static void UseLogging(this IApplicationBuilder app, IConfiguration Configuration)
+        public static IApplicationBuilder UseLogging(this IApplicationBuilder app, IConfiguration Configuration)
         {
             app.UseAllElasticApm(Configuration);
+
+            return app;
         }
 
         public static void UseLogging(this ILoggerFactory loggerFactory)

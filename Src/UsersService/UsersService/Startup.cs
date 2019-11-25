@@ -3,7 +3,9 @@ using Events.Users;
 using FluentValidation.AspNetCore;
 using Infrastructure.Consul;
 using Infrastructure.Logging;
+using Infrastructure.Outbox;
 using Infrastructure.RabbitMQ;
+using Infrastructure.Swagger;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,9 +48,11 @@ namespace UsersService
 
             services.AddOptions();
 
-            services.AddConsul(Configuration);
-
-            services.AddRabbitMQ(Configuration);
+            services
+                .AddConsul(Configuration)
+                .AddRabbitMQ(Configuration)
+                .AddOutbox(Configuration)
+                .AddSwagger(Configuration);
 
             services
                 .AddMvc(opt => { opt.Filters.Add(typeof(ExceptionFilter)); })
@@ -66,18 +70,18 @@ namespace UsersService
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseLogging(Configuration);
+            app
+                .UseLogging(Configuration)
+                .UseSwagger(Configuration)
+                .UseConsul(lifetime);
 
             loggerFactory.UseLogging();
 
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-            app.UseConsul(lifetime);
 
             app.UseRabbitMQSubscribeEvent<UserCreated>();
         }

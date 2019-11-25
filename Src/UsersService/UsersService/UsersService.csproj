@@ -31,6 +31,7 @@
     <PackageReference Include="Serilog.Exceptions" Version="5.3.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.2-dev-10260" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.1.0-alpha0005" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
   </ItemGroup>
 
   <ItemGroup>

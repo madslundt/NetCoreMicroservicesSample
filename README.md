@@ -20,9 +20,9 @@
  - [x] EventBus
  - [x] Data model
  - [x] API Gateway
+ - [x] Outbox
+ - [x] Swagger
  - [ ] GraphQL
- - [ ] Outbox
- - [ ] Swagger
  - [ ] Unit test
  - [ ] Kubernetes
 

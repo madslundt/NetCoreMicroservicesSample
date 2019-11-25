@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Outbox
 {
@@ -8,17 +6,8 @@ namespace Infrastructure.Outbox
     {
         public Guid Id { get; private set; } = Guid.NewGuid();
         public DateTime Created { get; private set; } = DateTime.UtcNow;
-        public string Type { get; private set; }
-        public string Data { get; private set; }
-
-        private OutboxMessage()
-        { }
-
-        internal OutboxMessage(DateTime created, string type, string data)
-        {
-            Created = created;
-            Type = type;
-            Data = data;
-        }
+        public string Type { get; set; }
+        public string Data { get; set; }
+        public DateTime? Processed { get; set; }
     }
 }

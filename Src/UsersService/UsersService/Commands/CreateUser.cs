@@ -2,6 +2,7 @@
 using DataModel.Models.User;
 using Events.Users;
 using FluentValidation;
+using Infrastructure.Outbox;
 using Infrastructure.RabbitMQ;
 using MediatR;
 using System;
@@ -36,12 +37,12 @@ namespace UsersService.Commands
 
         public class Handler : IRequestHandler<Command, Result>
         {
-            private readonly IRabbitMQListener _rabbitListener;
+            private readonly IOutboxListener _outboxListener;
             private readonly DatabaseContext _db;
 
-            public Handler(IRabbitMQListener rabbitEventListener, DatabaseContext db)
+            public Handler(IOutboxListener outboxListener, DatabaseContext db)
             {
-                _rabbitListener = rabbitEventListener;
+                _outboxListener = outboxListener;
                 _db = db;
             }
 
@@ -49,7 +50,7 @@ namespace UsersService.Commands
             {
                 var id = await CreateUser(request);
 
-                await _rabbitListener.Publish(new UserCreated(id)).ConfigureAwait(true);
+                await _outboxListener.Commit(new UserCreated(id)).ConfigureAwait(true);
 
                 var result = new Result
                 {

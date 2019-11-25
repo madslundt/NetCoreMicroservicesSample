@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DataModel
+﻿namespace DataModel
 {
     public class ConnectionStringKeys
     {
         public const string App = "AppConnection";
+
+        public const string Outbox = "OutboxConnection";
     }
 }

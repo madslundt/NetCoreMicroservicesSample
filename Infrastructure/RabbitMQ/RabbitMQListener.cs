@@ -3,8 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RawRabbit;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.RabbitMQ
@@ -13,9 +11,11 @@ namespace Infrastructure.RabbitMQ
     {
         void SubscribeEvent<T>() where T : IEvent;
         Task Publish<T>(T @event) where T : IEvent;
+        Task Publish(string message, string type);
 
         void SubscribeCommand<T>() where T : ICommand;
         Task Send<T>(T @event) where T : ICommand;
+        Task Send(string message, string type);
 
     }
     public class RabbitMQListener : IRabbitMQListener
@@ -70,9 +70,10 @@ namespace Infrastructure.RabbitMQ
             );
         }
 
-        private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration<T>()
+        public static string GetTypeName<T>()
         {
-            var name = typeof(T).Name.ToLower();
+            var name = typeof(T).FullName.ToLower().Replace("+", ".");
+
             if (typeof(T) is IEvent)
             {
                 name += "_event";
@@ -82,6 +83,18 @@ namespace Infrastructure.RabbitMQ
                 name += "_command";
             }
 
+            return name;
+        }
+
+        private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration<T>()
+        {
+            var name = GetTypeName<T>();
+
+            return GetExchangeDeclaration(name);
+        }
+
+        private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration(string name)
+        {
             return e => e
                 .WithName(_options.Exchange.Name)
                 .WithArgument("key", name);
@@ -103,6 +116,27 @@ namespace Infrastructure.RabbitMQ
             );
         }
 
+        public async Task Publish(string message, string type)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                throw new ArgumentNullException(nameof(message), "Event message can not be null.");
+            }
+
+            if (string.IsNullOrWhiteSpace(type))
+            {
+                throw new ArgumentNullException(nameof(type), "Event type can not be null.");
+            }
+
+            await _busClient.PublishAsync(
+                message,
+                cfg => cfg.UsePublishConfiguration(
+                    c => c
+                    .OnDeclaredExchange(GetExchangeDeclaration(type))
+                )
+            );
+        }
+
         public async Task Send<T>(T command) where T : ICommand
         {
             if (command is null)
@@ -115,6 +149,27 @@ namespace Infrastructure.RabbitMQ
                 cfg => cfg.UsePublishConfiguration(
                     c => c
                     .OnDeclaredExchange(GetExchangeDeclaration<T>())
+                )
+            );
+        }
+
+        public async Task Send(string message, string type)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                throw new ArgumentNullException(nameof(message), "Event message can not be null.");
+            }
+
+            if (string.IsNullOrWhiteSpace(type))
+            {
+                throw new ArgumentNullException(nameof(type), "Event type can not be null.");
+            }
+
+            await _busClient.PublishAsync(
+                message,
+                cfg => cfg.UsePublishConfiguration(
+                    c => c
+                    .OnDeclaredExchange(GetExchangeDeclaration(type))
                 )
             );
         }

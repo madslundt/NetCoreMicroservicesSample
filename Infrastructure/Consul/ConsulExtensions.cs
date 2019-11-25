@@ -14,7 +14,7 @@ namespace Infrastructure.Consul
 {
     public static class ConsulExtensions
     {
-        public static void AddConsul(this IServiceCollection services, IConfiguration Configuration)
+        public static IServiceCollection AddConsul(this IServiceCollection services, IConfiguration Configuration)
         {
             var options = new ConsulOptions();
             Configuration.GetSection(nameof(ConsulOptions)).Bind(options);
@@ -25,6 +25,8 @@ namespace Infrastructure.Consul
                 var address = options.Address;
                 consulConfig.Address = new Uri(address);
             }));
+
+            return services;
         }
 
         public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IHostApplicationLifetime lifetime)

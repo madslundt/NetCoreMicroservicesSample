@@ -8,7 +8,7 @@ namespace Infrastructure.RabbitMQ
 {
     public static class RabbitMQExtensions
     {
-        public static void AddRabbitMQ(this IServiceCollection services, IConfiguration Configuration)
+        public static IServiceCollection AddRabbitMQ(this IServiceCollection services, IConfiguration Configuration)
         {
             var options = new RabbitMQOptions();
             Configuration.GetSection(nameof(RabbitMQOptions)).Bind(options);
@@ -20,15 +20,21 @@ namespace Infrastructure.RabbitMQ
             });
 
             services.AddSingleton<IRabbitMQListener, RabbitMQListener>();
+
+            return services;
         }
-        public static void UseRabbitMQSubscribeEvent<T>(this IApplicationBuilder app) where T : IEvent
+        public static IApplicationBuilder UseRabbitMQSubscribeEvent<T>(this IApplicationBuilder app) where T : IEvent
         {
             app.ApplicationServices.GetRequiredService<IRabbitMQListener>().SubscribeEvent<T>();
+
+            return app;
         }
 
-        public static void UseRabbitMQSubscribeCommand<T>(this IApplicationBuilder app) where T : ICommand
+        public static IApplicationBuilder UseRabbitMQSubscribeCommand<T>(this IApplicationBuilder app) where T : ICommand
         {
             app.ApplicationServices.GetRequiredService<IRabbitMQListener>().SubscribeCommand<T>();
+
+            return app;
         }
     }
 }
