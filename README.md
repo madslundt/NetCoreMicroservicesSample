@@ -51,7 +51,7 @@ Events are used when something has happened (eg. when a user was created the eve
 
 Commands are used to do something right away. These are used quite rarely or often not even used.
 
-*Try to use events as these are doesn't require a micro service to know what should happen with other services*
+*Try use events over commands as events don't require the micro services to know what should happen with other services*
 
 RabbitMQ is used for publish/subscribe in order to deliver a message to multiple consumers.
 Outbox has also been added to make sure we save the messages before they are published via RabbitMQ (in case RabbitMQ is not running or they just can't be published). Outbox is set up to MongoDB.
