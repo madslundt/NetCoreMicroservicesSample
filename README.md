@@ -28,6 +28,7 @@
  - [ ] Kubernetes
  - [ ] Kafka
  - [ ] Azure service bus
+ - [ ] Introduce Correlation ID for tracking events
 
 
 ## Run with Docker
