@@ -5,20 +5,9 @@ using RawRabbit;
 using System;
 using System.Threading.Tasks;
 
-namespace Infrastructure.RabbitMQ
+namespace Infrastructure.EventBus.RabbitMQ
 {
-    public interface IRabbitMQListener
-    {
-        void SubscribeEvent<T>() where T : IEvent;
-        Task Publish<T>(T @event) where T : IEvent;
-        Task Publish(string message, string type);
-
-        void SubscribeCommand<T>() where T : ICommand;
-        Task Send<T>(T @event) where T : ICommand;
-        Task Send(string message, string type);
-
-    }
-    public class RabbitMQListener : IRabbitMQListener
+    public class RabbitMQListener : IEventListener
     {
         private readonly IBusClient _busClient;
         private readonly IServiceScopeFactory _serviceFactory;
@@ -70,35 +59,6 @@ namespace Infrastructure.RabbitMQ
             );
         }
 
-        public static string GetTypeName<T>()
-        {
-            var name = typeof(T).FullName.ToLower().Replace("+", ".");
-
-            if (typeof(T) is IEvent)
-            {
-                name += "_event";
-            }
-            else if (typeof(T) is ICommand)
-            {
-                name += "_command";
-            }
-
-            return name;
-        }
-
-        private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration<T>()
-        {
-            var name = GetTypeName<T>();
-
-            return GetExchangeDeclaration(name);
-        }
-
-        private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration(string name)
-        {
-            return e => e
-                .WithName(_options.Exchange.Name)
-                .WithArgument("key", name);
-        }
 
         public async Task Publish<T>(T @event) where T : IEvent
         {
@@ -172,6 +132,20 @@ namespace Infrastructure.RabbitMQ
                     .OnDeclaredExchange(GetExchangeDeclaration(type))
                 )
             );
+        }
+
+        private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration<T>()
+        {
+            var name = EventBusHelper.GetTypeName<T>();
+
+            return GetExchangeDeclaration(name);
+        }
+
+        private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration(string name)
+        {
+            return e => e
+                .WithName(_options.Exchange.Name)
+                .WithArgument("key", name);
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RawRabbit.DependencyInjection.ServiceCollection;
 using RawRabbit.Instantiation;
 
-namespace Infrastructure.RabbitMQ
+namespace Infrastructure.EventBus.RabbitMQ
 {
     public static class RabbitMQExtensions
     {
@@ -19,20 +19,20 @@ namespace Infrastructure.RabbitMQ
                 ClientConfiguration = options
             });
 
-            services.AddSingleton<IRabbitMQListener, RabbitMQListener>();
+            services.AddSingleton<IEventListener, RabbitMQListener>();
 
             return services;
         }
         public static IApplicationBuilder UseRabbitMQSubscribeEvent<T>(this IApplicationBuilder app) where T : IEvent
         {
-            app.ApplicationServices.GetRequiredService<IRabbitMQListener>().SubscribeEvent<T>();
+            app.ApplicationServices.GetRequiredService<IEventListener>().SubscribeEvent<T>();
 
             return app;
         }
 
         public static IApplicationBuilder UseRabbitMQSubscribeCommand<T>(this IApplicationBuilder app) where T : ICommand
         {
-            app.ApplicationServices.GetRequiredService<IRabbitMQListener>().SubscribeCommand<T>();
+            app.ApplicationServices.GetRequiredService<IEventListener>().SubscribeCommand<T>();
 
             return app;
         }

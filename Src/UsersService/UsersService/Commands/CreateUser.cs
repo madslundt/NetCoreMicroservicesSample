@@ -3,7 +3,6 @@ using DataModel.Models.User;
 using Events.Users;
 using FluentValidation;
 using Infrastructure.Outbox;
-using Infrastructure.RabbitMQ;
 using MediatR;
 using System;
 using System.Threading;

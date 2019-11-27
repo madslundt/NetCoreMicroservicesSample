@@ -1,4 +1,5 @@
-﻿using Infrastructure.RabbitMQ;
+﻿using Infrastructure.EventBus;
+using Infrastructure.EventBus.RabbitMQ;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace Infrastructure.Outbox
     {
         private readonly IMongoCollection<OutboxMessage> _outboxMessages;
 
-        public OutboxListener(IRabbitMQListener rabbitMqListener, IOptions<OutboxOptions> options)
+        public OutboxListener(IOptions<OutboxOptions> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             var database = client.GetDatabase(options.Value.DatabaseName);
@@ -26,7 +27,7 @@ namespace Infrastructure.Outbox
         {
             var outboxMessage = new OutboxMessage
             {
-                Type = RabbitMQListener.GetTypeName<T>(),
+                Type = EventBusHelper.GetTypeName<T>(),
                 Data = message is null ? "{}" : JsonConvert.SerializeObject(message, new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.All

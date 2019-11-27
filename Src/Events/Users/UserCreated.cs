@@ -1,4 +1,4 @@
-﻿using Infrastructure.RabbitMQ;
+﻿using Infrastructure.EventBus;
 using System;
 
 namespace Events.Users

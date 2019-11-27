@@ -1,5 +1,5 @@
 ﻿using Events.Users;
-using Infrastructure.RabbitMQ;
+using Infrastructure.EventBus;
 using System.Threading;
 using System.Threading.Tasks;
 

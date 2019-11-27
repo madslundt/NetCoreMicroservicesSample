@@ -1,4 +1,4 @@
-﻿using Infrastructure.RabbitMQ;
+﻿using Infrastructure.EventBus;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox
 {
-    internal sealed class OutboxProcessor : IHostedService
+    internal sealed class OutboxProcessorRabbitMQ : IHostedService
     {
         private readonly IMongoCollection<OutboxMessage> _outboxMessages;
-        private readonly IRabbitMQListener _rabbitMqListener;
+        private readonly IEventListener _eventListener;
         private readonly OutboxOptions _outboxOptions;
         private Timer _timer;
 
-        public OutboxProcessor(IRabbitMQListener rabbitMqListener, IOptions<OutboxOptions> options)
+        public OutboxProcessorRabbitMQ(IEventListener eventListener, IOptions<OutboxOptions> options)
         {
-            _rabbitMqListener = rabbitMqListener;
+            _eventListener = eventListener;
             _outboxOptions = options.Value;
 
             var client = new MongoClient(options.Value.ConnectionString);
@@ -52,7 +52,7 @@ namespace Infrastructure.Outbox
             {
                 foreach (var message in cursor.ToEnumerable())
                 {
-                    await _rabbitMqListener.Publish(message.Data, message.Type);
+                    await _eventListener.Publish(message.Data, message.Type);
                     publishedMessages.Add((id: message.Id, processed: DateTime.UtcNow));
                 }
             }

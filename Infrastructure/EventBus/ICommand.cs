@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Infrastructure.RabbitMQ
+namespace Infrastructure.EventBus
 {
     public interface ICommand : IRequest
     { }

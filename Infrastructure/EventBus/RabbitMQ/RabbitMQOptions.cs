@@ -1,6 +1,6 @@
 ﻿using RawRabbit.Configuration;
 
-namespace Infrastructure.RabbitMQ
+namespace Infrastructure.EventBus.RabbitMQ
 {
     public class RabbitMQOptions : RawRabbitConfiguration
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Events.Users;
-using Infrastructure.RabbitMQ;
+using Infrastructure.EventBus;
 using MediatR;
 using MessagesService.Commands;
 
