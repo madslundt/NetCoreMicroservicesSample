@@ -18,7 +18,7 @@
  - [x] Monitoring (APM)
  - [x] CQRS
  - [x] Validation
- - [x] EventBus
+ - [x] RabbitMQ
  - [x] Data model
  - [x] API Gateway
  - [x] Outbox
@@ -26,6 +26,8 @@
  - [ ] GraphQL
  - [ ] Unit test
  - [ ] Kubernetes
+ - [ ] Kafka
+ - [ ] Azure service bus
 
 
 ## Run with Docker
