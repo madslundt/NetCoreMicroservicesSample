@@ -71,11 +71,9 @@ namespace UsersService
             }
 
             app
-                .UseLogging(Configuration)
+                .UseLogging(Configuration, loggerFactory)
                 .UseSwagger(Configuration)
                 .UseConsul(lifetime);
-
-            loggerFactory.UseLogging();
 
             app.UseRouting();
             app.UseEndpoints(endpoints =>
