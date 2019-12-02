@@ -14,7 +14,7 @@ namespace Infrastructure.EventBus.Kafka
         public KafkaListener(IOptions<KafkaOptions> options)
         {
             _kafkaOptions = options.Value;
-
+            // TODO
             //var consumerConfig = _kafkaOptions.ConsumerOptions.GetType()
             // .GetProperties(BindingFlags.Instance | BindingFlags.Public)
             //      .ToDictionary(prop => prop.Name, prop => prop.GetValue(_kafkaOptions.ConsumerOptions, null));
@@ -36,7 +36,7 @@ namespace Infrastructure.EventBus.Kafka
             };
         }
 
-        public void SubscribeEvent<T>() where T : IEvent
+        public void Subscribe<T>() where T : IEvent
         {
             using (var c = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -69,46 +69,6 @@ namespace Infrastructure.EventBus.Kafka
         }
 
         public async Task Publish(string message, string type)
-        {
-            using (var p = new ProducerBuilder<Null, string>(_producerConfig).Build())
-            {
-                var dr = await p.ProduceAsync(type, new Message<Null, string> { Value = message });
-            }
-        }
-
-        public void SubscribeCommand<T>() where T : ICommand
-        {
-            using (var c = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
-            {
-                var name = EventBusHelper.GetTypeName<T>();
-                c.Subscribe(name);
-
-                try
-                {
-                    while (true)
-                    {
-                        c.Consume();
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    // Ensure the consumer leaves the group cleanly and final offsets are committed.
-                    c.Close();
-                    throw;
-                }
-            }
-        }
-
-        public async Task Send<T>(T command) where T : ICommand
-        {
-            using (var p = new ProducerBuilder<Null, T>(_producerConfig).Build())
-            {
-                var name = EventBusHelper.GetTypeName<T>();
-                var dr = await p.ProduceAsync(name, new Message<Null, T> { Value = command });
-            }
-        }
-
-        public async Task Send(string message, string type)
         {
             using (var p = new ProducerBuilder<Null, string>(_producerConfig).Build())
             {

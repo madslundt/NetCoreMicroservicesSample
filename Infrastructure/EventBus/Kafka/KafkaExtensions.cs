@@ -17,16 +17,9 @@ namespace Infrastructure.EventBus.Kafka
             return services;
         }
 
-        public static IApplicationBuilder UseKafkaSubscribeEvent<T>(this IApplicationBuilder app) where T : IEvent
+        public static IApplicationBuilder UseKafkaSubscribe<T>(this IApplicationBuilder app) where T : IEvent
         {
-            app.ApplicationServices.GetRequiredService<IEventListener>().SubscribeEvent<T>();
-
-            return app;
-        }
-
-        public static IApplicationBuilder UseKafkaSubscribeCommand<T>(this IApplicationBuilder app) where T : ICommand
-        {
-            app.ApplicationServices.GetRequiredService<IEventListener>().SubscribeCommand<T>();
+            app.ApplicationServices.GetRequiredService<IEventListener>().Subscribe<T>();
 
             return app;
         }

@@ -23,16 +23,9 @@ namespace Infrastructure.EventBus.RabbitMQ
 
             return services;
         }
-        public static IApplicationBuilder UseRabbitMQSubscribeEvent<T>(this IApplicationBuilder app) where T : IEvent
+        public static IApplicationBuilder UseRabbitMQSubscribe<T>(this IApplicationBuilder app) where T : IEvent
         {
-            app.ApplicationServices.GetRequiredService<IEventListener>().SubscribeEvent<T>();
-
-            return app;
-        }
-
-        public static IApplicationBuilder UseRabbitMQSubscribeCommand<T>(this IApplicationBuilder app) where T : ICommand
-        {
-            app.ApplicationServices.GetRequiredService<IEventListener>().SubscribeCommand<T>();
+            app.ApplicationServices.GetRequiredService<IEventListener>().Subscribe<T>();
 
             return app;
         }

@@ -23,7 +23,7 @@ namespace Infrastructure.EventBus.RabbitMQ
             _options = options.Value;
         }
 
-        public void SubscribeEvent<T>() where T : IEvent
+        public void Subscribe<T>() where T : IEvent
         {
             _busClient.SubscribeAsync(
                 (Func<T, Task>)(async (msg) =>
@@ -32,24 +32,6 @@ namespace Infrastructure.EventBus.RabbitMQ
                     {
                         var mediator = scope.ServiceProvider.GetService<IMediator>();
                         await mediator.Publish(msg);
-                    }
-                }),
-                cfg => cfg.UseSubscribeConfiguration(
-                    c => c
-                    .OnDeclaredExchange(GetExchangeDeclaration<T>())
-                    .FromDeclaredQueue(q => q.WithName((_options.Queue.Name ?? AppDomain.CurrentDomain.FriendlyName).Trim().Trim('_') + "_" + typeof(T).Name)))
-            );
-        }
-
-        public void SubscribeCommand<T>() where T : ICommand
-        {
-            _busClient.SubscribeAsync(
-                (Func<T, Task>)(async (msg) =>
-                {
-                    using (var scope = _serviceFactory.CreateScope())
-                    {
-                        var mediator = scope.ServiceProvider.GetService<IMediator>();
-                        await mediator.Send(msg);
                     }
                 }),
                 cfg => cfg.UseSubscribeConfiguration(
@@ -77,43 +59,6 @@ namespace Infrastructure.EventBus.RabbitMQ
         }
 
         public async Task Publish(string message, string type)
-        {
-            if (string.IsNullOrWhiteSpace(message))
-            {
-                throw new ArgumentNullException(nameof(message), "Event message can not be null.");
-            }
-
-            if (string.IsNullOrWhiteSpace(type))
-            {
-                throw new ArgumentNullException(nameof(type), "Event type can not be null.");
-            }
-
-            await _busClient.PublishAsync(
-                message,
-                cfg => cfg.UsePublishConfiguration(
-                    c => c
-                    .OnDeclaredExchange(GetExchangeDeclaration(type))
-                )
-            );
-        }
-
-        public async Task Send<T>(T command) where T : ICommand
-        {
-            if (command is null)
-            {
-                throw new ArgumentNullException(nameof(command), "Command can not be null.");
-            }
-
-            await _busClient.PublishAsync(
-                command,
-                cfg => cfg.UsePublishConfiguration(
-                    c => c
-                    .OnDeclaredExchange(GetExchangeDeclaration<T>())
-                )
-            );
-        }
-
-        public async Task Send(string message, string type)
         {
             if (string.IsNullOrWhiteSpace(message))
             {

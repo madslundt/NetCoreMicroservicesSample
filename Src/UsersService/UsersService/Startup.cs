@@ -81,7 +81,7 @@ namespace UsersService
                 endpoints.MapControllers();
             });
 
-            app.UseRabbitMQSubscribeEvent<UserCreated>();
+            app.UseRabbitMQSubscribe<UserCreated>();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Infrastructure.Outbox
 {
@@ -13,18 +12,7 @@ namespace Infrastructure.Outbox
             services.Configure<OutboxOptions>(Configuration.GetSection(nameof(OutboxOptions)));
 
             services.AddSingleton<IOutboxListener, OutboxListener>();
-
-            switch (options.EventBusType)
-            {
-                case EventBusTypeEnum.RabbitMQ:
-                    services.AddHostedService<OutboxProcessorRabbitMQ>();
-                    break;
-                case EventBusTypeEnum.Kafka:
-                    services.AddHostedService<OutboxProcessorKafka>();
-                    break;
-                default:
-                    throw new NotImplementedException(nameof(EventBusTypeEnum));
-            }
+            services.AddHostedService<OutboxProcessor>();
 
             return services;
         }

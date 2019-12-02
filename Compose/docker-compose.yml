@@ -58,14 +58,14 @@ services:
     networks:
      - docker-network
 
-  kafka:
-    image: wurstmeister/kafka
-    container_name: kafka
-    ports:
-     - "9092:9092"
-     - "9093:9093"
-    networks:
-     - docker-network
+  # kafka:
+  #   image: wurstmeister/kafka
+  #   container_name: kafka
+  #   ports:
+  #    - "9092:9092"
+  #    - "9093:9093"
+  #   networks:
+  #    - docker-network
 
   consul:
     image: consul

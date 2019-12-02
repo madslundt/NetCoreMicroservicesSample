@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox
 {
-    internal sealed class OutboxProcessorRabbitMQ : IHostedService
+    internal sealed class OutboxProcessor : IHostedService
     {
         private readonly IMongoCollection<OutboxMessage> _outboxMessages;
         private readonly IEventListener _eventListener;
         private readonly OutboxOptions _outboxOptions;
         private Timer _timer;
 
-        public OutboxProcessorRabbitMQ(IEventListener eventListener, IOptions<OutboxOptions> options)
+        public OutboxProcessor(IEventListener eventListener, IOptions<OutboxOptions> options)
         {
             _eventListener = eventListener;
             _outboxOptions = options.Value;
