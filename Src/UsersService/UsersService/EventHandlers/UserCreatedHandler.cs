@@ -3,7 +3,7 @@ using Infrastructure.EventBus;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UsersService.Events
+namespace UsersService.EventHandlers
 {
     public class UserCreatedHandler
     {

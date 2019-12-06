@@ -23,8 +23,8 @@
  - [x] API Gateway
  - [x] Outbox
  - [x] Swagger
+ - [x] Unit test
  - [ ] GraphQL
- - [ ] Unit test
  - [ ] Kubernetes
  - [ ] Kafka
  - [ ] Azure service bus
