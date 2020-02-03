@@ -28,7 +28,7 @@ namespace Infrastructure.Outbox
             var outboxMessage = new OutboxMessage
             {
                 Type = EventBusHelper.GetTypeName<T>(),
-                Data = message is null ? "{}" : JsonConvert.SerializeObject(message, new JsonSerializerSettings
+                Data = message == null ? "{}" : JsonConvert.SerializeObject(message, new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.All
                 })

@@ -44,7 +44,7 @@ namespace Infrastructure.EventBus.RabbitMQ
 
         public async Task Publish<T>(T @event) where T : IEvent
         {
-            if (@event is null)
+            if (@event == null)
             {
                 throw new ArgumentNullException(nameof(@event), "Event can not be null.");
             }
