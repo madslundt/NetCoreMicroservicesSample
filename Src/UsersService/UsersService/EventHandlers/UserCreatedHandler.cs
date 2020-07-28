@@ -7,9 +7,9 @@ namespace UsersService.EventHandlers
 {
     public class UserCreatedHandler
     {
-        public class Handler : IEventHandler<UserCreated>
+        public class Handler : IEventHandler<UserCreatedEvent>
         {
-            public Task Handle(UserCreated @event, CancellationToken cancellationToken)
+            public Task Handle(UserCreatedEvent @event, CancellationToken cancellationToken)
             {
                 return Task.CompletedTask;
             }

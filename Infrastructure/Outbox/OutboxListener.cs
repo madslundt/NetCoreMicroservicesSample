@@ -1,5 +1,4 @@
 ﻿using Infrastructure.EventBus;
-using Infrastructure.EventBus.RabbitMQ;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -9,7 +8,7 @@ namespace Infrastructure.Outbox
 {
     public interface IOutboxListener
     {
-        Task Commit<T>(T message);
+        Task Commit<T>(T message) where T : IEvent;
     }
     
     public class OutboxListener : IOutboxListener
@@ -23,7 +22,7 @@ namespace Infrastructure.Outbox
             _outboxMessages = database.GetCollection<OutboxMessage>(options.Value.CollectionName);
         }
 
-        public async Task Commit<T>(T message)
+        public async Task Commit<T>(T message) where T : IEvent
         {
             var outboxMessage = new OutboxMessage
             {

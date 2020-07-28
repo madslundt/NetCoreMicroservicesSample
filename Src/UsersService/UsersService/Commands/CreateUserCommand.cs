@@ -7,6 +7,7 @@ using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using UsersService.Repository;
 
 namespace UsersService.Commands
 {
@@ -36,30 +37,14 @@ namespace UsersService.Commands
 
         public class Handler : IRequestHandler<Command, Result>
         {
-            private readonly IOutboxListener _outboxListener;
-            private readonly DatabaseContext _db;
+            private readonly IUserRepository _repository;
 
-            public Handler(IOutboxListener outboxListener, DatabaseContext db)
+            public Handler(IUserRepository repository)
             {
-                _outboxListener = outboxListener;
-                _db = db;
+                _repository = repository;
             }
 
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var id = await CreateUser(request);
-
-                await _outboxListener.Commit(new UserCreated(id)).ConfigureAwait(true);
-
-                var result = new Result
-                {
-                    Id = id
-                };
-
-                return result;
-            }
-
-            private async Task<Guid> CreateUser(Command request)
             {
                 var user = new User
                 {
@@ -68,10 +53,14 @@ namespace UsersService.Commands
                     Email = request.Email
                 };
 
-                _db.Add(user);
-                await _db.SaveChangesAsync();
+                await _repository.CreateUser(user, cancellationToken);
 
-                return user.Id;
+                var result = new Result
+                {
+                    Id = user.Id
+                };
+
+                return result;
             }
         }
     }

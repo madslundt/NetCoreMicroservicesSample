@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System.Reflection;
+using UsersService.Repository;
 
 namespace UsersService
 {
@@ -39,6 +40,8 @@ namespace UsersService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
+
+            services.AddSingleton<IUserRepository, UserRepository>();
 
             services
                 .AddConsul(Configuration)

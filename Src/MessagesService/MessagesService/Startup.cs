@@ -1,4 +1,5 @@
 using DataModel;
+using DataModel.Models.Message;
 using Events;
 using Infrastructure.Consul;
 using Infrastructure.Core;
@@ -6,6 +7,7 @@ using Infrastructure.EventBus.RabbitMQ;
 using Infrastructure.Logging;
 using Infrastructure.Outbox;
 using Infrastructure.Swagger;
+using MessagesService.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +40,8 @@ namespace MessagesService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
+
+            services.AddSingleton<IMessageRepository, MessageRepository>();
 
             services
                 .AddConsul(Configuration)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 
 namespace UnitTest
@@ -11,6 +12,7 @@ namespace UnitTest
         {
             DbContextOptions<T> options = new DbContextOptionsBuilder<T>()
                   .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                  .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                   .Options;
 
             return options;

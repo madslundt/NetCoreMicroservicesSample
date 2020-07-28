@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Messages\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 

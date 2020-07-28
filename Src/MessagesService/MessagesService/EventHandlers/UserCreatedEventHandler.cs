@@ -7,7 +7,7 @@ using MessagesService.Commands;
 
 namespace MessagesService.EventHandlers
 {
-    public class UserCreatedEventHandler : IEventHandler<UserCreated>
+    public class UserCreatedEventHandler : IEventHandler<UserCreatedEvent>
     {
         private readonly IMediator _mediator;
 
@@ -15,7 +15,7 @@ namespace MessagesService.EventHandlers
         {
             _mediator = mediator;
         }
-        public async Task Handle(UserCreated notification, CancellationToken cancellationToken)
+        public async Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)
         {
             var text = "Welcome";
             var command = new CreateMessageCommand.Command(notification.UserId, text);
