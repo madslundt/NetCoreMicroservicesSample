@@ -18,7 +18,7 @@ namespace MessagesService.Controllers
         }
 
         [HttpGet, Route("messages/{id}")]
-        public async Task<IActionResult> GetMessage([FromRoute] Guid id)
+        public async Task<ActionResult<GetMessageQuery.Result>> GetMessage([FromRoute] Guid id)
         {
             var query = new GetMessageQuery.Query(id);
 
@@ -28,7 +28,7 @@ namespace MessagesService.Controllers
         }
 
         [HttpGet, Route("users/{userId}/messages")]
-        public async Task<IActionResult> GetUserMessages([FromRoute] Guid userId)
+        public async Task<ActionResult<GetUserMessagesQuery.Result>> GetUserMessages([FromRoute] Guid userId)
         {
             var query = new GetUserMessagesQuery.Query(userId);
 
@@ -42,7 +42,7 @@ namespace MessagesService.Controllers
             public string Text { get; set; }
         }
         [HttpPost, Route("users/{userId}/messages")]
-        public async Task<IActionResult> CreateUserMessage([FromRoute] Guid userId, [FromBody] CreateUserMessageRequest request)
+        public async Task<ActionResult<CreateMessageCommand.Result>> CreateUserMessage([FromRoute] Guid userId, [FromBody] CreateUserMessageRequest request)
         {
             var command = new CreateMessageCommand.Command(userId, request?.Text);
 

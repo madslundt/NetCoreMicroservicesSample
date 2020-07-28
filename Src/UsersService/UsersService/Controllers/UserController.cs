@@ -18,7 +18,7 @@ namespace UsersService.Controllers
         }
 
         [HttpGet, Route("{id}")]
-        public async Task<IActionResult> GetUser([FromRoute] Guid id)
+        public async Task<ActionResult<GetUserQuery.Result>> GetUser([FromRoute] Guid id)
         {
             var query = new GetUserQuery.Query(id);
 
@@ -28,7 +28,7 @@ namespace UsersService.Controllers
         }
 
         [HttpPost, Route("")]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand.Command user)
+        public async Task<ActionResult<CreateUserCommand.Result>> CreateUser([FromBody] CreateUserCommand.Command user)
         {
             var result = await _mediator.Send(user);
 
