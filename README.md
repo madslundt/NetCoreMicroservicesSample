@@ -24,11 +24,11 @@
  - [x] Outbox
  - [x] Swagger
  - [x] Unit test
- - [ ] GraphQL
+ - [x] Introduce Correlation ID for tracking events
  - [ ] Kubernetes
  - [ ] Kafka
  - [ ] Azure service bus
- - [ ] Introduce Correlation ID for tracking events
+ - [ ] GraphQL
 
 
 ## Run with Docker
