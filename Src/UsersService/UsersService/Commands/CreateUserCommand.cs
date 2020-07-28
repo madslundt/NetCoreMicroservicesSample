@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace UsersService.Commands
 {
-    public class CreateUser
+    public class CreateUserCommand
     {
         public class Command : IRequest<Result>
         {

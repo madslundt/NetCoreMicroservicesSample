@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MessagesService.Commands
 {
-    public class CreateMessage
+    public class CreateMessageCommand
     {
         public class Command : IRequest<Result>
         {

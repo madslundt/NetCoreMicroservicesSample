@@ -3,17 +3,19 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UsersService.Queries
+namespace MessagesService.Queries
 {
-    public class GetUser
+    public class GetMessageQuery
     {
         public class Query : IRequest<Result>
         {
             public Guid Id { get; }
+
             public Query(Guid id)
             {
                 Id = id;
@@ -22,12 +24,13 @@ namespace UsersService.Queries
 
         public class Result
         {
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Email { get; set; }
+            public Guid Id { get; set; }
+            public string Text { get; set; }
+            public Guid UserId { get; set; }
+            public DateTime Created { get; set; }
         }
 
-        public class Validator: AbstractValidator<Query>
+        public class Validator : AbstractValidator<Query>
         {
             public Validator()
             {
@@ -43,28 +46,28 @@ namespace UsersService.Queries
             {
                 _db = db;
             }
-
             public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user = await GetUser(request.Id);
+                var message = await GetMessage(request.Id);
 
-                if (user is null)
+                if (message is null)
                 {
-                    throw new ArgumentNullException($"{nameof(user)} was not found");
+                    throw new ArgumentNullException($"{nameof(message)} was not found");
                 }
 
-                return user;
+                return message;
             }
 
-            private async Task<Result> GetUser(Guid id)
+            private async Task<Result> GetMessage(Guid id)
             {
-                var query = from user in _db.Users
-                            where user.Id == id
+                var query = from message in _db.Messages
+                            where message.Id == id
                             select new Result
                             {
-                                Email = user.Email,
-                                FirstName = user.FirstName,
-                                LastName = user.LastName
+                                Id = message.Id,
+                                UserId = message.UserId,
+                                Text = message.Text,
+                                Created = message.Created
                             };
 
                 var result = await query.FirstOrDefaultAsync();

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RawRabbit.DependencyInjection.ServiceCollection;
 using RawRabbit.Instantiation;
+using System;
 
 namespace Infrastructure.EventBus.RabbitMQ
 {
@@ -26,6 +27,13 @@ namespace Infrastructure.EventBus.RabbitMQ
         public static IApplicationBuilder UseRabbitMQSubscribe<T>(this IApplicationBuilder app) where T : IEvent
         {
             app.ApplicationServices.GetRequiredService<IEventListener>().Subscribe<T>();
+
+            return app;
+        }
+
+        public static IApplicationBuilder UseRabbitMQSubscribe(this IApplicationBuilder app, Type type)
+        {
+            app.ApplicationServices.GetRequiredService<IEventListener>().Subscribe(type);
 
             return app;
         }

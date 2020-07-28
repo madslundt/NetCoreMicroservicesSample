@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Net;
 
-namespace MessagesService.Infrastructure.Filter
+namespace Infrastructure.Core
 {
     public class ExceptionFilter : Attribute, IExceptionFilter
     {

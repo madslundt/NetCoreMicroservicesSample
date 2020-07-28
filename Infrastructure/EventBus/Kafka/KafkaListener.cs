@@ -38,9 +38,14 @@ namespace Infrastructure.EventBus.Kafka
 
         public void Subscribe<T>() where T : IEvent
         {
+            Subscribe(typeof(T));
+        }
+
+        public void Subscribe(Type type)
+        {
             using (var c = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
-                var name = EventBusHelper.GetTypeName<T>();
+                var name = EventBusHelper.GetTypeName(type);
                 c.Subscribe(name);
 
                 try

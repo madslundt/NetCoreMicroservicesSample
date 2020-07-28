@@ -1,21 +1,28 @@
-﻿namespace Infrastructure.EventBus
+﻿using System;
+
+namespace Infrastructure.EventBus
 {
     public static class EventBusHelper
     {
-        public static string GetTypeName<T>()
+        public static string GetTypeName(Type type)
         {
-            var name = typeof(T).FullName.ToLower().Replace("+", ".");
+            var name = type.FullName.ToLower().Replace("+", ".");
 
-            if (typeof(T) is IEvent)
+            if (type is IEvent)
             {
                 name += "_event";
             }
-            else if (typeof(T) is ICommand)
+            else if (type is ICommand)
             {
                 name += "_command";
             }
 
             return name;
+        }
+
+        public static string GetTypeName<T>()
+        {
+            return GetTypeName(typeof(T));
         }
     }
 }

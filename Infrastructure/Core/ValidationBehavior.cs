@@ -3,7 +3,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UsersService.Infrastructure.Pipeline
+namespace Infrastructure.Core
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
@@ -20,7 +20,7 @@ namespace UsersService.Infrastructure.Pipeline
             RequestHandlerDelegate<TResponse> next)
         {
             var validator = _validationFactory.GetValidator(request.GetType());
-            var result = validator?.Validate(request);
+            var result = validator?.Validate(new ValidationContext<TRequest>(request));
 
             if (result != null && !result.IsValid)
             {

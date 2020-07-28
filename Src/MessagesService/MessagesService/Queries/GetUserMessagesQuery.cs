@@ -10,23 +10,27 @@ using System.Threading.Tasks;
 
 namespace MessagesService.Queries
 {
-    public class GetMessage
+    public class GetUserMessagesQuery
     {
         public class Query : IRequest<Result>
         {
-            public Guid Id { get; }
+            public Guid UserId { get; }
 
-            public Query(Guid id)
+            public Query(Guid userId)
             {
-                Id = id;
+                UserId = userId;
             }
         }
 
         public class Result
         {
+            public IEnumerable<Message> Messages { get; set; }
+        }
+
+        public class Message
+        {
             public Guid Id { get; set; }
             public string Text { get; set; }
-            public Guid UserId { get; set; }
             public DateTime Created { get; set; }
         }
 
@@ -34,7 +38,7 @@ namespace MessagesService.Queries
         {
             public Validator()
             {
-                RuleFor(query => query.Id).NotEmpty();
+                RuleFor(query => query.UserId).NotEmpty();
             }
         }
 
@@ -48,29 +52,33 @@ namespace MessagesService.Queries
             }
             public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
             {
-                var message = await GetMessage(request.Id);
+                var messages = await GetMessages(request.UserId);
 
-                if (message is null)
+                if (messages is null)
                 {
-                    throw new ArgumentNullException($"{nameof(message)} was not found");
+                    throw new ArgumentNullException($"{nameof(messages)} was not found");
                 }
 
-                return message;
+                var result = new Result
+                {
+                    Messages = messages
+                };
+
+                return result;
             }
 
-            private async Task<Result> GetMessage(Guid id)
+            private async Task<IEnumerable<Message>> GetMessages(Guid userId)
             {
                 var query = from message in _db.Messages
-                            where message.Id == id
-                            select new Result
+                            where message.UserId == userId
+                            select new Message
                             {
                                 Id = message.Id,
-                                UserId = message.UserId,
                                 Text = message.Text,
                                 Created = message.Created
                             };
 
-                var result = await query.FirstOrDefaultAsync();
+                var result = await query.ToListAsync();
 
                 return result;
             }

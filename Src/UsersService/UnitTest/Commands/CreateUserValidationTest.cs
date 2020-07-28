@@ -14,7 +14,7 @@ namespace UnitTest.Commands
         [Theory]
         [InlineAutoData("")]
         [InlineAutoData(null)]
-        public void Should_throw_ValidationException_When_FirstName_is_empty(string firstName, CreateUser.Command command, MailAddress mailAddress)
+        public void Should_throw_ValidationException_When_FirstName_is_empty(string firstName, CreateUserCommand.Command command, MailAddress mailAddress)
         {
             command.FirstName = firstName;
             command.Email = mailAddress.Address;
@@ -27,7 +27,7 @@ namespace UnitTest.Commands
         [Theory]
         [InlineAutoData("")]
         [InlineAutoData(null)]
-        public void Should_throw_ValidationException_When_LastName_is_empty(string lastName, CreateUser.Command command, MailAddress mailAddress)
+        public void Should_throw_ValidationException_When_LastName_is_empty(string lastName, CreateUserCommand.Command command, MailAddress mailAddress)
         {
             command.LastName = lastName;
             command.Email = mailAddress.Address;
@@ -40,7 +40,7 @@ namespace UnitTest.Commands
         [Theory]
         [InlineAutoData("")]
         [InlineAutoData(null)]
-        public void Should_throw_ValidationException_When_Email_is_empty(string email, CreateUser.Command command)
+        public void Should_throw_ValidationException_When_Email_is_empty(string email, CreateUserCommand.Command command)
         {
             command.Email = email;
 
@@ -51,7 +51,7 @@ namespace UnitTest.Commands
 
         [Theory]
         [InlineAutoData()]
-        public void Should_throw_ValidationException_When_Email_is_invalid(string email, CreateUser.Command command)
+        public void Should_throw_ValidationException_When_Email_is_invalid(string email, CreateUserCommand.Command command)
         {
             command.Email = email;
 

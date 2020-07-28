@@ -20,7 +20,7 @@ namespace MessagesService.Controllers
         [HttpGet, Route("messages/{id}")]
         public async Task<IActionResult> GetMessage([FromRoute] Guid id)
         {
-            var query = new GetMessage.Query(id);
+            var query = new GetMessageQuery.Query(id);
 
             var result = await _mediator.Send(query);
 
@@ -30,7 +30,7 @@ namespace MessagesService.Controllers
         [HttpGet, Route("users/{userId}/messages")]
         public async Task<IActionResult> GetUserMessages([FromRoute] Guid userId)
         {
-            var query = new GetUserMessages.Query(userId);
+            var query = new GetUserMessagesQuery.Query(userId);
 
             var result = await _mediator.Send(query);
 
@@ -44,7 +44,7 @@ namespace MessagesService.Controllers
         [HttpPost, Route("users/{userId}/messages")]
         public async Task<IActionResult> CreateUserMessage([FromRoute] Guid userId, [FromBody] CreateUserMessageRequest request)
         {
-            var command = new CreateMessage.Command(userId, request?.Text);
+            var command = new CreateMessageCommand.Command(userId, request?.Text);
 
             var result = await _mediator.Send(command);
 

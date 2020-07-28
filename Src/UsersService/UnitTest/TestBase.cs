@@ -1,10 +1,10 @@
 ﻿using DataModel;
 using FluentValidation.AspNetCore;
+using Infrastructure.Core;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using UsersService;
-using UsersService.Infrastructure.Pipeline;
 
 namespace UnitTest
 {

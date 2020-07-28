@@ -25,8 +25,13 @@ namespace Infrastructure.EventBus.RabbitMQ
 
         public void Subscribe<T>() where T : IEvent
         {
+            Subscribe(typeof(T));
+        }
+
+        public void Subscribe(Type type)
+        {
             _busClient.SubscribeAsync(
-                (Func<T, Task>)(async (msg) =>
+                (Func<IEvent, Task>)(async (msg) =>
                 {
                     using (var scope = _serviceFactory.CreateScope())
                     {
@@ -36,8 +41,8 @@ namespace Infrastructure.EventBus.RabbitMQ
                 }),
                 cfg => cfg.UseSubscribeConfiguration(
                     c => c
-                    .OnDeclaredExchange(GetExchangeDeclaration<T>())
-                    .FromDeclaredQueue(q => q.WithName((_options.Queue.Name ?? AppDomain.CurrentDomain.FriendlyName).Trim().Trim('_') + "_" + typeof(T).Name)))
+                    .OnDeclaredExchange(GetExchangeDeclaration(type))
+                    .FromDeclaredQueue(q => q.WithName((_options.Queue.Name ?? AppDomain.CurrentDomain.FriendlyName).Trim().Trim('_') + "_" + type.Name)))
             );
         }
 
@@ -81,7 +86,12 @@ namespace Infrastructure.EventBus.RabbitMQ
 
         private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration<T>()
         {
-            var name = EventBusHelper.GetTypeName<T>();
+            return GetExchangeDeclaration(typeof(T));
+        }
+
+        private Action<RawRabbit.Configuration.Exchange.IExchangeDeclarationBuilder> GetExchangeDeclaration(Type type)
+        {
+            var name = EventBusHelper.GetTypeName(type);
 
             return GetExchangeDeclaration(name);
         }
