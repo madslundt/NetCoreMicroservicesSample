@@ -70,7 +70,7 @@
   ],
 
   "GlobalConfiguration": {
-    "RequestIdKey": "OcRequestId",
+    "RequestIdKey": "x-correlation-id",
     "UseServiceDiscovery": true,
     "DownstreamScheme": "http",
     "ServiceDiscoveryProvider": {

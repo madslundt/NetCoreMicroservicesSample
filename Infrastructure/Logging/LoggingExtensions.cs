@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Exceptions;
+using System.Linq;
 
 namespace Infrastructure.Logging
 {
@@ -14,6 +15,8 @@ namespace Infrastructure.Logging
             var logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
+                .Enrich.WithCorrelationIdHeader()
+                .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("swagger")))
                 .ReadFrom.Configuration(Configuration)
             .CreateLogger();
 
