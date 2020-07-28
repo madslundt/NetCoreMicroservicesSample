@@ -1,7 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using DataModel.Models.User;
 using FluentAssertions;
-using Infrastructure.Outbox;
 using Moq;
 using System;
 using System.Threading;
