@@ -52,7 +52,7 @@ RabbitMQ is used for publish/subscribe in order to deliver a message to multiple
 Outbox has also been added to make sure we save the messages before they are published via RabbitMQ (in case RabbitMQ is not running or it can't be reached). Outbox is set up to MongoDB.
 Messages can either be deleted afterwards or kept in MongoDB.
 
-By using the `BaseController` to send commands, events created and added in the request will be committed and published to the event bus.
+By using the `BaseController`, events created and added to Outbox will be committed and published to the event bus at the end of the request.
 
 ## Structure
 - **Api**: Api gateway.
