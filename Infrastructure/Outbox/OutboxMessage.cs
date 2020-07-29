@@ -9,5 +9,6 @@ namespace Infrastructure.Outbox
         public string Type { get; set; }
         public string Data { get; set; }
         public DateTime? Processed { get; set; }
+        public Guid? TransactionId { get; set; }
     }
 }

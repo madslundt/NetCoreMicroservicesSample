@@ -12,10 +12,6 @@ namespace Infrastructure.EventBus
             {
                 name += "_event";
             }
-            else if (type is ICommand)
-            {
-                name += "_command";
-            }
 
             return name;
         }

@@ -12,6 +12,7 @@ namespace Infrastructure.Core
         {
             services.AddMediatR(assembly);
 
+            services.AddScoped<TransactionId>();
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddOptions();

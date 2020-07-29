@@ -1,6 +1,5 @@
 using DataModel;
 using Events;
-using Events.Users;
 using Infrastructure.Consul;
 using Infrastructure.Core;
 using Infrastructure.EventBus.RabbitMQ;
@@ -41,7 +40,7 @@ namespace UsersService
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
 
-            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services
                 .AddConsul(Configuration)

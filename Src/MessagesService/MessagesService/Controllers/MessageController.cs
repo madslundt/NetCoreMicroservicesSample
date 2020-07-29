@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Infrastructure.Core;
+using Infrastructure.Outbox;
+using MediatR;
 using MessagesService.Commands;
 using MessagesService.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -8,14 +10,12 @@ using System.Threading.Tasks;
 namespace MessagesService.Controllers
 {
     [Route("api")]
-    public class MessageController : Controller
+    public class MessageController : BaseController
     {
         private readonly IMediator _mediator;
 
-        public MessageController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public MessageController(IMediator mediator, IOutboxListener outboxListener, TransactionId transactionId) : base(mediator, outboxListener, transactionId)
+        {}
 
         [HttpGet, Route("messages/{id}")]
         public async Task<ActionResult<GetMessageQuery.Result>> GetMessage([FromRoute] Guid id)

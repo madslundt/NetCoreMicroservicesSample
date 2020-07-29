@@ -1,5 +1,6 @@
 ﻿using DataModel;
 using FluentValidation;
+using Infrastructure.EventBus;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,7 +12,7 @@ namespace UsersService.Queries
 {
     public class GetUserQuery
     {
-        public class Query : IRequest<Result>
+        public class Query : IQuery<Result>
         {
             public Guid Id { get; }
             public Query(Guid id)

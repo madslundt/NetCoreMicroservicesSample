@@ -1,8 +1,6 @@
-﻿using DataModel;
-using DataModel.Models.User;
-using Events.Users;
+﻿using DataModel.Models.User;
 using FluentValidation;
-using Infrastructure.Outbox;
+using Infrastructure.EventBus;
 using MediatR;
 using System;
 using System.Threading;
@@ -13,7 +11,7 @@ namespace UsersService.Commands
 {
     public class CreateUserCommand
     {
-        public class Command : IRequest<Result>
+        public class Command : ICommand<Result>
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }

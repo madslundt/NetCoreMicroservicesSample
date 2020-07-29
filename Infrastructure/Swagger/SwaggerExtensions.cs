@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace Infrastructure.Swagger
 {
@@ -21,6 +23,7 @@ namespace Infrastructure.Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(options.Version, options);
+                c.CustomSchemaIds(x => x.FullName);
             });
 
             return services;

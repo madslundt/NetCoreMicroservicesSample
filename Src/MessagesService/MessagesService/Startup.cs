@@ -41,7 +41,7 @@ namespace MessagesService
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
 
-            services.AddSingleton<IMessageRepository, MessageRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
 
             services
                 .AddConsul(Configuration)

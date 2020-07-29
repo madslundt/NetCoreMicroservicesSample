@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Infrastructure.Core;
+using Infrastructure.Outbox;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UsersService.Commands;
@@ -8,29 +11,26 @@ using UsersService.Queries;
 namespace UsersService.Controllers
 {
     [Route("api/users")]
-    public class UserController : Controller
+    public class UserController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public UserController(IMediator mediator)
+        public UserController(IMediator mediator, IOutboxListener outboxListener, TransactionId transactionId) : base(mediator, outboxListener, transactionId)
         {
-            _mediator = mediator;
-        }
 
+        }
         [HttpGet, Route("{id}")]
-        public async Task<ActionResult<GetUserQuery.Result>> GetUser([FromRoute] Guid id)
+        public async Task<ActionResult<GetUserQuery.Result>> GetUser([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var query = new GetUserQuery.Query(id);
 
-            var result = await _mediator.Send(query);
+            var result = await Send(query, cancellationToken);
 
             return Ok(result);
         }
 
         [HttpPost, Route("")]
-        public async Task<ActionResult<CreateUserCommand.Result>> CreateUser([FromBody] CreateUserCommand.Command user)
+        public async Task<ActionResult<CreateUserCommand.Result>> CreateUser([FromBody] CreateUserCommand.Command user, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(user);
+            var result = await Send(user, cancellationToken);
 
             return Ok(result);
         }
