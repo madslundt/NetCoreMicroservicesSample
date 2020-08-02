@@ -1,4 +1,4 @@
-﻿using Infrastructure.Core.Aggregates;
+﻿using Infrastructure.EventStores.Aggregates;
 using Infrastructure.EventStores.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

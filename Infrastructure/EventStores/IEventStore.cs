@@ -1,5 +1,5 @@
-﻿using Infrastructure.Core.Aggregates;
-using Infrastructure.Core.Events;
+﻿using Infrastructure.Core.Events;
+using Infrastructure.EventStores.Aggregates;
 using Infrastructure.EventStores.Projection;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
 ﻿using Events.Users;
-using Infrastructure.Core.Aggregates;
+using Infrastructure.EventStores.Aggregates;
 using System;
 
 namespace UsersService

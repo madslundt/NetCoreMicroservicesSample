@@ -13,7 +13,7 @@ namespace Infrastructure.Core
 {
     public class ExceptionFilter : Attribute, IExceptionFilter
     {
-        private HttpStatusCode MapStatusCode(Exception ex)
+        protected virtual HttpStatusCode MapStatusCode(Exception ex)
         {
             // Status Codes
             if (ex is ArgumentNullException)
@@ -49,7 +49,7 @@ namespace Infrastructure.Core
             _logger = logger;
         }
 
-        public void OnException(ExceptionContext context)
+        public virtual void OnException(ExceptionContext context)
         {
             if (context.Exception is Exception)
             {
@@ -73,7 +73,7 @@ namespace Infrastructure.Core
             }
         }
 
-        private void LogError(ExceptionContext context, int statusCode)
+        protected virtual void LogError(ExceptionContext context, int statusCode)
         {
             var logTitle = $"{context.HttpContext.Request.Path} :: [{statusCode}] {context.Exception.Message}";
             var logError = new

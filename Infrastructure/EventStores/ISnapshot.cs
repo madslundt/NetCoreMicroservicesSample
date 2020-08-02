@@ -1,4 +1,4 @@
-﻿using Infrastructure.Core.Aggregates;
+﻿using Infrastructure.EventStores.Aggregates;
 using System;
 
 namespace Infrastructure.EventStores

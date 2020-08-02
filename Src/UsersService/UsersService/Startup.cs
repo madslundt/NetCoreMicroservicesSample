@@ -45,7 +45,7 @@ namespace UsersService
                 .AddMongoDbEventStore<UserAggregate>(Configuration)
                 .AddOutbox(Configuration)
                 .AddSwagger(Configuration)
-                .AddCore(typeof(Startup), typeof(DatabaseContext));
+                .AddCore(typeof(Startup), typeof(DatabaseContext)); // Types are needed for mediator to work the different projects. In this case startup is added for this project and DatabaseContext for the DataModel project.
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime)

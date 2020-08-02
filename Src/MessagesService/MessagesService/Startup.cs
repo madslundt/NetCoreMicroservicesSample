@@ -2,11 +2,11 @@ using DataModel;
 using Events;
 using Infrastructure.Consul;
 using Infrastructure.Core;
+using Infrastructure.EventStores.MongoDb;
 using Infrastructure.Logging;
 using Infrastructure.MessageBrokers.RabbitMQ;
 using Infrastructure.Outbox;
 using Infrastructure.Swagger;
-using MessagesService.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -39,14 +39,13 @@ namespace MessagesService
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
 
-            services.AddScoped<IMessageRepository, MessageRepository>();
-
             services
                 .AddConsul(Configuration)
                 .AddRabbitMQ(Configuration)
+                .AddMongoDbEventStore<MessageAggregate>(Configuration)
                 .AddOutbox(Configuration)
                 .AddSwagger(Configuration)
-                .AddCore(typeof(Startup), typeof(DatabaseContext));
+                .AddCore(typeof(Startup), typeof(DatabaseContext)); // Types are needed for mediator to work the different projects. In this case startup is added for this project and DatabaseContext for the DataModel project.
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime)

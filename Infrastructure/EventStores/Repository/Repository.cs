@@ -1,5 +1,5 @@
 ﻿using Infrastructure.Core;
-using Infrastructure.Core.Aggregates;
+using Infrastructure.EventStores.Aggregates;
 using Infrastructure.MessageBrokers;
 using Infrastructure.Outbox;
 using System;

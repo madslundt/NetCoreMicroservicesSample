@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Infrastructure.Core.Aggregates
+namespace Infrastructure.EventStores.Aggregates
 {
     public abstract class Aggregate : IAggregate
     {
@@ -11,7 +11,7 @@ namespace Infrastructure.Core.Aggregates
         public int Version { get; protected set; } = 0;
         public virtual string Name => "";
 
-        [NonSerialized] 
+        [NonSerialized]
         private readonly List<IEvent> uncommittedEvents = new List<IEvent>();
 
         protected Aggregate()

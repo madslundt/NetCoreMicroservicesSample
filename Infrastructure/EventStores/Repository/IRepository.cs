@@ -1,4 +1,4 @@
-﻿using Infrastructure.Core.Aggregates;
+﻿using Infrastructure.EventStores.Aggregates;
 using System.Threading.Tasks;
 
 namespace Infrastructure.EventStores.Repository
