@@ -85,8 +85,8 @@ Event store is a database where all events published in the application are stor
 At the moment the only eventstore supported is *MongoDb*.
 
 Besides that it also contain interfaces and abstract classes:
-- **Aggregates** is the aggregate
-- **Projections** is the projections
+- **Aggregates** ...
+- **Projections** ...
 - **Repository** is the repository for the aggregates. This makes sure to store the event to the event store and publish the event to the message broker (if Outbox is added to the service it will use Outbox).
 
 - **Core**: Contain core functionalities and must be imported for other services to work well. This contain aggregate, command, query, and event type, global exception filter
@@ -122,7 +122,6 @@ That also means that the Outbox database should be hosted very close to the serv
 
 In order to publish events to the message broker a hosted service is running in Outbox to look for unpublished events in the interval of every 2 second.
 
-
 #### Swagger
 Swagger is used for API documentation.
 
@@ -140,3 +139,4 @@ A microservice consists of:
  - **Repository**: Repository used when writing to the application. This will also publish the correct events.
 
 Next to the microservice is the data model. This contain the migrations, models and update handlers (if used) for the database.
+
