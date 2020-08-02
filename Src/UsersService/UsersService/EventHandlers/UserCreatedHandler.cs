@@ -1,5 +1,5 @@
 ﻿using Events.Users;
-using Infrastructure.EventBus;
+using Infrastructure.Core.Events;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,3 +16,4 @@ namespace UsersService.EventHandlers
         }
     }
 }
+    

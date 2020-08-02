@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Infrastructure.Core;
-using Infrastructure.Outbox;
-using MediatR;
+using Infrastructure.Core.Commands;
+using Infrastructure.Core.Queries;
 using Microsoft.AspNetCore.Mvc;
 using UsersService.Commands;
 using UsersService.Queries;
@@ -11,18 +10,23 @@ using UsersService.Queries;
 namespace UsersService.Controllers
 {
     [Route("api/users")]
-    public class UserController : BaseController
+    public class UserController : Controller
     {
-        public UserController(IMediator mediator, IOutboxListener outboxListener, TransactionId transactionId) : base(mediator, outboxListener, transactionId)
-        {
+        private readonly IQueryBus _queryBus;
+        private readonly ICommandBus _commandBus;
 
+        public UserController(IQueryBus queryBus, ICommandBus commandBus)
+        {
+            _queryBus = queryBus;
+            _commandBus = commandBus;
         }
+
         [HttpGet, Route("{id}")]
         public async Task<ActionResult<GetUserQuery.Result>> GetUser([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var query = new GetUserQuery.Query(id);
 
-            var result = await Send(query, cancellationToken);
+            var result = await _queryBus.Send(query, cancellationToken);
 
             return Ok(result);
         }
@@ -30,7 +34,7 @@ namespace UsersService.Controllers
         [HttpPost, Route("")]
         public async Task<ActionResult<CreateUserCommand.Result>> CreateUser([FromBody] CreateUserCommand.Command user, CancellationToken cancellationToken)
         {
-            var result = await Send(user, cancellationToken);
+            var result = await _commandBus.Send(user, cancellationToken);
 
             return Ok(result);
         }

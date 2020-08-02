@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Confluent.Kafka" Version="1.5.0" />
     <PackageReference Include="Consul" Version="1.6.1.1" />
     <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.6.1" />
@@ -35,6 +36,10 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.2-dev-10265" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="EventStores\EventStore\" />
   </ItemGroup>
 
 </Project>

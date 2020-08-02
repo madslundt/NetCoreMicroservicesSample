@@ -1,4 +1,5 @@
-﻿using Infrastructure.EventBus;
+﻿using Infrastructure.Core.Events;
+using Infrastructure.MessageBrokers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;

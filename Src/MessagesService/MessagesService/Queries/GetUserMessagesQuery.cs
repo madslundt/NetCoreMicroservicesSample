@@ -1,6 +1,6 @@
 ﻿using DataModel;
 using FluentValidation;
-using MediatR;
+using Infrastructure.Core.Queries;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace MessagesService.Queries
 {
     public class GetUserMessagesQuery
     {
-        public class Query : IRequest<Result>
+        public class Query : IQuery<Result>
         {
             public Guid UserId { get; }
 
@@ -42,7 +42,7 @@ namespace MessagesService.Queries
             }
         }
 
-        public class Handler : IRequestHandler<Query, Result>
+        public class Handler : IQueryHandler<Query, Result>
         {
             private readonly DatabaseContext _db;
 

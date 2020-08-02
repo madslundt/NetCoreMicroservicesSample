@@ -22,7 +22,7 @@ namespace Infrastructure.Swagger
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc(options.Version, options);
+                c.SwaggerDoc(options.VersionName, options);
                 c.CustomSchemaIds(x => x.FullName);
             });
 
@@ -43,7 +43,7 @@ namespace Infrastructure.Swagger
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"/swagger/{options.Version}/swagger.json", options.Title);
+                c.SwaggerEndpoint($"/swagger/{options.VersionName}/swagger.json", options.Title);
                 c.RoutePrefix = options.RoutePrefix;
             });
 

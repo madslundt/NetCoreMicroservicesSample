@@ -1,7 +1,6 @@
-﻿using DataModel;
-using DataModel.Models.Message;
-using FluentValidation;
-using MediatR;
+﻿using FluentValidation;
+using Infrastructure.Core.Commands;
+using Infrastructure.EventStores.Repository;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ namespace MessagesService.Commands
 {
     public class CreateMessageCommand
     {
-        public class Command : IRequest<Result>
+        public class Command : ICommand<Result>
         {
             public Guid UserId { get; }
             public string Text { get; }
@@ -36,39 +35,27 @@ namespace MessagesService.Commands
             }
         }
 
-        public class Handler : IRequestHandler<Command, Result>
+        public class Handler : ICommandHandler<Command, Result>
         {
-            private readonly DatabaseContext _db;
+            private readonly IRepository<MessageAggregate> _repository;
 
-            public Handler(DatabaseContext db)
+            public Handler(IRepository<MessageAggregate> repository)
             {
-                _db = db;
+                _repository = repository;
             }
 
-            public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
             {
-                var id = await CreateMessage(request.UserId, request.Text);
+                var message = MessageAggregate.CreateMessage(command.UserId, command.Text);
+
+                await _repository.Add(message);
 
                 var result = new Result
                 {
-                    Id = id
+                    Id = message.MessageId
                 };
 
                 return result;
-            }
-
-            private async Task<Guid> CreateMessage(Guid userId, string text)
-            {
-                var message = new Message
-                {
-                    UserId = userId,
-                    Text = text
-                };
-
-                _db.Add(message);
-                await _db.SaveChangesAsync();
-
-                return message.Id;
             }
         }
     }

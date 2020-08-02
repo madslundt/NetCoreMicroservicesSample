@@ -1,10 +1,9 @@
 using DataModel;
-using DataModel.Models.Message;
 using Events;
 using Infrastructure.Consul;
 using Infrastructure.Core;
-using Infrastructure.EventBus.RabbitMQ;
 using Infrastructure.Logging;
+using Infrastructure.MessageBrokers.RabbitMQ;
 using Infrastructure.Outbox;
 using Infrastructure.Swagger;
 using MessagesService.Repository;
@@ -16,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using System.Reflection;
 
 namespace MessagesService
 {
@@ -48,7 +46,7 @@ namespace MessagesService
                 .AddRabbitMQ(Configuration)
                 .AddOutbox(Configuration)
                 .AddSwagger(Configuration)
-                .AddCore(typeof(Startup).GetTypeInfo().Assembly);
+                .AddCore(typeof(Startup), typeof(DatabaseContext));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime)

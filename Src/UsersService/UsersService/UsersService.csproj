@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Confluent.Kafka" Version="1.5.0" />
     <PackageReference Include="Consul" Version="1.6.1.1" />
     <PackageReference Include="FluentValidation" Version="9.0.1" />

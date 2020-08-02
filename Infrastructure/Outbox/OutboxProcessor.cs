@@ -1,4 +1,4 @@
-﻿using Infrastructure.EventBus;
+﻿using Infrastructure.MessageBrokers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -46,7 +46,7 @@ namespace Infrastructure.Outbox
 
         public async Task Process()
         {
-            var cursor = await _outboxMessages.Find(Builders<OutboxMessage>.Filter.Where(d => !d.Processed.HasValue && !d.TransactionId.HasValue)).ToCursorAsync();
+            var cursor = await _outboxMessages.Find(Builders<OutboxMessage>.Filter.Where(d => !d.Processed.HasValue)).ToCursorAsync();
             var publishedMessages = new List<(Guid id, DateTime processed)>();
             try
             {

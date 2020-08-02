@@ -2,8 +2,9 @@ using DataModel;
 using Events;
 using Infrastructure.Consul;
 using Infrastructure.Core;
-using Infrastructure.EventBus.RabbitMQ;
+using Infrastructure.EventStores.MongoDb;
 using Infrastructure.Logging;
+using Infrastructure.MessageBrokers.RabbitMQ;
 using Infrastructure.Outbox;
 using Infrastructure.Swagger;
 using Microsoft.AspNetCore.Builder;
@@ -14,8 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using System.Reflection;
-using UsersService.Repository;
 
 namespace UsersService
 {
@@ -40,14 +39,13 @@ namespace UsersService
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
 
-            services.AddScoped<IUserRepository, UserRepository>();
-
             services
                 .AddConsul(Configuration)
                 .AddRabbitMQ(Configuration)
+                .AddMongoDbEventStore<UserAggregate>(Configuration)
                 .AddOutbox(Configuration)
                 .AddSwagger(Configuration)
-                .AddCore(typeof(Startup).GetTypeInfo().Assembly);
+                .AddCore(typeof(Startup), typeof(DatabaseContext));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime)

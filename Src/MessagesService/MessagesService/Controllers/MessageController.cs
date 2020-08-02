@@ -1,6 +1,5 @@
-﻿using Infrastructure.Core;
-using Infrastructure.Outbox;
-using MediatR;
+﻿using Infrastructure.Core.Commands;
+using Infrastructure.Core.Queries;
 using MessagesService.Commands;
 using MessagesService.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -10,19 +9,23 @@ using System.Threading.Tasks;
 namespace MessagesService.Controllers
 {
     [Route("api")]
-    public class MessageController : BaseController
+    public class MessageController : Controller
     {
-        private readonly IMediator _mediator;
+        private readonly IQueryBus _queryBus;
+        private readonly ICommandBus _commandBus;
 
-        public MessageController(IMediator mediator, IOutboxListener outboxListener, TransactionId transactionId) : base(mediator, outboxListener, transactionId)
-        {}
+        public MessageController(IQueryBus queryBus, ICommandBus commandBus)
+        {
+            _queryBus = queryBus;
+            _commandBus = commandBus;
+        }
 
         [HttpGet, Route("messages/{id}")]
         public async Task<ActionResult<GetMessageQuery.Result>> GetMessage([FromRoute] Guid id)
         {
             var query = new GetMessageQuery.Query(id);
 
-            var result = await _mediator.Send(query);
+            var result = await _queryBus.Send(query);
 
             return Ok(result);
         }
@@ -32,7 +35,7 @@ namespace MessagesService.Controllers
         {
             var query = new GetUserMessagesQuery.Query(userId);
 
-            var result = await _mediator.Send(query);
+            var result = await _queryBus.Send(query);
 
             return Ok(result);
         }
@@ -46,7 +49,7 @@ namespace MessagesService.Controllers
         {
             var command = new CreateMessageCommand.Command(userId, request?.Text);
 
-            var result = await _mediator.Send(command);
+            var result = await _commandBus.Send(command);
 
             return Ok(result);
         }

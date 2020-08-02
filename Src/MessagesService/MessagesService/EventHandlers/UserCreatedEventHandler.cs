@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Events.Users;
-using Infrastructure.EventBus;
+using Infrastructure.Core.Events;
 using MediatR;
 using MessagesService.Commands;
 

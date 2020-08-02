@@ -7,14 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using UsersService;
-using UsersService.Repository;
 
 namespace UnitTest
 {
     public class TestBase : IDisposable
     {
         protected readonly IMediator _mediator;
-        protected readonly Mock<IUserRepository> _repositoryMock;
         protected readonly Mock<IOutboxListener> _outboxMock;
         protected readonly DatabaseContext _db;
 
@@ -36,9 +34,6 @@ namespace UnitTest
             // Service provider
             var serviceProvider = services.BuildServiceProvider();
             _mediator = serviceProvider.GetService<IMediator>();
-
-            // Repository
-            _repositoryMock = new Mock<IUserRepository>();
 
             // Outbox
             _outboxMock = new Mock<IOutboxListener>();

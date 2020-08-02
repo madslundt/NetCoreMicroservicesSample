@@ -16,5 +16,7 @@ namespace DataModel.Models.User
         public UserStatusEnum Status { get; set; } = UserStatusEnum.WaitingConfirmation;
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
+
+        
     }
 }

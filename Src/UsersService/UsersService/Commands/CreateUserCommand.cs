@@ -1,11 +1,12 @@
-﻿using DataModel.Models.User;
+﻿using Events.Users;
 using FluentValidation;
-using Infrastructure.EventBus;
+using Infrastructure.Core.Commands;
+using Infrastructure.EventStores.Repository;
+using Infrastructure.Outbox;
 using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using UsersService.Repository;
 
 namespace UsersService.Commands
 {
@@ -33,29 +34,23 @@ namespace UsersService.Commands
             }
         }
 
-        public class Handler : IRequestHandler<Command, Result>
+        public class Handler : ICommandHandler<Command, Result>
         {
-            private readonly IUserRepository _repository;
+            private readonly IRepository<UserAggregate> _repository;
 
-            public Handler(IUserRepository repository)
+            public Handler(IRepository<UserAggregate> repository)
             {
                 _repository = repository;
             }
-
-            public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
             {
-                var user = new User
-                {
-                    FirstName = request.FirstName,
-                    LastName = request.LastName,
-                    Email = request.Email
-                };
+                var user = UserAggregate.CreateUser(command.FirstName, command.LastName, command.Email);
 
-                await _repository.CreateUser(user, cancellationToken);
+                await _repository.Add(user);
 
                 var result = new Result
                 {
-                    Id = user.Id
+                    Id = user.UserId
                 };
 
                 return result;

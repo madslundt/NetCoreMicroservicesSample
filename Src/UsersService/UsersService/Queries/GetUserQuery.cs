@@ -1,7 +1,6 @@
 ﻿using DataModel;
 using FluentValidation;
-using Infrastructure.EventBus;
-using MediatR;
+using Infrastructure.Core.Queries;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -36,7 +35,7 @@ namespace UsersService.Queries
             }
         }
 
-        public class Handler : IRequestHandler<Query, Result>
+        public class Handler : IQueryHandler<Query, Result>
         {
             private readonly DatabaseContext _db;
 
