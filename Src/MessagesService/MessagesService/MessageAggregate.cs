@@ -6,7 +6,6 @@ namespace MessagesService
 {
     public class MessageAggregate : Aggregate
     {
-        public Guid MessageId { get; private set; }
         public Guid UserId { get; private set; }
         public string Text { get; private set; }
 
@@ -34,7 +33,7 @@ namespace MessagesService
 
         private void Apply(MessageCreatedEvent @event)
         {
-            MessageId = @event.MessageId;
+            Id = @event.MessageId;
             UserId = @event.UserId;
             Text = @event.Text;
         }

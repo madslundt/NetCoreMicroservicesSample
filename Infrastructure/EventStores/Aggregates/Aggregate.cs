@@ -7,8 +7,9 @@ namespace Infrastructure.EventStores.Aggregates
 {
     public abstract class Aggregate : IAggregate
     {
-        public Guid AggregateId { get; protected set; } = Guid.NewGuid();
+        public Guid Id { get; protected set; }
         public int Version { get; protected set; } = 0;
+        public DateTime Created { get; protected set; }
         public virtual string Name => "";
 
         [NonSerialized]
@@ -29,6 +30,7 @@ namespace Infrastructure.EventStores.Aggregates
         protected virtual void Enqueue(IEvent @event)
         {
             Version++;
+            Created = DateTime.UtcNow;
             uncommittedEvents.Add(@event);
         }
     }

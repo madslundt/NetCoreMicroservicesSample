@@ -13,11 +13,7 @@ namespace UsersService.Queries
     {
         public class Query : IQuery<Result>
         {
-            public Guid Id { get; }
-            public Query(Guid id)
-            {
-                Id = id;
-            }
+            public Guid Id { get; set; }
         }
 
         public class Result
@@ -44,13 +40,13 @@ namespace UsersService.Queries
                 _db = db;
             }
 
-            public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result> Handle(Query query, CancellationToken cancellationToken)
             {
-                var user = await GetUser(request.Id);
+                var user = await GetUser(query.Id);
 
                 if (user is null)
                 {
-                    throw new ArgumentNullException($"{nameof(user)} was not found");
+                    throw new ArgumentNullException($"{nameof(user)} was not found by id '{query.Id}'");
                 }
 
                 return user;

@@ -15,8 +15,6 @@ namespace DataModel.Models.User
         public UserStatusRef UserStatusRef { get; set; }
         public UserStatusEnum Status { get; set; } = UserStatusEnum.WaitingConfirmation;
 
-        public DateTime Created { get; set; } = DateTime.UtcNow;
-
-        
+        public DateTime Created { get; set; } = DateTime.UtcNow;       
     }
 }

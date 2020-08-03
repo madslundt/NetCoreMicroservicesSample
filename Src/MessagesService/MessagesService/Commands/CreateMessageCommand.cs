@@ -52,7 +52,7 @@ namespace MessagesService.Commands
 
                 var result = new Result
                 {
-                    Id = message.MessageId
+                    Id = message.Id
                 };
 
                 return result;

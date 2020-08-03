@@ -6,8 +6,10 @@ namespace Infrastructure.EventStores.Aggregates
 {
     public interface IAggregate
     {
-        Guid AggregateId { get; }
+        Guid Id { get; }
         int Version { get; }
+        DateTime Created { get; }
+
         IEnumerable<IEvent> DequeueUncommittedEvents();
 
     }

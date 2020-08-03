@@ -4,7 +4,7 @@ using System;
 
 namespace Events.Messages
 {
-    public class MessageCreatedEvent : IEvent
+    public class MessageCreatedEvent : Event
     {
         public Guid MessageId { get; set; }
         public Guid UserId { get; set; }
@@ -14,8 +14,8 @@ namespace Events.Messages
         {
             public Validator()
             {
-                RuleFor(cmd => cmd.UserId).Empty();
-                RuleFor(cmd => cmd.Text).Empty();
+                RuleFor(e => e.UserId).NotEmpty();
+                RuleFor(e => e.Text).NotEmpty();
             }
         }
     }

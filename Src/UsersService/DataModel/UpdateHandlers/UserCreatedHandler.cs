@@ -15,6 +15,7 @@ namespace DataModel.UpdateHandlers
         {
             _db = db;
         }
+
         public async Task Handle(UserCreatedEvent @event, CancellationToken cancellationToken)
         {
             var user = Mapping.Map<UserCreatedEvent, User>(@event);

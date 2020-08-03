@@ -20,5 +20,10 @@ namespace Infrastructure.Core.Commands
 
             return result;
         }
+
+        public virtual async Task Send(ICommand command, CancellationToken cancellationToken = default)
+        {
+            await _mediator.Send(command);
+        }
     }
 }

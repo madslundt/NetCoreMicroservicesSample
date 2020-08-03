@@ -24,11 +24,27 @@ namespace UsersService.Controllers
         [HttpGet, Route("{id}")]
         public async Task<ActionResult<GetUserQuery.Result>> GetUser([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            var query = new GetUserQuery.Query(id);
+            var query = new GetUserQuery.Query
+            {
+                Id = id
+            };
 
             var result = await _queryBus.Send(query, cancellationToken);
 
             return Ok(result);
+        }
+
+        [HttpDelete, Route("{id}")]
+        public async Task<ActionResult<GetUserQuery.Result>> DeleteUser([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var command = new DeleteUserCommand.Command
+            {
+                Id = id
+            };
+
+            await _commandBus.Send(command, cancellationToken);
+
+            return Ok();
         }
 
         [HttpPost, Route("")]

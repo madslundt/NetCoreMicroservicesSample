@@ -50,7 +50,7 @@ namespace UsersService.Commands
 
                 var result = new Result
                 {
-                    Id = user.UserId
+                    Id = user.Id
                 };
 
                 return result;

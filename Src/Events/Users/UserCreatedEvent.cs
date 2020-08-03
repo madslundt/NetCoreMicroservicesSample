@@ -1,5 +1,4 @@
-﻿using Elastic.Apm.Api;
-using FluentValidation;
+﻿using FluentValidation;
 using Infrastructure.Core.Events;
 using System;
 
@@ -16,10 +15,10 @@ namespace Events.Users
         {
             public Validator()
             {
-                RuleFor(cmd => cmd.UserId).Empty();
-                RuleFor(cmd => cmd.FirstName).Empty();
-                RuleFor(cmd => cmd.LastName).Empty();
-                RuleFor(cmd => cmd.Email).Empty().EmailAddress();
+                RuleFor(e => e.UserId).NotEmpty();
+                RuleFor(e => e.FirstName).NotEmpty();
+                RuleFor(e => e.LastName).NotEmpty();
+                RuleFor(e => e.Email).NotEmpty().EmailAddress();
             }
         }
     }

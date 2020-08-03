@@ -7,6 +7,8 @@ namespace Infrastructure.EventStores
     {
         public static object InvokeIfExists<T>(this T item, string methodName, object param)
         {
+            var methods = item.GetType()
+                    .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             var method = item.GetType()
                     .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     .Where(m =>
@@ -16,7 +18,7 @@ namespace Infrastructure.EventStores
                         return
                         m.Name == methodName
                         && parameters.Length == 1
-                        && parameters.Single().ParameterType == param.GetType();
+                        && parameters.Single()?.ParameterType == param.GetType();
                     })
                     .SingleOrDefault();
 

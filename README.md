@@ -142,6 +142,7 @@ Besides that it also contain interfaces and abstract classes:
 Logging is using Serilog and ELK APM.
 
 `LoggingExtensions.AddLogging` and `UseLogging` can be used to include logging in the application.
+`UseSerilog` must be used in *Program.cs*.
 
 #### MessageBrokers
 Message broker is used to publish and subscribe to events across services. This is to allow services send events to each other.

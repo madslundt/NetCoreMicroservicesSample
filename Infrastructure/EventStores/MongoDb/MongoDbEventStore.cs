@@ -1,4 +1,5 @@
-﻿using Infrastructure.Core.Events;
+﻿using FluentValidation;
+using Infrastructure.Core.Events;
 using Infrastructure.EventStores.Aggregates;
 using Infrastructure.EventStores.MongoDb;
 using Infrastructure.EventStores.Projection;
@@ -19,12 +20,14 @@ namespace Infrastructure.EventStores
         private readonly IMongoCollection<StreamState> _streamStates;
         private readonly IList<ISnapshot> snapshots = new List<ISnapshot>();
         private readonly IList<IProjection> projections = new List<IProjection>();
+        private readonly IValidatorFactory _validationFactory;
 
-        public MongoDbEventStore(IOptions<MongoDbEventStoreOptions> options)
+        public MongoDbEventStore(IOptions<MongoDbEventStoreOptions> options, IValidatorFactory validationFactory)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             var database = client.GetDatabase(options.Value.DatabaseName);
             _streamStates = CreateOrGetCollection(database, options.Value.CollectionName);
+            _validationFactory = validationFactory;
         }
 
         private IMongoCollection<StreamState> CreateOrGetCollection(IMongoDatabase database, string collectionName)
@@ -61,11 +64,29 @@ namespace Infrastructure.EventStores
 
             foreach (var @event in events)
             {
-                aggregate.InvokeIfExists("Apply", @event);
+                aggregate.InvokeIfExists("Apply", DeserializeObject(@event?.Data));
                 aggregate.SetIfExists(nameof(IAggregate.Version), ++v);
             }
 
             return aggregate;
+        }
+
+        public virtual async Task<ICollection<TAggregate>> AggregateStream<TAggregate>(ICollection<Guid> ids) where TAggregate : IAggregate
+        {
+            var aggregates = new List<TAggregate>();
+            foreach (var id in ids)
+            {
+                var aggregate = (TAggregate)Activator.CreateInstance(typeof(TAggregate), true);
+
+                var @event = await GetEvent(id);
+
+                aggregate.InvokeIfExists("Apply", DeserializeObject(@event?.Data));
+                aggregate.SetIfExists(nameof(IAggregate.Version), @event.Version + 1);
+
+                aggregates.Add(aggregate);
+            }
+
+            return aggregates;
         }
 
         public virtual async Task AppendEvent<TStream>(Guid streamId, IEvent @event, int? expectedVersion = null, Func<StreamState, Task> action = null)
@@ -106,6 +127,14 @@ namespace Infrastructure.EventStores
             }
         }
 
+        private static IEvent DeserializeObject(string obj)
+        {
+            return JsonConvert.DeserializeObject<IEvent>(obj, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+        }
+
         public virtual async Task<IEnumerable<StreamState>> GetEvents(Guid streamId, int? version = null, DateTime? createdUtc = null)
         {
             var filter = Builders<StreamState>.Filter.Where(d => d.Id == streamId /*&& (!version.HasValue || d.Version == version) && (!createdUtc.HasValue || d.CreatedUtc == createdUtc)*/);
@@ -119,9 +148,9 @@ namespace Infrastructure.EventStores
             return result;
         }
 
-        public virtual async Task<StreamState> GetStreamState(Guid streamId)
+        public virtual async Task<StreamState> GetEvent(Guid streamId)
         {
-            var cursor = await _streamStates.Find(Builders<StreamState>.Filter.Where(d => d.Id == streamId)).ToCursorAsync();
+            var cursor = await _streamStates.Find(Builders<StreamState>.Filter.Where(d => d.Id == streamId)).SortByDescending(d => d.Version).ToCursorAsync();
 
             var result = await cursor.FirstOrDefaultAsync();
 
@@ -135,7 +164,16 @@ namespace Infrastructure.EventStores
 
             foreach (var @event in events)
             {
-                await AppendEvent<TAggregate>(aggregate.AggregateId, @event, initialVersion++, action);
+                initialVersion++;
+
+                var validator = _validationFactory.GetValidator(@event.GetType());
+                var result = validator?.Validate(new ValidationContext<IEvent>(@event));
+                if (result != null && !result.IsValid)
+                {
+                    continue;
+                }
+
+                await AppendEvent<TAggregate>(aggregate.Id, @event, initialVersion - 1, action);
 
                 foreach (var projection in projections.Where(
                     projection => projection.Handles.Contains(@event.GetType())))
@@ -147,6 +185,14 @@ namespace Infrastructure.EventStores
             snapshots
                 .FirstOrDefault(snapshot => snapshot.Handles == typeof(TAggregate))?
                 .Handle(aggregate);
+        }
+
+        public virtual async Task Store<TAggregate>(ICollection<TAggregate> aggregates, Func<StreamState, Task> action = null) where TAggregate : IAggregate
+        {
+            foreach (var aggregate in aggregates)
+            {
+                await Store(aggregate, action);
+            }
         }
     }
 }

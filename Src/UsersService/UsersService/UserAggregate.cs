@@ -6,7 +6,6 @@ namespace UsersService
 {
     public class UserAggregate : Aggregate
     {
-        public Guid UserId { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string Email { get; private set; }
@@ -35,10 +34,25 @@ namespace UsersService
         }
 
 
+        public void DeleteUser()
+        {
+            var @event = new UserDeletedEvent
+            {
+                UserId = this.Id
+            };
+
+            Enqueue(@event);
+            Apply(@event);
+        }
+
+        public void Apply(UserDeletedEvent @event)
+        {
+            Id = @event.Id;
+        }
 
         public void Apply(UserCreatedEvent @event)
         {
-            UserId = @event.UserId;
+            Id = @event.UserId;
             FirstName = @event.FirstName;
             LastName = @event.LastName;
             Email = @event.Email;
