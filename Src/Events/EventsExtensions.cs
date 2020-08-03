@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Core.Events;
 using Infrastructure.MessageBrokers;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +16,7 @@ namespace Events
 
             foreach (var type in types)
             {
-                app.ApplicationServices.GetRequiredService<IEventListener>().Subscribe(type);
+                app.UseSubscribeEvent(type);
             }
 
             return app;

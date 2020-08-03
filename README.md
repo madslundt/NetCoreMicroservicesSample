@@ -47,8 +47,33 @@ All of this is optional in the application and it is possible to only use parts 
 - **Src/Events**: Contain all events sent to the event bus.
 - **Infrastructure**: Infrastructure for microservices (eg. setup RabbitMQ, Consul, Logging, etc.)
 
+### Api
+Api gateway is using Ocelot to have a unified point of entry to all microservices.
+Configuration for this can be found in `ocelot.json`.
+
+### Microservice
+Microservices are REST APIs and are created without any knowledge to each other. If a microservice wants to notify other services it simply publishes an event and the services subscribing to this event can take action on it using publish/subscribe with RabbitMQ.
+
+A microservice consists of:
+ - **Controllers**: API endpoints for the microservice.
+ - **Queries**: Queries used to get data when client wants to read data.
+ - **Commands**: Commands used to write data when client wants to modify data.
+ - **EventHandlers**: Handlers for events to take action when events are being published.
+ - **Repository**: Repository used when writing to the application. This will also publish the correct events.
+
+Next to the microservice is the data model. This contain the migrations, models and update handlers (if using event sourcing) for the database.
+
+
 ### Infrastructure
 Infrastructure contains the logic for the different services and keeps most of the boiler code hidden from the services.
+
+- [Consul](#Consul)
+- [Core](#Core)
+- [Eventstore](#Eventstore)
+- [Logging](#Logging)
+- [MessageBrokers](#MessageBrokers)
+- [Outbox](#Outbox)
+- [Swagger](#Swagger)
 
 #### Consul
 Consul is used as service discovery. This is used by the services and the API gateway in order to call other services by name/id, rather than by uri.
@@ -70,6 +95,8 @@ Appsettings for consul looks like this
 - **Tags**: is optional and is by default empty.
 - **Address** is required and must include uri schema, host and port (eg. http://localhost:8500).
 
+`AddConsul` and `UseConsul` can be used in order to include it in the application.
+
 
 #### Core
 Core contain basic functionalities and must be imported most of the other services to work well. Core functionalities are:
@@ -81,19 +108,20 @@ Core contain basic functionalities and must be imported most of the other servic
 - **Mapping** contain functionality to map one object into a class.
 - **ValidationBehavior** contain validation and is added as a mediator pipeline. This makes sure to run validation if such is added to the request.
 
+`AddCore` can be used with a type from each project that needs to include CQRS.
+
 #### Eventstores
 Event store is a database where all events published in the application are stored. This is used with eventsourcing and will be a write model for the application.
 
 At the moment the only eventstore supported is *MongoDb*.
 
 Besides that it also contain interfaces and abstract classes:
-- **Aggregates** ...
-- **Projections** ...
+- **Aggregates** is a set of related entities and value objects that model a single thing (or related set of things) which need to remain internally consistent.
 - **Repository** is the repository for the aggregates. This makes sure to store the event to the event store and publish the event to the message broker (if Outbox is added to the service it will use Outbox).
 
-- **Core**: Contain core functionalities and must be imported for other services to work well. This contain aggregate, command, query, and event type, global exception filter
+- **Core**: Contain core functionalities and must be imported for other services to work well. This contain aggregate, command, query, and event type, global exception filter.
 
-##### MongoDb appsettings
+##### MongoDb
 ```
 {
     "MongoDbEventStoreOptions": {
@@ -108,13 +136,23 @@ Besides that it also contain interfaces and abstract classes:
 - **CollectionName** is optional and is by default 'Events'.
 - **ConnectionString**: is required and must include uri schema, host and port (eg. mongodb://localhost:27017)
 
+`AddMongoDbEventStore` can be used with the aggregate as the type and the Configuration to include event store with MongoDb in the application.
+
 #### Logging
 Logging is using Serilog and ELK APM.
+
+`LoggingExtensions.AddLogging` and `UseLogging` can be used to include logging in the application.
 
 #### MessageBrokers
 Message broker is used to publish and subscribe to events across services. This is to allow services send events to each other.
 
 At the moment the only message brokers supported is *RabbitMQ*
+
+`UseSubscribeEvent` can be used to subscribe to a specific event.
+`UseSubscribeAllEvents` can be used to subscribe to all events in the application.
+
+##### RabbitMQ
+`AddRabbitMQ` can be used to include RabbitMQ in the application.
 
 #### Outbox
 Outbox is used to store events before they are published to the message broker. The events are either removed after being published to the message broker or kept with the *processed* property set to the datetime, in UTC, it was published to the message broker.
@@ -124,22 +162,10 @@ That also means that the Outbox database should be hosted very close to the serv
 
 In order to publish events to the message broker a hosted service is running in Outbox to look for unpublished events in the interval of every 2 second.
 
+`AddOutbox` can be used to include Outbox with MongoDb in the application.
+
 #### Swagger
 Swagger is used for API documentation.
 
-### Api
-Api gateway is using Ocelot to have a unified point of entry to all microservices.
-Configuration for this can be found in `ocelot.json`.
-
-### Microservice
-Microservices are REST APIs and are created without any knowledge to each other. If a microservice wants to notify other services it simply publishes an event and the services subscribing to this event can take action on it using publish/subscribe with RabbitMQ.
-
-A microservice consists of:
- - **Controllers**: API endpoints for the microservice.
- - **Queries**: Queries used to get data when client wants to read data.
- - **Commands**: Commands used to write data when client wants to modify data.
- - **EventHandlers**: Handlers for events to take action when events are being published.
- - **Repository**: Repository used when writing to the application. This will also publish the correct events.
-
-Next to the microservice is the data model. This contain the migrations, models and update handlers (if using event sourcing) for the database.
+`AddSwagger` and `UseSwagger` can be used to include swagger in the application.
 
