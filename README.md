@@ -25,18 +25,20 @@ After that you can run the services with default `appsettings.json`.
 ## Architecture
 ![Microservices architecture](microservices_architecture.png "Microservices archivecture")
 
-The architecture shows that there is one public API (API gateway). This is accessible for the clients.
+The architecture shows that there is one public API (API gateway). This is accessible for the clients. This is done via HTTP request/response.
 
-Each microservice hosts its own REST API that is only accessible via its Public API. Each microservice are within its own domain and have directly access to its own dependencies such as databases, stores, etc. This also means that a microservice can have zero, one or multiple databases (mssql, postgres, mongo, etc.). All these dependencies are not accessible for other microservices. In fact microservices are decoupled from each other.
-Microservices are event based which means they can publish and/or subscribe to any events. By doing so one or more microservices can publish an event which can be received by one or more microservices unknown for the publisher.
+The API gateway then routes the HTTP request to the correct microservice.
+The HTTP request is received by the microservice that hosts its own REST API. Each microservice is running within its own domain and has directly access to its own dependencies such as databases, stores, etc. All these dependencies are only accessible for the microservice and not to the outside world. In fact microservices are decoupled from each other. This also means that the microservice does not rely on other parts in the system and can run independently of other services.
 
-Events are used when something did happen (eg. when a user was created the event could be called UserCreated).
+Microservices are event based which means they can publish and/or subscribe to any events occurring in the setup. By using this approach for communicating between services, each microservice does not need to know about the other services or handle errors occurred in other microservices.
 
-RabbitMQ is used for publish/subscribe in order to deliver a message to multiple consumers.
-Outbox has also been added to make sure we save the messages before they are published via RabbitMQ (in case RabbitMQ is not running or it can't be reached). Outbox is set up to MongoDB.
-Messages can either be deleted afterwards or kept in MongoDB.
+Event sourcing can be used to store events that have been published from the service performantly. By using the event sourcing approach the database will become the read model of the service. The only write operations done in the read model are when subscribed events need to update or insert data to the database.
 
-Event sourcing is also possible. This will divide each microservice into having a write and read model.
+Outbox can be used as a landing zone for events before they are published to the message broker. Events in the Outbox database are published to the message broker via a background service. If the connection to the message broker is broken, the background service will try until the event has been published successfully. After the event has been published successfully to the message broker, the event in the Outbox database is either removed or kept with a flag that it has been published successfully.
+
+The Outbox database and the event store have essentially the same data format. The major difference is that the event sourcing is meant to be a permanent and immutable store of domain events, while the Outbox database is meant to be highly ephemeral and only be a landing zone for domain events to be captured inside change events and forwarded to downstream consumers.
+
+All of this is optional in the application and it is possible to only use parts that the service needs. Eg. if the service does not want event sourcing via an event store but rather have a read/write database (like in the user service).
 
 ## Structure
 - **Api**: Api gateway.
@@ -46,7 +48,7 @@ Event sourcing is also possible. This will divide each microservice into having 
 - **Infrastructure**: Infrastructure for microservices (eg. setup RabbitMQ, Consul, Logging, etc.)
 
 ### Infrastructure
-Infrastructure contains the logic for the different services and keeps most of the boiler code away from our services.
+Infrastructure contains the logic for the different services and keeps most of the boiler code hidden from the services.
 
 #### Consul
 Consul is used as service discovery. This is used by the services and the API gateway in order to call other services by name/id, rather than by uri.
@@ -127,9 +129,10 @@ Swagger is used for API documentation.
 
 ### Api
 Api gateway is using Ocelot to have a unified point of entry to all microservices.
+Configuration for this can be found in `ocelot.json`.
 
 ### Microservice
-Microservices are just REST APIs and are created without any knowledge to each other. If a microservice wants to notify another service it simply publishes an event and the services subscribing to this event can take action on it using publish/subscribe with RabbitMQ.
+Microservices are REST APIs and are created without any knowledge to each other. If a microservice wants to notify other services it simply publishes an event and the services subscribing to this event can take action on it using publish/subscribe with RabbitMQ.
 
 A microservice consists of:
  - **Controllers**: API endpoints for the microservice.
@@ -138,5 +141,5 @@ A microservice consists of:
  - **EventHandlers**: Handlers for events to take action when events are being published.
  - **Repository**: Repository used when writing to the application. This will also publish the correct events.
 
-Next to the microservice is the data model. This contain the migrations, models and update handlers (if used) for the database.
+Next to the microservice is the data model. This contain the migrations, models and update handlers (if using event sourcing) for the database.
 
