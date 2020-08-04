@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using Infrastructure.Core.Events;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -39,8 +40,8 @@ namespace Infrastructure.MessageBrokers.Kafka
 
                     using (var scope = _serviceFactory.CreateScope())
                     {
-                        var eventBus = scope.ServiceProvider.GetService<IEventBus>();
-                        eventBus.Publish(@event);
+                        var mediator = scope.ServiceProvider.GetService<IMediator>();
+                        mediator.Publish(@event);
                     }
                 }
             }

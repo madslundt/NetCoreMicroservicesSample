@@ -42,7 +42,6 @@ namespace UsersService
             services
                 .AddConsul(Configuration)
                 .AddRabbitMQ(Configuration)
-                .AddMongoDbEventStore<UserAggregate>(Configuration)
                 .AddOutbox(Configuration)
                 .AddSwagger(Configuration)
                 .AddCore(typeof(Startup), typeof(EventsExtensions), typeof(DatabaseContext)); // Types are needed for mediator to work the different projects. In this case startup is added for this project and DatabaseContext for the DataModel project.

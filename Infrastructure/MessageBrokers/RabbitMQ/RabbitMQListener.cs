@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Core.Events;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RawRabbit;
@@ -35,8 +36,8 @@ namespace Infrastructure.MessageBrokers.RabbitMQ
                 {
                     using (var scope = _serviceFactory.CreateScope())
                     {
-                        var eventBus = scope.ServiceProvider.GetService<IEventBus>();
-                        await eventBus.Publish(msg);
+                        var mediator = scope.ServiceProvider.GetService<IMediator>();
+                        await mediator.Publish(msg);
                     }
                 }),
                 cfg => cfg.UseSubscribeConfiguration(

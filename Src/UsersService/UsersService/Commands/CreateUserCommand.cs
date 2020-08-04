@@ -1,9 +1,10 @@
-﻿using Events.Users;
+﻿using DataModel;
+using DataModel.Models.User;
+using Events.Users;
 using FluentValidation;
+using Infrastructure.Core;
 using Infrastructure.Core.Commands;
-using Infrastructure.EventStores.Repository;
-using Infrastructure.Outbox;
-using MediatR;
+using Infrastructure.Core.Events;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,17 +37,30 @@ namespace UsersService.Commands
 
         public class Handler : ICommandHandler<Command, Result>
         {
-            private readonly IRepository<UserAggregate> _repository;
+            private readonly DatabaseContext _db;
+            private readonly IEventBus _eventBus;
 
-            public Handler(IRepository<UserAggregate> repository)
+            public Handler(DatabaseContext db, IEventBus eventBus)
             {
-                _repository = repository;
+                _db = db;
+                _eventBus = eventBus;
             }
+
             public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
             {
-                var user = UserAggregate.CreateUser(command.FirstName, command.LastName, command.Email);
+                var user = new User
+                {
+                    FirstName = command.FirstName,
+                    LastName = command.LastName,
+                    Email = command.Email
+                };
 
-                await _repository.Add(user);
+                await _db.AddAsync(user, cancellationToken);
+
+                var @event = Mapping.Map<User, UserCreatedEvent>(user);
+                @event.UserId = user.Id;
+
+                await _db.SaveChangesAndCommit(@event);
 
                 var result = new Result
                 {
