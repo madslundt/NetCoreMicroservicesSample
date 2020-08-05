@@ -1,5 +1,7 @@
-# NetCoreMicroservices
+# NetCoreMicroservicesSample
+Example implementing an API with microservices using CQRS pattern, event sourcing, message brokers, etc.
 
+Work in progress.
 
 ## Requirements
  - **Consul**: Service discovery
@@ -38,13 +40,21 @@ Outbox can be used as a landing zone for events before they are published to the
 
 The Outbox database and the event store have essentially the same data format. The major difference is that the event sourcing is meant to be a permanent and immutable store of domain events, while the Outbox database is meant to be highly ephemeral and only be a landing zone for domain events to be captured inside change events and forwarded to downstream consumers.
 
-All of this is optional in the application and it is possible to only use parts that the service needs. Eg. if the service does not want event sourcing via an event store but rather have a read/write database (like in the user service).
+All of this is optional in the application and it is possible to only use what that the service needs. Eg. if the service does not want event sourcing via an event store but rather have a read/write database (like in the *UsersService*).
+
+<br />
+
+In this example **UsersService** is not storing events in an event store. The service are publishing and subscribing to events in order for other services to take action when necessary.
+<br />
+**MoviesService** and **ReviewsService** are storing events in an event store, and are fully implementing CQRS with ES.
 
 ## Structure
-- **Api**: Api gateway.
-- **Compose**: Docker compose to set up all surroundings (eg. RabbitMQ, SQL Server, etc.)
-- **Src/\*Service**: All microservices in their own solution.
-- **Src/Events**: Contain all events sent to the event bus.
+How this repository is structured:
+
+- **API/APIGateway**: Api gateway.
+- **Compose**: Docker compose to set up all dependencies (eg. RabbitMQ, SQL Server, etc.)
+- **Src/\*Service**: Microservices in their own solution.
+- **Src/Events**: All events that are published and subscribed to.
 - **Infrastructure**: Infrastructure for microservices (eg. setup RabbitMQ, Consul, Logging, etc.)
 
 ### Api
@@ -62,6 +72,8 @@ A microservice consists of:
  - **Repository**: Repository used when writing to the application. This will also publish the correct events.
 
 Next to the microservice is the data model. This contain the migrations, models and update handlers (if using event sourcing) for the database.
+<br />
+Update handlers in the data model are listening to an event, just like the event handlers. The only job for the update handlers is to update the read model in order for the events to populate to the read model.
 
 
 ### Infrastructure
@@ -142,6 +154,7 @@ Besides that it also contain interfaces and abstract classes:
 Logging is using Serilog and ELK APM.
 
 `LoggingExtensions.AddLogging` and `UseLogging` can be used to include logging in the application.
+<br />
 `UseSerilog` must be used in *Program.cs*.
 
 #### MessageBrokers
@@ -150,6 +163,7 @@ Message broker is used to publish and subscribe to events across services. This 
 At the moment the only message brokers supported is *RabbitMQ*
 
 `UseSubscribeEvent` can be used to subscribe to a specific event.
+<br />
 `UseSubscribeAllEvents` can be used to subscribe to all events in the application.
 
 ##### RabbitMQ
