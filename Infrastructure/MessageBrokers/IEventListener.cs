@@ -7,8 +7,8 @@ namespace Infrastructure.MessageBrokers
     public interface IEventListener
     {
         void Subscribe(Type type);
-        void Subscribe<T>() where T : IEvent;
-        Task Publish<T>(T @event) where T : IEvent;
+        void Subscribe<TEvent>() where TEvent : IEvent;
+        Task Publish<TEvent>(TEvent @event) where TEvent : IEvent;
         Task Publish(string message, string type);
     }
 }

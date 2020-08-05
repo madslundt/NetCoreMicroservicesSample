@@ -20,6 +20,14 @@ namespace Infrastructure.Core.Events
             _eventListener = eventListener;
         }
 
+        public virtual async Task PublishLocal(params IEvent[] events)
+        {
+            foreach (var @event in events)
+            {
+                await _mediator.Publish(@event);
+            }
+        }
+
         public virtual async Task Commit(params IEvent[] events)
         {
             foreach (var @event in events)

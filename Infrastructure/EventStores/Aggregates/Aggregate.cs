@@ -9,7 +9,7 @@ namespace Infrastructure.EventStores.Aggregates
     {
         public Guid Id { get; protected set; }
         public int Version { get; protected set; } = 0;
-        public DateTime Created { get; protected set; }
+        public DateTime CreatedUtc { get; protected set; }
         public virtual string Name => "";
 
         [NonSerialized]
@@ -30,7 +30,7 @@ namespace Infrastructure.EventStores.Aggregates
         protected virtual void Enqueue(IEvent @event)
         {
             Version++;
-            Created = DateTime.UtcNow;
+            CreatedUtc = DateTime.UtcNow;
             uncommittedEvents.Add(@event);
         }
     }

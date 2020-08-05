@@ -19,7 +19,7 @@ namespace DataModel
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<UserStatusRef> UserStatuses { get; set; }
+        public DbSet<UserStatusRef> UserStatusRefs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

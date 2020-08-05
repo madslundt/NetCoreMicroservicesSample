@@ -1,11 +1,11 @@
 ﻿using Infrastructure.Core.Queries;
 using Microsoft.AspNetCore.Mvc;
-using MoviesService.Queries;
+using ReviewsService.Queries;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MoviesService.Controllers
+namespace ReviewsService.Controllers
 {
     [Route("api/users")]
     public class UserController : Controller
@@ -17,10 +17,10 @@ namespace MoviesService.Controllers
             _queryBus = queryBus;
         }
 
-        [HttpGet, Route("{userId}/movies")]
-        public async Task<ActionResult<GetMoviesByUserIdQuery.Result>> GetMoviesByUserId([FromRoute] Guid userId, CancellationToken cancellationToken)
+        [HttpGet, Route("{userId}/reviews")]
+        public async Task<ActionResult<GetReviewsByUserIdQuery.Result>> GetReviewsByMovieId([FromRoute] Guid userId, CancellationToken cancellationToken)
         {
-            var query = new GetMoviesByUserIdQuery.Query
+            var query = new GetReviewsByUserIdQuery.Query
             {
                 UserId = userId
             };

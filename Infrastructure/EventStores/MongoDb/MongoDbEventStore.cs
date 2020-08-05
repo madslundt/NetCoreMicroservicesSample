@@ -66,6 +66,7 @@ namespace Infrastructure.EventStores
             {
                 aggregate.InvokeIfExists("Apply", DeserializeObject(@event?.Data));
                 aggregate.SetIfExists(nameof(IAggregate.Version), ++v);
+                aggregate.SetIfExists(nameof(IAggregate.CreatedUtc), @event.CreatedUtc);
             }
 
             return aggregate;
@@ -76,13 +77,7 @@ namespace Infrastructure.EventStores
             var aggregates = new List<TAggregate>();
             foreach (var id in ids)
             {
-                var aggregate = (TAggregate)Activator.CreateInstance(typeof(TAggregate), true);
-
-                var @event = await GetEvent(id);
-
-                aggregate.InvokeIfExists("Apply", DeserializeObject(@event?.Data));
-                aggregate.SetIfExists(nameof(IAggregate.Version), @event.Version + 1);
-
+                var aggregate = await AggregateStream<TAggregate>(id);
                 aggregates.Add(aggregate);
             }
 

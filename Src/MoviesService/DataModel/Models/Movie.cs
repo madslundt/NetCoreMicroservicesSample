@@ -12,6 +12,6 @@ namespace DataModel.Models
         public int Year { get; set; }
         public Guid UserId { get; set; }
 
-        public DateTime Created { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
     }
 }

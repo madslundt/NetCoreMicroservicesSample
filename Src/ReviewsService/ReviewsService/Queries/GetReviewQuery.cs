@@ -1,4 +1,5 @@
 ﻿using DataModel;
+using DataModel.Models.Rating;
 using FluentValidation;
 using Infrastructure.Core.Queries;
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MoviesService.Queries
+namespace ReviewsService.Queries
 {
-    public class GetMovieQuery
+    public class GetReviewQuery
     {
         public class Query : IQuery<Result>
         {
@@ -18,8 +19,10 @@ namespace MoviesService.Queries
 
         public class Result
         {
-            public string Title { get; set; }
-            public int Year { get; set; }
+            public Guid UserId { get; set; }
+            public Guid MovieId { get; set; }
+            public string Text { get; set; }
+            public RatingEnum Rating { get; set; }
             public DateTime CreatedUtc { get; set; }
         }
 
@@ -41,25 +44,27 @@ namespace MoviesService.Queries
             }
             public async Task<Result> Handle(Query query, CancellationToken cancellationToken)
             {
-                var movie = await GetMovie(query.Id);
+                var review = await GetReview(query.Id);
 
-                if (movie is null)
+                if (review is null)
                 {
-                    throw new ArgumentNullException($"Could not find {nameof(movie)} with id '{query.Id}'");
+                    throw new ArgumentNullException($"Could not find {nameof(review)} with id '{query.Id}'");
                 }
 
-                return movie;
+                return review;
             }
 
-            private async Task<Result> GetMovie(Guid id)
+            private async Task<Result> GetReview(Guid id)
             {
-                var query = from movie in _db.Movies
-                            where movie.Id == id
+                var query = from review in _db.Reviews
+                            where review.Id == id
                             select new Result
                             {
-                                Title = movie.Title,
-                                Year = movie.Year,
-                                CreatedUtc = movie.CreatedUtc
+                                UserId = review.UserId,
+                                MovieId = review.MovieId,
+                                Text = review.Text,
+                                Rating = review.Rating,
+                                CreatedUtc = review.CreatedUtc
                             };
 
                 var result = await query.FirstOrDefaultAsync();

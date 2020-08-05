@@ -8,7 +8,7 @@ namespace Infrastructure.EventStores.Aggregates
     {
         Guid Id { get; }
         int Version { get; }
-        DateTime Created { get; }
+        DateTime CreatedUtc { get; }
 
         IEnumerable<IEvent> DequeueUncommittedEvents();
 
