@@ -37,9 +37,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Events\Events.csproj" />
-    <ProjectReference Include="..\DataModel\DataModel.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructure\Infrastructure.csproj">
+      <Private></Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Events\Events.csproj">
+      <Private></Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DataModel\DataModel.csproj">
+      <Private></Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,4 @@
-﻿using System;
-using DataModel.Models.User;
-
-namespace DataModel.Models.UserStatus
+﻿namespace DataModel.Models.UserStatus
 {
     public class UserStatusRef
     {

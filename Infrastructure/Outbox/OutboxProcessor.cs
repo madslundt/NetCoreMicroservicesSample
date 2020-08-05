@@ -47,28 +47,21 @@ namespace Infrastructure.Outbox
         public async Task Process()
         {
             var cursor = await _outboxMessages.Find(Builders<OutboxMessage>.Filter.Where(d => !d.Processed.HasValue)).ToCursorAsync();
-            var publishedMessages = new List<(Guid id, DateTime processed)>();
+            var publishedMessageIds = new List<Guid>();
             try
             {
                 foreach (var message in cursor.ToEnumerable())
                 {
                     await _eventListener.Publish(message.Data, message.Type);
-                    publishedMessages.Add((id: message.Id, processed: DateTime.UtcNow));
+                    publishedMessageIds.Add(message.Id);
+                    await _outboxMessages.UpdateOneAsync(Builders<OutboxMessage>.Filter.Eq(d => d.Id, message.Id), Builders<OutboxMessage>.Update.Set(x => x.Processed, DateTime.UtcNow));
                 }
             }
             finally
             {
                 if (_outboxOptions.DeleteAfter)
                 {
-                    var ids = publishedMessages.Select(message => message.id);
-                    await _outboxMessages.DeleteManyAsync(Builders<OutboxMessage>.Filter.In(d => d.Id, ids));
-                }
-                else
-                {
-                    foreach (var publishedMessage in publishedMessages)
-                    {
-                        await _outboxMessages.UpdateOneAsync(Builders<OutboxMessage>.Filter.Eq(d => d.Id, publishedMessage.id), Builders<OutboxMessage>.Update.Set(x => x.Processed, publishedMessage.processed));
-                    }
+                    await _outboxMessages.DeleteManyAsync(Builders<OutboxMessage>.Filter.In(d => d.Id, publishedMessageIds));
                 }
             }
         }

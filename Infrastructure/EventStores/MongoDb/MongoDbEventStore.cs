@@ -105,7 +105,7 @@ namespace Infrastructure.EventStores
 
             var stream = new StreamState
             {
-                Id = streamId,
+                AggregateId = streamId,
                 Version = version,
                 Type = MessageBrokersHelper.GetTypeName(@event.GetType()),
                 Data = @event == null ? "{}" : JsonConvert.SerializeObject(@event, new JsonSerializerSettings
@@ -132,7 +132,7 @@ namespace Infrastructure.EventStores
 
         public virtual async Task<IEnumerable<StreamState>> GetEvents(Guid streamId, int? version = null, DateTime? createdUtc = null)
         {
-            var filter = Builders<StreamState>.Filter.Where(d => d.Id == streamId /*&& (!version.HasValue || d.Version == version) && (!createdUtc.HasValue || d.CreatedUtc == createdUtc)*/);
+            var filter = Builders<StreamState>.Filter.Where(d => d.AggregateId == streamId /*&& (!version.HasValue || d.Version == version) && (!createdUtc.HasValue || d.CreatedUtc == createdUtc)*/);
 
             var cursor = await _streamStates
                 .Find(filter)
@@ -168,7 +168,7 @@ namespace Infrastructure.EventStores
                     continue;
                 }
 
-                await AppendEvent<TAggregate>(aggregate.Id, @event, initialVersion - 1, action);
+                await AppendEvent<TAggregate>(aggregate.Id, @event, initialVersion, action);
 
                 foreach (var projection in projections.Where(
                     projection => projection.Handles.Contains(@event.GetType())))

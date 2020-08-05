@@ -8,14 +8,14 @@ namespace DataModel.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "UserStatuses",
+                name: "UserStatusRefs",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserStatuses", x => x.Id);
+                    table.PrimaryKey("PK_UserStatusRefs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -27,31 +27,31 @@ namespace DataModel.Migrations
                     LastName = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false)
+                    CreatedUtc = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_UserStatuses_Status",
+                        name: "FK_Users_UserStatusRefs_Status",
                         column: x => x.Status,
-                        principalTable: "UserStatuses",
+                        principalTable: "UserStatusRefs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
-                table: "UserStatuses",
+                table: "UserStatusRefs",
                 column: "Id",
                 value: 0);
 
             migrationBuilder.InsertData(
-                table: "UserStatuses",
+                table: "UserStatusRefs",
                 column: "Id",
                 value: 1);
 
             migrationBuilder.InsertData(
-                table: "UserStatuses",
+                table: "UserStatusRefs",
                 column: "Id",
                 value: 2);
 
@@ -73,7 +73,7 @@ namespace DataModel.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "UserStatuses");
+                name: "UserStatusRefs");
         }
     }
 }

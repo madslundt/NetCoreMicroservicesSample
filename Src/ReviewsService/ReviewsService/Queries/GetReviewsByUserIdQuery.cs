@@ -61,12 +61,13 @@ namespace ReviewsService.Queries
                 return result;
             }
 
-            private async Task<ICollection<ReviewItem>> GetReviews(Guid id)
+            private async Task<ICollection<ReviewItem>> GetReviews(Guid userId)
             {
                 var query = from review in _db.Reviews
-                            where review.Id == id
+                            where review.UserId == userId
                             select new ReviewItem
                             {
+                                Id = review.Id,
                                 MovieId = review.MovieId,
                                 Text = review.Text,
                                 Rating = review.Rating,
