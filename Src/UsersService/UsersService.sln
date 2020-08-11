@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsersService", "UsersService\UsersService.csproj", "{BD40257E-CB41-46B6-9798-858323855486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsersService", "UsersService.csproj", "{BD40257E-CB41-46B6-9798-858323855486}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModel", "DataModel\DataModel.csproj", "{81A0425C-0C95-4839-8954-92ECCA96EDA3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Events", "..\Events\Events.csproj", "{F9251D74-5927-444A-B900-80183F447CA6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "..\..\Infrastructure\Infrastructure.csproj", "{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{F316D7F1-00E2-4B2A-BEDF-FBF2962742DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1674ED29-B0E7-43CB-87EB-1A51A1C6A274}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F316D7F1-00E2-4B2A-BEDF-FBF2962742DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F316D7F1-00E2-4B2A-BEDF-FBF2962742DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F316D7F1-00E2-4B2A-BEDF-FBF2962742DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F316D7F1-00E2-4B2A-BEDF-FBF2962742DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

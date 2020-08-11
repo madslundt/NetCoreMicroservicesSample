@@ -1,0 +1,39 @@
+{
+  "GlobalConfiguration": {
+    "RequestIdKey": "x-correlation-id",
+    "UseServiceDiscovery": true,
+    "DownstreamScheme": "http",
+    "ServiceDiscoveryProvider": {
+      "Type": "Consul",
+      "Host": "localhost",
+      "Port": 8500,
+      "ConfigurationKey": "ApiGateway_1"
+    }
+  },
+
+  "RateLimitOptions": {
+    "ClientWhitelist": [],
+    "EnableRateLimiting": true,
+    "Period": "1s",
+    "HttpStatusCode": 428,
+    "QuotaExceededMessage": "Too many requests...",
+    "PeriodTimespan": 1,
+    "Limit": 1
+  },
+
+  "HttpHandlerOptions": {
+    "UseTracing": true
+  },
+
+  "LoadBalancerOptions": {
+    "Type": "LeastConnection",
+    "Key": null,
+    "Expiry": 0
+  },
+
+  "QoSOptions": {
+    "ExceptionsAllowedBeforeBreaking": 3,
+    "DurationOfBreak": 10000,
+    "TimeoutValue": 5000
+  }
+}

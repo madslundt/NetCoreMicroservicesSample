@@ -1,13 +1,13 @@
 version: '3.5'
 
 services:
-  api:
-    build: ../API/APIGateway
-    container_name: api
-    ports:
-      - "8080:80"
-    networks:
-      - docker-network
+#  api:
+#    build: ../API/APIGateway
+#    container_name: api
+#    ports:
+#      - "8080:80"
+#    networks:
+#      - docker-network
 
 
   # users_service:

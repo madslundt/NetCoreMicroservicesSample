@@ -26,7 +26,7 @@ namespace Infrastructure.Outbox
         public virtual async Task Commit<TEvent>(TEvent @event) where TEvent : IEvent
         {
             var outboxMessage = new OutboxMessage
-            {
+            { 
                 Type = MessageBrokersHelper.GetTypeName<TEvent>(),
                 Data = @event == null ? "{}" : JsonConvert.SerializeObject(@event, new JsonSerializerSettings
                 {

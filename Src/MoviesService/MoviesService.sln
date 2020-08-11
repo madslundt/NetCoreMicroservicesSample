@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoviesService", "MoviesService\MoviesService.csproj", "{2157BAF5-D90D-49C5-8EEB-57062CCA1D46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoviesService", "MoviesService.csproj", "{2157BAF5-D90D-49C5-8EEB-57062CCA1D46}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Events", "..\Events\Events.csproj", "{046DCC18-B1DE-49B2-B2DA-F284B29BCA85}"
 EndProject

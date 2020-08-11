@@ -1,0 +1,39 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/users/{userId}/movies/{everything}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/users/{userId}/movies/{everything}",
+      "ServiceName": "MoviesService",
+      "SwaggerKey": "MoviesService",
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/users/{userId}/reviews/{everything}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/users/{userId}/reviews/{everything}",
+      "ServiceName": "ReviewsService",
+      "SwaggerKey": "ReviewsService",
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/users/{everything}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/users/{everything}",
+      "ServiceName": "UsersService",
+      "SwaggerKey": "UsersService",
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    }
+  ]
+}

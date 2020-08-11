@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewsService", "ReviewsService\ReviewsService.csproj", "{39100278-9C2C-4C53-8D2D-696CEEC99D70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewsService", "ReviewsService.csproj", "{39100278-9C2C-4C53-8D2D-696CEEC99D70}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Events", "..\Events\Events.csproj", "{A451BF13-B6BA-4368-B39A-F3C435E25567}"
 EndProject
