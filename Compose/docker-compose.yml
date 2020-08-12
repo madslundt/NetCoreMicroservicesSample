@@ -1,30 +1,57 @@
 version: '3.5'
 
 services:
-#  api:
-#    build: ../API/APIGateway
-#    container_name: api
-#    ports:
-#      - "8080:80"
-#    networks:
-#      - docker-network
+  api:
+    build: ../ApiGateway
+    container_name: api
+    restart: on-failure
+    ports:
+      - "8080:80"
+    networks:
+      - docker-network
+    depends_on:
+      - consul
 
 
-  # users_service:
-  #   build: ../Src/UsersService/UsersService
-  #   container_name: users_service
-  #   networks:
-  #     - docker-network
-  # movies_service:
-  #   build: ../Src/MoviesService/MoviesService
-  #   container_name: movies_service
-  #   networks:
-  #     - docker-network
-  # reviews_service:
-  #   build: ../Src/ReviewsService/ReviewsService
-  #   container_name: reviews_service
-  #   networks:
-  #     - docker-network
+  users_service:
+    build:
+      context: ../
+      dockerfile: Src/UsersService/Dockerfile
+    container_name: users_service
+    restart: on-failure
+    networks:
+      - docker-network
+    depends_on:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
+  movies_service:
+    build:
+      context: ../
+      dockerfile: Src/MoviesService/Dockerfile
+    container_name: movies_service
+    restart: on-failure
+    networks:
+      - docker-network
+    depends_on:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
+  reviews_service:
+    build:
+      context: ../
+      dockerfile: Src/ReviewsService/Dockerfile
+    container_name: reviews_service
+    restart: on-failure
+    networks:
+      - docker-network
+    depends_on:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
 
   db:
    image: mcr.microsoft.com/mssql/server:2019-latest

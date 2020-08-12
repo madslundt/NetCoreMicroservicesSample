@@ -1,13 +1,17 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["UsersService/UsersService.csproj", "UsersService/"]
-RUN dotnet restore "UsersService/UsersService.csproj"
+COPY ["Src/UsersService/UsersService.csproj", "Src/UsersService/"]
+COPY ["Src/UsersService/DataModel/DataModel.csproj", "Src/UsersService/DataModel/"]
+COPY ["Src/Events/Events.csproj", "Src/Events/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+RUN dotnet restore "Src/UsersService/UsersService.csproj"
 COPY . .
-WORKDIR "/src/UsersService"
+WORKDIR "/src/Src/UsersService"
 RUN dotnet build "UsersService.csproj" -c Release -o /app/build
 
 FROM build AS publish

@@ -30,6 +30,7 @@
       "UpstreamPathTemplate": "/api/users/{everything}",
       "ServiceName": "UsersService",
       "SwaggerKey": "UsersService",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"

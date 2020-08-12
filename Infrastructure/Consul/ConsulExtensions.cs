@@ -50,9 +50,9 @@ namespace Infrastructure.Consul
             var uri = new Uri(address);
             var registration = new AgentServiceRegistration()
             {
-                ID = $"{consulConfig.Value.Id ?? Guid.NewGuid()}-{uri.Port}",
+                ID = consulConfig.Value.Id ?? Guid.NewGuid().ToString(),
                 Name = consulConfig.Value.Name ?? AppDomain.CurrentDomain.FriendlyName.Trim().Trim('_'),
-                Address = $"{uri.Scheme}://{uri.Host}",
+                Address = uri.Host,
                 Port = uri.Port,
                 Tags = consulConfig.Value.Tags
             };

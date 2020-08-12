@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using MMLib.SwaggerForOcelot.DependencyInjection;
+using System.IO;
 
 namespace ApiGateway
 {
@@ -17,9 +18,24 @@ namespace ApiGateway
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
+                    //var ocelotJson = new JObject();
+                    //foreach (var jsonFilename in Directory.EnumerateFiles("Configuration", "ocelot.*.json", SearchOption.AllDirectories))
+                    //{
+                    //    using (StreamReader fi = File.OpenText(jsonFilename))
+                    //    {
+                    //        var json = JObject.Parse(fi.ReadToEnd());
+                    //        ocelotJson.Merge(json, new JsonMergeSettings
+                    //        {
+                    //            MergeArrayHandling = MergeArrayHandling.Union
+                    //        });
+                    //    }
+                    //}
+
+                    //File.WriteAllText("ocelot.json", ocelotJson.ToString());
+
                     config
                         .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json",
                             optional: true, reloadOnChange: true)
                         .AddOcelotWithSwaggerSupport(folder: "Configuration")

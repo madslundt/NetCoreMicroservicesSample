@@ -4,10 +4,11 @@
     "UseServiceDiscovery": true,
     "DownstreamScheme": "http",
     "ServiceDiscoveryProvider": {
-      "Type": "Consul",
-      "Host": "localhost",
+      "Type": "PollConsul",
+      "Host": "consul",
       "Port": 8500,
-      "ConfigurationKey": "ApiGateway_1"
+      "ConfigurationKey": "ApiGateway_1",
+      "PollingInterval": 100
     }
   },
 
