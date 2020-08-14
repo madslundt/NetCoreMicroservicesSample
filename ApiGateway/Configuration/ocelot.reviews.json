@@ -1,6 +1,17 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/reviews",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/reviews",
+      "ServiceName": "ReviewsService",
+      "SwaggerKey": "ReviewsService",
+      "FileCacheOptions": { "TtlSeconds": 15 },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/reviews/{everything}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/reviews/{everything}",

@@ -22,7 +22,7 @@ namespace Infrastructure.Consul
 
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
             {
-                var address = options.Address;
+                var address = options.ConsulAddress;
                 consulConfig.Address = new Uri(address);
             }));
 
@@ -42,16 +42,24 @@ namespace Infrastructure.Consul
             var logger = loggingFactory.CreateLogger<IApplicationBuilder>();
 
             // Get server IP address
-            var features = app.Properties["server.Features"] as FeatureCollection;
-            var addresses = features.Get<IServerAddressesFeature>();
-            var address = addresses.Addresses.First();
+            var address = consulConfig.Value.ServiceAddress;
+
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                var features = app.Properties["server.Features"] as FeatureCollection;
+                var addresses = features.Get<IServerAddressesFeature>();
+                address = addresses.Addresses.First();
+
+                Console.WriteLine($"Could not find service address in config. Using '{address}'");
+            }
 
             // Register service with consul
             var uri = new Uri(address);
+            var serviceName = consulConfig.Value.Name ?? AppDomain.CurrentDomain.FriendlyName.Trim().Trim('_');
             var registration = new AgentServiceRegistration()
             {
-                ID = consulConfig.Value.Id ?? Guid.NewGuid().ToString(),
-                Name = consulConfig.Value.Name ?? AppDomain.CurrentDomain.FriendlyName.Trim().Trim('_'),
+                ID = $"{serviceName.ToLowerInvariant()}-{consulConfig.Value.Id ?? Guid.NewGuid().ToString()}",
+                Name = serviceName,
                 Address = uri.Host,
                 Port = uri.Port,
                 Tags = consulConfig.Value.Tags

@@ -1,14 +1,36 @@
 version: '3.5'
 
+networks:
+  # Network for API gateway
+  network-gateway:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.2.0/24
+  # Network for microservices
+  network-microservice:
+    #internal: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.4.0/24
+
 services:
   api:
     build: ../ApiGateway
     container_name: api
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - "8080:80"
     networks:
-      - docker-network
+      - network-gateway
+      - network-microservice
+    links:
+      - users_service
+      - movies_service
+      - reviews_service
     depends_on:
       - consul
 
@@ -18,35 +40,52 @@ services:
       context: ../
       dockerfile: Src/UsersService/Dockerfile
     container_name: users_service
-    restart: on-failure
+    restart: unless-stopped
     networks:
-      - docker-network
+      - network-microservice
+    links:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
     depends_on:
       - rabbitmq
       - db
       - mongo
       - consul
+
   movies_service:
     build:
       context: ../
       dockerfile: Src/MoviesService/Dockerfile
     container_name: movies_service
-    restart: on-failure
+    restart: unless-stopped
     networks:
-      - docker-network
+      - network-microservice
+    links:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
     depends_on:
       - rabbitmq
       - db
       - mongo
       - consul
+
   reviews_service:
     build:
       context: ../
       dockerfile: Src/ReviewsService/Dockerfile
     container_name: reviews_service
-    restart: on-failure
+    restart: unless-stopped
     networks:
-      - docker-network
+      - network-microservice
+    links:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
     depends_on:
       - rabbitmq
       - db
@@ -56,25 +95,28 @@ services:
   db:
    image: mcr.microsoft.com/mssql/server:2019-latest
    container_name: db
+   restart: on-failure
    environment:
     - "ACCEPT_EULA=Y"
     - "SA_PASSWORD=pass123!"
    ports:
     - "1433:1433"
    networks:
-    - docker-network
+    - network-microservice
 
   mongo:
     image: mongo
     container_name: mongo
+    restart: on-failure
     ports:
       - "27017:27017"
     networks:
-      - docker-network
+      - network-microservice
 
   elasticsearch:
    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
    container_name: elasticsearch
+   restart: on-failure
    ports:
     - "9200:9200"
    environment:
@@ -83,57 +125,61 @@ services:
    volumes:
     - elasticsearch-data:/usr/share/elasticsearch/data
    networks:
-    - docker-network
+    - network-microservice
 
   kibana:
    image: docker.elastic.co/kibana/kibana:7.8.1
    container_name: kibana
+   restart: on-failure
    ports:
     - "5601:5601"
    depends_on:
     - elasticsearch
    networks:
-    - docker-network
+    - network-microservice
 
   apm:
    image: docker.elastic.co/apm/apm-server:7.8.1
    container_name: apm
+   restart: on-failure
    ports:
     - "8200:8200"
    depends_on:
     - kibana
    networks:
-    - docker-network
+    - network-microservice
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    restart: on-failure
+    environment:
+     - RABBITMQ_DEFAULT_USER=user
+     - RABBITMQ_DEFAULT_PASS=password
     ports:
      - "5672:5672"
      - "15672:15672"
     networks:
-     - docker-network
+     - network-microservice
 
   # kafka:
   #   image: wurstmeister/kafka
   #   container_name: kafka
+  #   restart: on-failure
   #   ports:
   #    - "9092:9092"
   #    - "9093:9093"
   #   networks:
-  #    - docker-network
+  #    - network-microservice
 
   consul:
     image: consul
     container_name: consul
+    restart: on-failure
     ports:
      - "8500:8500"
     networks:
-     - docker-network
-
-networks:
-  docker-network:
-    driver: bridge
+     - network-microservice
 
 volumes:
   elasticsearch-data:
