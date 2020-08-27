@@ -69,7 +69,7 @@ A microservice consists of:
  - **Queries**: Queries used to get data when client wants to read data.
  - **Commands**: Commands used to write data when client wants to modify data.
  - **EventHandlers**: Handlers for events to take action when events are being published.
- - **Repository**: Repository used with eventsourcing when modifying data in the application. This will also publish the correct events.
+ - **Repository**: Repository used with event sourcing when modifying data in the application. This will also publish the correct events.
 
 Next to the microservice is the data model. This contain the migrations, models and update handlers (if using event sourcing) for the database.
 <br />
@@ -81,7 +81,7 @@ Infrastructure contains the logic for the different services and keeps most of t
 
 - [Consul](#Consul)
 - [Core](#Core)
-- [Eventstore](#Eventstore)
+- [EventStore](#EventStore)
 - [Logging](#Logging)
 - [MessageBrokers](#MessageBrokers)
 - [Outbox](#Outbox)
@@ -122,10 +122,10 @@ Core contain basic functionalities and must be imported most of the other servic
 
 `AddCore` is used with a type from each project that needs to include CQRS.
 
-#### Eventstores
-Event store is a database where all events published in the application are stored. This is used with eventsourcing and will be a write model for the application.
+#### Event stores
+Event store is a database where all events published in the application are stored. This is used with event sourcing and will be a write model for the application.
 
-At the moment the eventstores supported are *MongoDb* and *EF core*.
+At the moment the event stores supported are *MongoDb* and *EF core*.
 
 `AddEventStore` is used with the aggregate as the type, and the Configuration and DbContextOptionsBuilder (only used with EF core) to include event store in the application.
 
