@@ -2,23 +2,21 @@
 using Infrastructure.Core.Events;
 using Infrastructure.EventStores.Aggregates;
 using Infrastructure.EventStores.Projection;
+using Infrastructure.EventStores.Stores;
 using Infrastructure.MessageBrokers;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Infrastructure.EventStores.Providers.MongoDb
+namespace Infrastructure.EventStores
 {
-    public class MongoDbEventStore : IEventStore
+    public class EventStore : IEventStore
     {
-        private readonly IMongoCollection<StreamState> _streamStates;
         private readonly IList<ISnapshot> snapshots = new List<ISnapshot>();
         private readonly IList<IProjection> projections = new List<IProjection>();
+        private readonly IStore _store;
         private readonly IValidatorFactory _validationFactory;
 
         private readonly JsonSerializerSettings JSON_SERIALIZER_SETTINGS = new JsonSerializerSettings
@@ -26,27 +24,10 @@ namespace Infrastructure.EventStores.Providers.MongoDb
             TypeNameHandling = TypeNameHandling.All
         };
 
-        public MongoDbEventStore(IOptions<MongoDbEventStoreOptions> options, IValidatorFactory validationFactory)
+        public EventStore(IStore store, IValidatorFactory validationFactory)
         {
-            var client = new MongoClient(options.Value.ConnectionString);
-            var database = client.GetDatabase(options.Value.DatabaseName);
-            _streamStates = CreateOrGetCollection(database, options.Value.CollectionName);
+            _store = store;
             _validationFactory = validationFactory;
-        }
-
-        private IMongoCollection<StreamState> CreateOrGetCollection(IMongoDatabase database, string collectionName)
-        {
-            var filter = new BsonDocument("name", collectionName);
-            var collections = database.ListCollections(new ListCollectionsOptions { Filter = filter });
-
-            var doesCollectionExist = collections.Any();
-
-            if (!doesCollectionExist)
-            {
-                database.CreateCollection(collectionName);
-            }
-
-            return database.GetCollection<StreamState>(collectionName);
         }
 
         public virtual void AddProjection(IProjection projection)
@@ -115,7 +96,7 @@ namespace Infrastructure.EventStores.Providers.MongoDb
                 Data = @event == null ? "{}" : JsonConvert.SerializeObject(@event, JSON_SERIALIZER_SETTINGS)
             };
 
-            await _streamStates.InsertOneAsync(stream);
+            await _store.Add(stream);
 
             if (action != null)
             {
@@ -125,32 +106,14 @@ namespace Infrastructure.EventStores.Providers.MongoDb
 
         public virtual async Task<IEnumerable<StreamState>> GetEvents(Guid aggregateId, int? version = null, DateTime? createdUtc = null)
         {
-            var builder = Builders<StreamState>.Filter;
-            var filter = builder.Where(d => d.AggregateId == aggregateId);
-
-            if (version.HasValue)
-            {
-                filter = filter & builder.Where(d => d.Version == version.Value);
-            }
-            if (createdUtc.HasValue)
-            {
-                filter = filter & builder.Where(d => d.CreatedUtc == createdUtc);
-            }
-
-            var cursor = await _streamStates
-                .Find(filter)
-                .ToCursorAsync();
-
-            var result = cursor.ToEnumerable();
+            var result = await _store.GetEvents(aggregateId, version, createdUtc);
 
             return result;
         }
 
         public virtual async Task<StreamState> GetStream(Guid streamId)
         {
-            var cursor = await _streamStates.Find(Builders<StreamState>.Filter.Where(d => d.Id == streamId)).SortByDescending(d => d.Version).ToCursorAsync();
-
-            var result = await cursor.FirstOrDefaultAsync();
+            var result = await _store.GetStream(streamId);
 
             return result;
         }

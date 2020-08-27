@@ -10,8 +10,8 @@ namespace Infrastructure.MessageBrokers.RabbitMQ
         public static IServiceCollection AddRabbitMQ(this IServiceCollection services, IConfiguration Configuration)
         {
             var options = new RabbitMQOptions();
-            Configuration.GetSection(nameof(RabbitMQOptions)).Bind(options);
-            services.Configure<RabbitMQOptions>(Configuration.GetSection(nameof(RabbitMQOptions)));
+            Configuration.GetSection(nameof(MessageBrokersOptions)).Bind(options);
+            services.Configure<RabbitMQOptions>(Configuration.GetSection(nameof(MessageBrokersOptions)));
 
             services.AddRawRabbit(new RawRabbitOptions
             {

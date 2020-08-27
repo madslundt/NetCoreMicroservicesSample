@@ -2,9 +2,9 @@ using DataModel;
 using Events;
 using Infrastructure.Consul;
 using Infrastructure.Core;
-using Infrastructure.EventStores.Providers.MongoDb;
+using Infrastructure.EventStores;
 using Infrastructure.Logging;
-using Infrastructure.MessageBrokers.RabbitMQ;
+using Infrastructure.MessageBrokers;
 using Infrastructure.Outbox;
 using Infrastructure.Swagger;
 using Microsoft.AspNetCore.Builder;
@@ -41,11 +41,11 @@ namespace ReviewsService
 
             services
                 .AddConsul(Configuration)
-                .AddRabbitMQ(Configuration)
-                .AddMongoDbEventStore<ReviewAggregate>(Configuration)
+                .AddMessageBroker(Configuration)
+                .AddEventStore<ReviewAggregate>(Configuration)
                 .AddOutbox(Configuration)
                 .AddSwagger(Configuration)
-                .AddCore(typeof(Startup), typeof(DatabaseContext)); // Types are needed for mediator to work the different projects. In this case startup is added for this project and DatabaseContext for the DataModel project.
+                .AddCore(typeof(Startup), typeof(EventsExtensions), typeof(DatabaseContext)); // Types are needed for mediator to work the different projects. In this case startup is added for this project and DatabaseContext for the DataModel project.
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime)

@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.EventStores.Providers.MongoDb
+﻿namespace Infrastructure.EventStores.Stores.MongoDb
 {
     public class MongoDbEventStoreOptions
     {

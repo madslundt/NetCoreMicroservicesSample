@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EventStores\Providers\EventStore\" />
+    <Folder Include="EventStores\Stores\EventStore\" />
   </ItemGroup>
 
 </Project>

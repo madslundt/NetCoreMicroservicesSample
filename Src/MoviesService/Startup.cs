@@ -2,9 +2,9 @@ using DataModel;
 using Events;
 using Infrastructure.Consul;
 using Infrastructure.Core;
-using Infrastructure.EventStores.Providers.MongoDb;
+using Infrastructure.EventStores;
 using Infrastructure.Logging;
-using Infrastructure.MessageBrokers.RabbitMQ;
+using Infrastructure.MessageBrokers;
 using Infrastructure.Outbox;
 using Infrastructure.Swagger;
 using Microsoft.AspNetCore.Builder;
@@ -41,8 +41,8 @@ namespace MoviesService
 
             services
                 .AddConsul(Configuration)
-                .AddRabbitMQ(Configuration)
-                .AddMongoDbEventStore<MovieAggregate>(Configuration)
+                .AddMessageBroker(Configuration)
+                .AddEventStore<MovieAggregate>(Configuration)
                 .AddOutbox(Configuration)
                 .AddSwagger(Configuration)
                 .AddCore(typeof(Startup), typeof(EventsExtensions), typeof(DatabaseContext)); // Types are needed for mediator to work the different projects. In this case startup is added for this project and DatabaseContext for the DataModel project.

@@ -3,7 +3,7 @@ using Events;
 using Infrastructure.Consul;
 using Infrastructure.Core;
 using Infrastructure.Logging;
-using Infrastructure.MessageBrokers.RabbitMQ;
+using Infrastructure.MessageBrokers;
 using Infrastructure.Outbox;
 using Infrastructure.Swagger;
 using Microsoft.AspNetCore.Builder;
@@ -40,7 +40,7 @@ namespace UsersService
 
             services
                 .AddConsul(Configuration)
-                .AddRabbitMQ(Configuration)
+                .AddMessageBroker(Configuration)
                 .AddOutbox(Configuration)
                 .AddSwagger(Configuration)
                 .AddCore(typeof(Startup), typeof(EventsExtensions), typeof(DatabaseContext)); // Types are needed for mediator to work the different projects. In this case startup is added for this project and DatabaseContext for the DataModel project.

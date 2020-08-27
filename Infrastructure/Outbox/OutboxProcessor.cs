@@ -1,10 +1,9 @@
 ﻿using Infrastructure.MessageBrokers;
+using Infrastructure.Outbox.Stores;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,19 +11,17 @@ namespace Infrastructure.Outbox
 {
     internal sealed class OutboxProcessor : IHostedService
     {
-        private readonly IMongoCollection<OutboxMessage> _outboxMessages;
         private readonly IEventListener _eventListener;
+        private readonly IStore _store;
         private readonly OutboxOptions _outboxOptions;
         private Timer _timer;
 
-        public OutboxProcessor(IEventListener eventListener, IOptions<OutboxOptions> options)
+        public OutboxProcessor(IEventListener eventListener, IOptions<OutboxOptions> options, IStore store)
         {
             _eventListener = eventListener;
+            _store = store;
             _outboxOptions = options.Value;
 
-            var client = new MongoClient(options.Value.ConnectionString);
-            var database = client.GetDatabase(options.Value.DatabaseName);
-            _outboxMessages = database.GetCollection<OutboxMessage>(options.Value.CollectionName);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -46,22 +43,22 @@ namespace Infrastructure.Outbox
 
         public async Task Process()
         {
-            var cursor = await _outboxMessages.Find(Builders<OutboxMessage>.Filter.Where(d => !d.Processed.HasValue)).ToCursorAsync();
+            var messages = await _store.GetUnprocessedMessages();
             var publishedMessageIds = new List<Guid>();
             try
             {
-                foreach (var message in cursor.ToEnumerable())
+                foreach (var message in messages)
                 {
                     await _eventListener.Publish(message.Data, message.Type);
                     publishedMessageIds.Add(message.Id);
-                    await _outboxMessages.UpdateOneAsync(Builders<OutboxMessage>.Filter.Eq(d => d.Id, message.Id), Builders<OutboxMessage>.Update.Set(x => x.Processed, DateTime.UtcNow));
+                    await _store.SetMessageToProcessed(message.Id);
                 }
             }
             finally
             {
                 if (_outboxOptions.DeleteAfter)
                 {
-                    await _outboxMessages.DeleteManyAsync(Builders<OutboxMessage>.Filter.In(d => d.Id, publishedMessageIds));
+                    await _store.Delete(publishedMessageIds);
                 }
             }
         }

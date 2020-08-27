@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.EventStores.Providers.EfCore
+namespace Infrastructure.EventStores.Stores.EfCore
 {
-    public class EventStoreContext : DbContext
+    public class EfCoreEventStoreContext : DbContext
     {
         public DbSet<StreamState> Streams { get; set; }
 
