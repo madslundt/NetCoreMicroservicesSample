@@ -127,7 +127,7 @@ Event store is a database where all events published in the application are stor
 
 At the moment the eventstores supported are *MongoDb* and *EF core*.
 
-`AddEventStore` is used with the aggregate as the type and the Configuration or DbContextOptionsBuilder to include event store in the application.
+`AddEventStore` is used with the aggregate as the type, and the Configuration and DbContextOptionsBuilder (only used with EF core) to include event store in the application.
 
 Choice of event store is configured in appsettings with the key **EventStoreType**.
 
