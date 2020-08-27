@@ -51,7 +51,7 @@ In this example **UsersService** is not storing events in an event store. The se
 ## Structure
 How this repository is structured:
 
-- **API/APIGateway**: Api gateway.
+- **ApiGateway**: Api gateway.
 - **Compose**: Docker compose to set up all dependencies (eg. RabbitMQ, SQL Server, etc.)
 - **Src/\*Service**: Microservices in their own solution.
 - **Src/Events**: All events that are published and subscribed to.
@@ -69,7 +69,7 @@ A microservice consists of:
  - **Queries**: Queries used to get data when client wants to read data.
  - **Commands**: Commands used to write data when client wants to modify data.
  - **EventHandlers**: Handlers for events to take action when events are being published.
- - **Repository**: Repository used when writing to the application. This will also publish the correct events.
+ - **Repository**: Repository used with eventsourcing when modifying data in the application. This will also publish the correct events.
 
 Next to the microservice is the data model. This contain the migrations, models and update handlers (if using event sourcing) for the database.
 <br />
