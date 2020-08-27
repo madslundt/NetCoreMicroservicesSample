@@ -122,7 +122,7 @@ Core contain basic functionalities and must be imported most of the other servic
 
 `AddCore` is used with a type from each project that needs to include CQRS.
 
-#### Event stores
+#### EventStore
 Event store is a database where all events published in the application are stored. This is used with event sourcing and will be a write model for the application.
 
 At the moment the event stores supported are *MongoDb* and *EF core*.
