@@ -11,7 +11,7 @@ namespace Infrastructure.EventStores
 {
     public static class EventStoresExtensions
     {
-        public static IServiceCollection AddEventStore<TAggregate>(this IServiceCollection services, IConfiguration Configuration = null, Action<DbContextOptionsBuilder> dbContextOptions = null) where TAggregate : IAggregate
+        public static IServiceCollection AddEventStore<TAggregate>(this IServiceCollection services, IConfiguration Configuration, Action<DbContextOptionsBuilder> dbContextOptions = null) where TAggregate : IAggregate
         {
             var options = new EventStoresOptions();
             Configuration.GetSection(nameof(EventStoresOptions)).Bind(options);
@@ -21,7 +21,7 @@ namespace Infrastructure.EventStores
             {
                 case "efcore":
                 case "ef":
-                    services.AddEfCoreDbEventStore(dbContextOptions);
+                    services.AddEfCoreEventStore(dbContextOptions);
                     break;
                 case "mongo":
                 case "mongodb":

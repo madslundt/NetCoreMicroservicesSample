@@ -1,4 +1,6 @@
-﻿using Infrastructure.Outbox.Stores.MongoDb;
+﻿using Infrastructure.Outbox.Stores.EfCore;
+using Infrastructure.Outbox.Stores.MongoDb;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,7 +9,7 @@ namespace Infrastructure.Outbox
 {
     public static class OutboxExtensions
     {
-        public static IServiceCollection AddOutbox(this IServiceCollection services, IConfiguration Configuration)
+        public static IServiceCollection AddOutbox(this IServiceCollection services, IConfiguration Configuration, Action<DbContextOptionsBuilder> dbContextOptions = null)
         {
             var options = new OutboxOptions();
             Configuration.GetSection(nameof(OutboxOptions)).Bind(options);
@@ -15,6 +17,10 @@ namespace Infrastructure.Outbox
 
             switch (options.OutboxType.ToLowerInvariant())
             {
+                case "efcore":
+                case "ef":
+                    services.AddEfCoreOutboxStore(dbContextOptions);
+                    break;
                 case "mongo":
                 case "mongodb":
                     services.AddMongoDbOutbox(Configuration);

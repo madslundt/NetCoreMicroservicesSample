@@ -107,7 +107,7 @@ Appsettings for consul looks like this
 - **Tags**: is optional and is by default empty.
 - **Address** is required and must include uri schema, host and port (eg. http://localhost:8500).
 
-`AddConsul` and `UseConsul` can be used in order to include it in the application.
+`AddConsul` and `UseConsul` is used in order to include it in the application.
 
 
 #### Core
@@ -120,12 +120,16 @@ Core contain basic functionalities and must be imported most of the other servic
 - **Mapping** contain functionality to map one object into a class.
 - **ValidationBehavior** contain validation and is added as a mediator pipeline. This makes sure to run validation if such is added to the request.
 
-`AddCore` can be used with a type from each project that needs to include CQRS.
+`AddCore` is used with a type from each project that needs to include CQRS.
 
 #### Eventstores
 Event store is a database where all events published in the application are stored. This is used with eventsourcing and will be a write model for the application.
 
-At the moment the only eventstore supported is *MongoDb*.
+At the moment the eventstores supported are *MongoDb* and *EF core*.
+
+`AddEventStore` is used with the aggregate as the type and the Configuration or DbContextOptionsBuilder to include event store in the application.
+
+Choice of event store is configured in appsettings with the key **EventStoreType**.
 
 Besides that it also contain interfaces and abstract classes:
 - **Aggregates** is a set of related entities and value objects that model a single thing (or related set of things) which need to remain internally consistent.
@@ -136,7 +140,8 @@ Besides that it also contain interfaces and abstract classes:
 ##### MongoDb
 ```
 {
-    "MongoDbEventStoreOptions": {
+    "EventStoreOptions": {
+        "EventStoreType": "mongo",
         "DatabaseName": "",
         "CollectionName": "",
         "ConnectionString": ""
@@ -148,12 +153,20 @@ Besides that it also contain interfaces and abstract classes:
 - **CollectionName** is optional and is by default 'Events'.
 - **ConnectionString**: is required and must include uri schema, host and port (eg. mongodb://localhost:27017)
 
-`AddMongoDbEventStore` can be used with the aggregate as the type and the Configuration to include event store with MongoDb in the application.
+##### Ef core
+```
+{
+    "EventStoreOptions": {
+        "EventStoreType": "ef"
+    }
+}
+```
+Choice of database is set when using *AddEventStore* with **DbContextOptionsBuilder**.
 
 #### Logging
 Logging is using Serilog and ELK APM.
 
-`LoggingExtensions.AddLogging` and `UseLogging` can be used to include logging in the application.
+`LoggingExtensions.AddLogging` and `UseLogging` is used to include logging in the application.
 <br />
 `UseSerilog` must be used in *Program.cs*.
 
@@ -162,12 +175,44 @@ Message broker is used to publish and subscribe to events across services. This 
 
 At the moment the only message brokers supported is *RabbitMQ*
 
-`UseSubscribeEvent` can be used to subscribe to a specific event.
+`AddMessageBroker` is used to include message broker.
+
+Choice of message broker is configured in appsettings with the key **MessageBrokerType**.
+
+`UseSubscribeEvent` is used to subscribe to a specific event.
 <br />
-`UseSubscribeAllEvents` can be used to subscribe to all events in the application.
+`UseSubscribeAllEvents` is used to subscribe to all events in the application.
 
 ##### RabbitMQ
-`AddRabbitMQ` can be used to include RabbitMQ in the application.
+```
+"MessageBrokersOptions": {
+    "messageBrokerType": "rabbitmq",
+    "username": "",
+    "password": "",
+    "virtualHost": "",
+    "port": 5672,
+    "hostnames": [""],
+    "requestTimeout": "",
+    "publishConfirmTimeout": "",
+    "recoveryInterval": "",
+    "persistentDeliveryMode": true,
+    "autoCloseConnection": true,
+    "automaticRecovery": true,
+    "topologyRecovery": true,
+    "exchange": {
+        "durable": true,
+        "autoDelete": false,
+        "type": "",
+        "name": ""
+    },
+    "queue": {
+        "declare": true,
+        "durable": true,
+        "exclusive": false,
+        "autoDelete": false
+    }
+}
+```
 
 #### Outbox
 Outbox is used to store events before they are published to the message broker. The events are either removed after being published to the message broker or kept with the *processed* property set to the datetime, in UTC, it was published to the message broker.
@@ -177,10 +222,33 @@ That also means that the Outbox database should be hosted very close to the serv
 
 In order to publish events to the message broker a hosted service is running in Outbox to look for unpublished events in the interval of every 2 second.
 
-`AddOutbox` can be used to include Outbox with MongoDb in the application.
+`AddOutbox` is used to include Outbox in the application.
+
+Choice of store is configured in appsettings with the key **OutboxType**.
+
+##### MongoDb
+```
+"OutboxOptions": {
+    "OutboxType": "mongo",
+    "DatabaseName": "",
+    "CollectionName": "",
+    "ConnectionString": "",
+    "DeleteAfter": true
+}
+```
+
+##### Ef core
+```
+{
+    "OutboxOptions": {
+        "OutboxType": "ef"
+    }
+}
+```
+Choice of database is set when using *AddOutbox* with **DbContextOptionsBuilder**.
 
 #### Swagger
 Swagger is used for API documentation.
 
-`AddSwagger` and `UseSwagger` can be used to include swagger in the application.
+`AddSwagger` and `UseSwagger` is used to include swagger in the application.
 
