@@ -28,7 +28,7 @@ namespace Infrastructure.EventStores
                     services.AddMongoDbEventStore(Configuration);
                     break;
                 default:
-                    throw new Exception($"Event store type '{options.EventStoreType}' is not valid");
+                    throw new Exception($"Event store type '{options.EventStoreType}' is not supported");
             }
 
             services.AddScoped<IRepository<TAggregate>, Repository<TAggregate>>();

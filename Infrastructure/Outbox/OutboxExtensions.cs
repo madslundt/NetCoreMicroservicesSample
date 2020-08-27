@@ -26,7 +26,7 @@ namespace Infrastructure.Outbox
                     services.AddMongoDbOutbox(Configuration);
                     break;
                 default:
-                    throw new Exception($"Outbox type '{options.OutboxType}' is not valid");
+                    throw new Exception($"Outbox type '{options.OutboxType}' is not supported");
             }
 
             services.AddSingleton<IOutboxListener, OutboxListener>();

@@ -23,7 +23,7 @@ namespace Infrastructure.MessageBrokers
                 case "kafka":
                     return services.AddKafka(Configuration);
                 default:
-                    throw new Exception($"Message broker type '{options.MessageBrokerType}' is not valid");
+                    throw new Exception($"Message broker type '{options.MessageBrokerType}' is not supported");
             }
         }
 
