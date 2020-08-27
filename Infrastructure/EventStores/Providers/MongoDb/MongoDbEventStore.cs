@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Infrastructure.Core.Events;
 using Infrastructure.EventStores.Aggregates;
-using Infrastructure.EventStores.MongoDb;
 using Infrastructure.EventStores.Projection;
 using Infrastructure.MessageBrokers;
 using Microsoft.Extensions.Options;
@@ -13,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Infrastructure.EventStores
+namespace Infrastructure.EventStores.Providers.MongoDb
 {
     public class MongoDbEventStore : IEventStore
     {
@@ -21,6 +20,11 @@ namespace Infrastructure.EventStores
         private readonly IList<ISnapshot> snapshots = new List<ISnapshot>();
         private readonly IList<IProjection> projections = new List<IProjection>();
         private readonly IValidatorFactory _validationFactory;
+
+        private readonly JsonSerializerSettings JSON_SERIALIZER_SETTINGS = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All
+        };
 
         public MongoDbEventStore(IOptions<MongoDbEventStoreOptions> options, IValidatorFactory validationFactory)
         {
@@ -55,16 +59,16 @@ namespace Infrastructure.EventStores
             throw new NotImplementedException();
         }
 
-        public virtual async Task<TAggregate> AggregateStream<TAggregate>(Guid streamId, int? version = null, DateTime? createdUtc = null) where TAggregate : IAggregate
+        public virtual async Task<TAggregate> AggregateStream<TAggregate>(Guid aggregateId, int? version = null, DateTime? createdUtc = null) where TAggregate : IAggregate
         {
             var aggregate = (TAggregate)Activator.CreateInstance(typeof(TAggregate), true);
 
-            var events = await GetEvents(streamId, version, createdUtc);
+            var events = await GetEvents(aggregateId, version, createdUtc);
             var v = 0;
 
             foreach (var @event in events)
             {
-                aggregate.InvokeIfExists("Apply", DeserializeObject(@event?.Data));
+                aggregate.InvokeIfExists("Apply", JsonConvert.DeserializeObject<IEvent>(@event?.Data, JSON_SERIALIZER_SETTINGS));
                 aggregate.SetIfExists(nameof(IAggregate.Version), ++v);
                 aggregate.SetIfExists(nameof(IAggregate.CreatedUtc), @event.CreatedUtc);
             }
@@ -84,18 +88,18 @@ namespace Infrastructure.EventStores
             return aggregates;
         }
 
-        public virtual async Task AppendEvent<TStream>(Guid streamId, IEvent @event, int? expectedVersion = null, Func<StreamState, Task> action = null)
+        public virtual async Task AppendEvent<TStream>(Guid aggregateId, IEvent @event, int? expectedVersion = null, Func<StreamState, Task> action = null)
         {
             var version = 1;
 
-            var events = await GetEvents(streamId);
+            var events = await GetEvents(aggregateId);
             var versions = events.Select(e => e.Version).ToList();
 
             if (expectedVersion.HasValue)
             {
                 if (versions.Contains(expectedVersion.Value))
                 {
-                    throw new Exception($"Version '{expectedVersion.Value}' already exists for stream '{streamId}'");
+                    throw new Exception($"Version '{expectedVersion.Value}' already exists for stream '{aggregateId}'");
                 }
             }
             else
@@ -105,13 +109,10 @@ namespace Infrastructure.EventStores
 
             var stream = new StreamState
             {
-                AggregateId = streamId,
+                AggregateId = aggregateId,
                 Version = version,
                 Type = MessageBrokersHelper.GetTypeName(@event.GetType()),
-                Data = @event == null ? "{}" : JsonConvert.SerializeObject(@event, new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                })
+                Data = @event == null ? "{}" : JsonConvert.SerializeObject(@event, JSON_SERIALIZER_SETTINGS)
             };
 
             await _streamStates.InsertOneAsync(stream);
@@ -122,17 +123,19 @@ namespace Infrastructure.EventStores
             }
         }
 
-        private static IEvent DeserializeObject(string obj)
+        public virtual async Task<IEnumerable<StreamState>> GetEvents(Guid aggregateId, int? version = null, DateTime? createdUtc = null)
         {
-            return JsonConvert.DeserializeObject<IEvent>(obj, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
-        }
+            var builder = Builders<StreamState>.Filter;
+            var filter = builder.Where(d => d.AggregateId == aggregateId);
 
-        public virtual async Task<IEnumerable<StreamState>> GetEvents(Guid streamId, int? version = null, DateTime? createdUtc = null)
-        {
-            var filter = Builders<StreamState>.Filter.Where(d => d.AggregateId == streamId /*&& (!version.HasValue || d.Version == version) && (!createdUtc.HasValue || d.CreatedUtc == createdUtc)*/);
+            if (version.HasValue)
+            {
+                filter = filter & builder.Where(d => d.Version == version.Value);
+            }
+            if (createdUtc.HasValue)
+            {
+                filter = filter & builder.Where(d => d.CreatedUtc == createdUtc);
+            }
 
             var cursor = await _streamStates
                 .Find(filter)
@@ -143,7 +146,7 @@ namespace Infrastructure.EventStores
             return result;
         }
 
-        public virtual async Task<StreamState> GetEvent(Guid streamId)
+        public virtual async Task<StreamState> GetStream(Guid streamId)
         {
             var cursor = await _streamStates.Find(Builders<StreamState>.Filter.Where(d => d.Id == streamId)).SortByDescending(d => d.Version).ToCursorAsync();
 

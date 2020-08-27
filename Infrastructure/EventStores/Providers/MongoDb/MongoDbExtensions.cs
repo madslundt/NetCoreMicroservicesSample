@@ -3,7 +3,7 @@ using Infrastructure.EventStores.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.EventStores.MongoDb
+namespace Infrastructure.EventStores.Providers.MongoDb
 {
     public static class MongoDbExtensions
     {

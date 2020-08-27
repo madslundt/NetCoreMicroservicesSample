@@ -2,7 +2,6 @@ using DataModel;
 using Events;
 using Infrastructure.Consul;
 using Infrastructure.Core;
-using Infrastructure.EventStores.MongoDb;
 using Infrastructure.Logging;
 using Infrastructure.MessageBrokers.RabbitMQ;
 using Infrastructure.Outbox;

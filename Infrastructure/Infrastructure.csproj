@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.1.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="3.1.4" />
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.1.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.System" Version="3.1.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.1.1" />
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Confluent.Kafka" Version="1.5.0" />
     <PackageReference Include="Consul" Version="1.6.1.1" />
@@ -44,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EventStores\EventStore\" />
+    <Folder Include="EventStores\Providers\EventStore\" />
   </ItemGroup>
 
 </Project>
