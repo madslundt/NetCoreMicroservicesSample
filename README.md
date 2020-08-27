@@ -237,11 +237,16 @@ Choice of store is configured in appsettings with the key **OutboxType**.
 }
 ```
 
+- **DatabaseName** is optional and is by default 'EventStore'
+- **CollectionName** is optional and is by default 'Events'.
+- **ConnectionString**: is required and must include uri schema, host and port (eg. mongodb://localhost:27017)
+
 ##### Ef core
 ```
 {
     "OutboxOptions": {
-        "OutboxType": "ef"
+        "OutboxType": "ef",
+        "DeleteAfter": true
     }
 }
 ```
