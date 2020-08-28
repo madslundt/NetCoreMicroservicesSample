@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox.Stores.MongoDb
 {
-    public class MongoDbOutboxStore : IStore
+    public class MongoDbOutboxStore : IOutboxStore
     {
         private readonly IMongoCollection<OutboxMessage> _outboxMessages;
 

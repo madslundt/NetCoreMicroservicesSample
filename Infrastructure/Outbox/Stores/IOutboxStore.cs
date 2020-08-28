@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox.Stores
 {
-    public interface IStore
+    public interface IOutboxStore
     {
         Task Add(OutboxMessage message);
         Task<IEnumerable<OutboxMessage>> GetUnprocessedMessages();

@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Core.Events;
-using Infrastructure.EventStores.Stores;
 using Infrastructure.MessageBrokers;
+using Infrastructure.Outbox.Stores;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
@@ -8,9 +8,9 @@ namespace Infrastructure.Outbox
 {
     public class OutboxListener : IOutboxListener
     {
-        private readonly IStore _store;
+        private readonly IOutboxStore _store;
 
-        public OutboxListener(IStore store)
+        public OutboxListener(IOutboxStore store)
         {
             _store = store;
         }

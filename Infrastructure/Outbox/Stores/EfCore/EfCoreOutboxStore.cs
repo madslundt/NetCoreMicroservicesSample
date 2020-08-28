@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox.Stores.EfCore
 {
-    public class EfCoreOutboxStore : IStore
+    public class EfCoreOutboxStore : IOutboxStore
     {
         private readonly EfCoreOutboxContext _context;
 

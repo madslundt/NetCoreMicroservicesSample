@@ -12,11 +12,11 @@ namespace Infrastructure.Outbox
     internal sealed class OutboxProcessor : IHostedService
     {
         private readonly IEventListener _eventListener;
-        private readonly IStore _store;
+        private readonly IOutboxStore _store;
         private readonly OutboxOptions _outboxOptions;
         private Timer _timer;
 
-        public OutboxProcessor(IEventListener eventListener, IOptions<OutboxOptions> options, IStore store)
+        public OutboxProcessor(IEventListener eventListener, IOptions<OutboxOptions> options, IOutboxStore store)
         {
             _eventListener = eventListener;
             _store = store;

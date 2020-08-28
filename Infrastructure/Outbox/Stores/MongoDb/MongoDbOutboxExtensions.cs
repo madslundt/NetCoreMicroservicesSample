@@ -14,7 +14,7 @@ namespace Infrastructure.Outbox.Stores.MongoDb
             Configuration.GetSection(nameof(OutboxOptions)).Bind(options);
             services.Configure<MongoDbOutboxOptions>(Configuration.GetSection(nameof(OutboxOptions)));
 
-            services.AddSingleton<IStore, MongoDbOutboxStore>();
+            services.AddSingleton<IOutboxStore, MongoDbOutboxStore>();
 
             return services;
         }
