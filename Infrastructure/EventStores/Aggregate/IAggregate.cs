@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.EventStores.Aggregates
+namespace Infrastructure.EventStores.Aggregate
 {
     public interface IAggregate
     {

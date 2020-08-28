@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Infrastructure.EventStores.Aggregates
+namespace Infrastructure.EventStores.Aggregate
 {
     public abstract class Aggregate : IAggregate
     {

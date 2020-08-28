@@ -1,6 +1,6 @@
 ﻿using DataModel.Models.Rating;
 using Events.Reviews;
-using Infrastructure.EventStores.Aggregates;
+using Infrastructure.EventStores.Aggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;

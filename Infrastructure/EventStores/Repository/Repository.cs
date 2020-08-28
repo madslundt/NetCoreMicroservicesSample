@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Core;
 using Infrastructure.Core.Events;
-using Infrastructure.EventStores.Aggregates;
+using Infrastructure.EventStores.Aggregate;
 using Infrastructure.Outbox;
 using System;
 using System.Collections.Generic;

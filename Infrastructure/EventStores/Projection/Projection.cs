@@ -11,7 +11,7 @@ namespace Infrastructure.EventStores.Projection
 
         public Type[] Handles => Handlers.Keys.ToArray();
 
-        protected virtual void Projects<TEvent>(Action<TEvent> action)
+        protected virtual void Projects<TEvent>(Action<TEvent> action) where TEvent : IEvent
         {
             Handlers.Add(typeof(TEvent), @event => action((TEvent)@event));
         }

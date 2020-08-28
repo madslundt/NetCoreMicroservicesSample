@@ -1,7 +1,7 @@
-﻿using Infrastructure.EventStores.Aggregates;
+﻿using Infrastructure.EventStores.Aggregate;
 using System;
 
-namespace Infrastructure.EventStores
+namespace Infrastructure.EventStores.Snapshot
 {
     public interface ISnapshot
     {

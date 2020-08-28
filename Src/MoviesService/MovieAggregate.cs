@@ -1,5 +1,5 @@
 ﻿using Events.Movies;
-using Infrastructure.EventStores.Aggregates;
+using Infrastructure.EventStores.Aggregate;
 using System;
 
 namespace MoviesService

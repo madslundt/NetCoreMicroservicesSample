@@ -1,4 +1,4 @@
-﻿using Infrastructure.EventStores.Aggregates;
+﻿using Infrastructure.EventStores.Aggregate;
 using Infrastructure.EventStores.Repository;
 using Infrastructure.EventStores.Stores.EfCore;
 using Infrastructure.EventStores.Stores.MongoDb;

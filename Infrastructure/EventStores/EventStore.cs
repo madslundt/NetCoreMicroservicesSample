@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using Infrastructure.Core.Events;
-using Infrastructure.EventStores.Aggregates;
+using Infrastructure.EventStores.Aggregate;
 using Infrastructure.EventStores.Projection;
+using Infrastructure.EventStores.Snapshot;
 using Infrastructure.EventStores.Stores;
 using Infrastructure.MessageBrokers;
 using Newtonsoft.Json;
@@ -14,8 +15,8 @@ namespace Infrastructure.EventStores
 {
     public class EventStore : IEventStore
     {
-        private readonly IList<ISnapshot> snapshots = new List<ISnapshot>();
-        private readonly IList<IProjection> projections = new List<IProjection>();
+        private readonly IList<ISnapshot> _snapshots = new List<ISnapshot>();
+        private readonly IList<IProjection> _projections = new List<IProjection>();
         private readonly IStore _store;
         private readonly IValidatorFactory _validationFactory;
 
@@ -136,14 +137,14 @@ namespace Infrastructure.EventStores
 
                 await AppendEvent<TAggregate>(aggregate.Id, @event, initialVersion, action);
 
-                foreach (var projection in projections.Where(
-                    projection => projection.Handles.Contains(@event.GetType())))
+                var projections = _projections.Where(projection => projection.Handles.Contains(@event.GetType()));
+                foreach (var projection in projections)
                 {
                     projection.Handle(@event);
                 }
             }
 
-            snapshots
+            _snapshots
                 .FirstOrDefault(snapshot => snapshot.Handles == typeof(TAggregate))?
                 .Handle(aggregate);
         }

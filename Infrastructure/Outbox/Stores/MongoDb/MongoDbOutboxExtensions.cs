@@ -1,4 +1,4 @@
-﻿using Infrastructure.EventStores.Aggregates;
+﻿using Infrastructure.EventStores.Aggregate;
 using Infrastructure.EventStores.Stores.MongoDb;
 using Infrastructure.Outbox.Providers.MongoDb;
 using Microsoft.Extensions.Configuration;
