@@ -20,10 +20,6 @@ Work in progress.
 This can be run with `docker-compose`.
 Simply go to the [Compose](/Compose) folder and run `docker-compose up --build`.
 
-This will start up SQL server, MongoDB, Elasticsearch, Kibana, APM server, RabbitMQ and Consul.
-
-After that you can run the services with default `appsettings.json`.
-
 ## Architecture
 ![Microservices architecture](microservices_architecture.png "Microservices archivecture")
 
@@ -59,7 +55,7 @@ How this repository is structured:
 
 ### Api
 Api gateway is using Ocelot to have a unified point of entry to all microservices.
-Configuration for this can be found in `ocelot.json`.
+Configuration for this can be found in the subfolder Configuration.
 
 ### Microservice
 Microservices are REST APIs and are created without any knowledge to each other. If a microservice wants to notify other services it simply publishes an event and the services subscribing to this event can take action on it using publish/subscribe with RabbitMQ.
