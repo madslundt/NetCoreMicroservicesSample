@@ -33,12 +33,12 @@ namespace Infrastructure.EventStores
 
         public virtual void AddProjection(IProjection projection)
         {
-            throw new NotImplementedException();
+            _projections.Add(projection);
         }
 
         public virtual void AddSnapshot(ISnapshot snapshot)
         {
-            throw new NotImplementedException();
+            _snapshots.Add(snapshot);
         }
 
         public virtual async Task<TAggregate> AggregateStream<TAggregate>(Guid aggregateId, int? version = null, DateTime? createdUtc = null) where TAggregate : IAggregate

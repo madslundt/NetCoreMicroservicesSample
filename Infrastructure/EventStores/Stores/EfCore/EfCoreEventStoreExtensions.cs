@@ -1,6 +1,4 @@
-﻿using Infrastructure.EventStores.Aggregate;
-using Infrastructure.EventStores.Repository;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
