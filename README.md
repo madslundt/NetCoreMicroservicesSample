@@ -1,7 +1,9 @@
 # NetCoreMicroservicesSample
 Example implementing an API with microservices using CQRS pattern, event sourcing, message brokers, etc.
 
-Work in progress.
+[I've written a short Medium post about this repository](https://medium.com/@madslundt/microservices-with-event-sourcing-using-net-core-33e3074171f5)
+
+Keep in mind this repository is work in progress.
 
 ## Requirements
  - **Consul**: Service discovery
