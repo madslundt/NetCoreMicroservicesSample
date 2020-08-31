@@ -51,7 +51,7 @@ namespace Infrastructure.Outbox
                 {
                     await _eventListener.Publish(message.Data, message.Type);
                     publishedMessageIds.Add(message.Id);
-                    await _store.SetMessageToProcessed(message.Id);
+                    await _store.SetMessageToProcessed(message.Id);// if this code doesnt run, message can publish twice.
                 }
             }
             finally
