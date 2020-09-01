@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Infrastructure.Outbox.Providers.MongoDb
+﻿namespace Infrastructure.Outbox.Providers.MongoDb
 {
     public class MongoDbOutboxOptions : OutboxOptions
     {

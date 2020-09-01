@@ -10,8 +10,8 @@ namespace Infrastructure.MessageBrokers.Kafka
         public static IServiceCollection AddKafka(this IServiceCollection services, IConfiguration Configuration)
         {
             var options = new KafkaOptions();
-            Configuration.GetSection(nameof(KafkaOptions)).Bind(options);
-            services.Configure<KafkaOptions>(Configuration.GetSection(nameof(KafkaOptions)));
+            Configuration.GetSection(nameof(MessageBrokersOptions)).Bind(options);
+            services.Configure<KafkaOptions>(Configuration.GetSection(nameof(MessageBrokersOptions)));
 
             services.AddSingleton<IEventListener, KafkaListener>();
 

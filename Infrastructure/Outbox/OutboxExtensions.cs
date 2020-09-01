@@ -1,4 +1,5 @@
-﻿using Infrastructure.Outbox.Stores.EfCore;
+﻿using Infrastructure.Outbox.Stores.Dapr;
+using Infrastructure.Outbox.Stores.EfCore;
 using Infrastructure.Outbox.Stores.MongoDb;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,9 @@ namespace Infrastructure.Outbox
                 case "efcore":
                 case "ef":
                     services.AddEfCoreOutboxStore(dbContextOptions);
+                    break;
+                case "dapr":
+                    services.AddDaprOutbox(Configuration);
                     break;
                 case "mongo":
                 case "mongodb":

@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Core.Events;
+using Infrastructure.MessageBrokers.Dapr;
 using Infrastructure.MessageBrokers.Kafka;
 using Infrastructure.MessageBrokers.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +19,8 @@ namespace Infrastructure.MessageBrokers
 
             switch (options.MessageBrokerType.ToLowerInvariant())
             {
+                case "dapr":
+                    return services.AddDapr(Configuration);
                 case "rabbitmq":
                     return services.AddRabbitMQ(Configuration);
                 case "kafka":
