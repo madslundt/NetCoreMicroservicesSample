@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
@@ -34,15 +37,22 @@ namespace ApiGateway
         public void Configure(IApplicationBuilder app)
         {
             app.UseStaticFiles();
-            app.UseSwaggerForOcelotUI(opt =>
-            {
-                opt.DownstreamSwaggerHeaders = new[]
+
+            app
+                .UseSwaggerForOcelotUI(opt =>
                 {
-                    new KeyValuePair<string, string>("x-correlation-id", Guid.NewGuid().ToString()),
-                };
-            })
-            .UseOcelot()
-            .Wait();
+                    opt.ReConfigureUpstreamSwaggerJson = (HttpContext context, string swaggerJson) =>
+                    {
+                        var swagger = JObject.Parse(swaggerJson);
+                        return swagger.ToString(Formatting.Indented);
+                    };
+                    opt.DownstreamSwaggerHeaders = new[]
+                    {
+                        new KeyValuePair<string, string>("x-correlation-id", Guid.NewGuid().ToString()),
+                    };
+                })
+                .UseOcelot()
+                .Wait();
         }
     }
 }

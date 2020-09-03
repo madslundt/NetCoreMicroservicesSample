@@ -70,7 +70,8 @@ namespace Infrastructure.EventStores
             return aggregates;
         }
 
-        public virtual async Task AppendEvent<TStream>(Guid aggregateId, IEvent @event, int? expectedVersion = null, Func<StreamState, Task> action = null)
+        public virtual async Task AppendEvent<TAggregate>(Guid aggregateId, IEvent @event, int? expectedVersion = null, Func<StreamState, Task> action = null)
+            where TAggregate : IAggregate
         {
             var version = 1;
 
@@ -108,13 +109,6 @@ namespace Infrastructure.EventStores
         public virtual async Task<IEnumerable<StreamState>> GetEvents(Guid aggregateId, int? version = null, DateTime? createdUtc = null)
         {
             var result = await _store.GetEvents(aggregateId, version, createdUtc);
-
-            return result;
-        }
-
-        public virtual async Task<StreamState> GetStream(Guid streamId)
-        {
-            var result = await _store.GetStream(streamId);
 
             return result;
         }

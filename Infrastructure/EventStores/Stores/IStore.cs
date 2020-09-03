@@ -8,6 +8,5 @@ namespace Infrastructure.EventStores.Stores
     {
         Task Add(StreamState stream);
         Task<IEnumerable<StreamState>> GetEvents(Guid aggregateId, int? version = null, DateTime? createdUtc = null);
-        Task<StreamState> GetStream(Guid streamId);
     }
 }

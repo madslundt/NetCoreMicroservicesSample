@@ -60,14 +60,5 @@ namespace Infrastructure.EventStores.Stores.MongoDb
 
             return result;
         }
-
-        public async Task<StreamState> GetStream(Guid streamId)
-        {
-            var cursor = await _streamStates.Find(Builders<StreamState>.Filter.Where(d => d.Id == streamId)).ToCursorAsync();
-
-            var result = await cursor.FirstOrDefaultAsync();
-
-            return result;
-        }
     }
 }

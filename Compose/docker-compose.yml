@@ -1,13 +1,13 @@
 version: '3.5'
 
 networks:
-  # Network for API gateway
-  network-gateway:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.2.0/24
+    # Network for api gateway
+    network-gateway:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: 172.28.2.0/24
   # Network for microservices
   network-microservice:
     #internal: true
@@ -18,23 +18,6 @@ networks:
         - subnet: 172.28.4.0/24
 
 services:
-  api:
-    build: ../ApiGateway
-    container_name: api
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    networks:
-      - network-gateway
-      - network-microservice
-    links:
-      - users_service
-      - movies_service
-      - reviews_service
-    depends_on:
-      - consul
-
-
   users_service:
     build:
       context: ../

@@ -4,7 +4,7 @@
     "UseServiceDiscovery": true,
     "DownstreamScheme": "http",
     "ServiceDiscoveryProvider": {
-      "Type": "PollConsul",
+      "Type": "Consul",
       "Host": "http://consul",
       "Port": 8500,
       "ConfigurationKey": "ApiGateway_1",
