@@ -1,0 +1,78 @@
+version: '3.5'
+
+networks:
+    # Network for api gateway
+    network-gateway:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: 172.28.2.0/24
+  # Network for microservices
+  network-microservice:
+    #internal: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.4.0/24
+
+services:
+  users_service:
+    build:
+      context: ../
+      dockerfile: Src/UsersService/Dockerfile
+    container_name: users_service
+    restart: unless-stopped
+    networks:
+      - network-microservice
+    links:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
+    depends_on:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
+
+  movies_service:
+    build:
+      context: ../
+      dockerfile: Src/MoviesService/Dockerfile
+    container_name: movies_service
+    restart: unless-stopped
+    networks:
+      - network-microservice
+    links:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
+    depends_on:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
+
+  reviews_service:
+    build:
+      context: ../
+      dockerfile: Src/ReviewsService/Dockerfile
+    container_name: reviews_service
+    restart: unless-stopped
+    networks:
+      - network-microservice
+    links:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
+    depends_on:
+      - rabbitmq
+      - db
+      - mongo
+      - consul
+volumes:
+  elasticsearch-data:

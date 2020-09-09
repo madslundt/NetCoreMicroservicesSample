@@ -11,8 +11,8 @@ namespace Infrastructure.Outbox
             Id = id;
         }
 
-        public Guid Id { get; } = Guid.NewGuid();
-        public DateTime CreatedUtc { get; } = DateTime.UtcNow;
+        public Guid Id { get; private set; } = Guid.NewGuid();
+        public DateTime CreatedUtc { get; private set; } = DateTime.UtcNow;
         public string Type { get; set; }
         public string Data { get; set; }
         public DateTime? Processed { get; set; }

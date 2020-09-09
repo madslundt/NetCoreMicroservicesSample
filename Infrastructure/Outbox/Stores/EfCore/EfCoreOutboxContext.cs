@@ -4,6 +4,9 @@ namespace Infrastructure.Outbox.Stores.EfCore
 {
     public class EfCoreOutboxContext : DbContext
     {
+        public EfCoreOutboxContext(DbContextOptions<EfCoreOutboxContext> options) : base(options)
+        { }
+
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

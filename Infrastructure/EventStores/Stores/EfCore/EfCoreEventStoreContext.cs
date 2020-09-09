@@ -4,6 +4,9 @@ namespace Infrastructure.EventStores.Stores.EfCore
 {
     public class EfCoreEventStoreContext : DbContext
     {
+        public EfCoreEventStoreContext(DbContextOptions<EfCoreEventStoreContext> options) : base(options)
+        { }
+
         public DbSet<StreamState> Streams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -9,7 +9,7 @@ namespace Infrastructure.EventStores.Stores.EfCore
         public static IServiceCollection AddEfCoreEventStore(this IServiceCollection services, Action<DbContextOptionsBuilder> dbContextOptions)
         {
             services.AddDbContext<EfCoreEventStoreContext>(dbContextOptions);
-            services.AddSingleton<IStore, EfCoreEventStore>();
+            services.AddScoped<IStore, EfCoreEventStore>();
 
             return services;
         }

@@ -1,13 +1,13 @@
 version: '3.5'
 
 networks:
-    # Network for api gateway
-    network-gateway:
-      driver: bridge
-      ipam:
-        driver: default
-        config:
-          - subnet: 172.28.2.0/24
+  # Network for api gateway
+  network-gateway:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.2.0/24
   # Network for microservices
   network-microservice:
     #internal: true
@@ -18,63 +18,6 @@ networks:
         - subnet: 172.28.4.0/24
 
 services:
-  users_service:
-    build:
-      context: ../
-      dockerfile: Src/UsersService/Dockerfile
-    container_name: users_service
-    restart: unless-stopped
-    networks:
-      - network-microservice
-    links:
-      - rabbitmq
-      - db
-      - mongo
-      - consul
-    depends_on:
-      - rabbitmq
-      - db
-      - mongo
-      - consul
-
-  movies_service:
-    build:
-      context: ../
-      dockerfile: Src/MoviesService/Dockerfile
-    container_name: movies_service
-    restart: unless-stopped
-    networks:
-      - network-microservice
-    links:
-      - rabbitmq
-      - db
-      - mongo
-      - consul
-    depends_on:
-      - rabbitmq
-      - db
-      - mongo
-      - consul
-
-  reviews_service:
-    build:
-      context: ../
-      dockerfile: Src/ReviewsService/Dockerfile
-    container_name: reviews_service
-    restart: unless-stopped
-    networks:
-      - network-microservice
-    links:
-      - rabbitmq
-      - db
-      - mongo
-      - consul
-    depends_on:
-      - rabbitmq
-      - db
-      - mongo
-      - consul
-
   db:
    image: mcr.microsoft.com/mssql/server:2019-latest
    container_name: db
@@ -144,16 +87,6 @@ services:
      - "15672:15672"
     networks:
      - network-microservice
-
-  # kafka:
-  #   image: wurstmeister/kafka
-  #   container_name: kafka
-  #   restart: on-failure
-  #   ports:
-  #    - "9092:9092"
-  #    - "9093:9093"
-  #   networks:
-  #    - network-microservice
 
   consul:
     image: consul

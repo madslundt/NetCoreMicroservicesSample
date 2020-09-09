@@ -31,11 +31,22 @@ namespace Infrastructure.Outbox.Stores.EfCore
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<OutboxMessage>> GetUnprocessedMessages()
+        public async Task<OutboxMessage> GetMessage(Guid id)
+        {
+            var query = from message in _context.OutboxMessages
+                        where message.Id == id
+                        select message;
+
+            var result = await query.FirstOrDefaultAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<Guid>> GetUnprocessedMessageIds()
         {
             var query = from message in _context.OutboxMessages
                         where !message.Processed.HasValue
-                        select message;
+                        select message.Id;
 
             var result = await query.ToListAsync();
 

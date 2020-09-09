@@ -9,7 +9,7 @@ namespace Infrastructure.Outbox.Stores.EfCore
         public static IServiceCollection AddEfCoreOutboxStore(this IServiceCollection services, Action<DbContextOptionsBuilder> dbContextOptions)
         {
             services.AddDbContext<EfCoreOutboxContext>(dbContextOptions);
-            services.AddSingleton<IOutboxStore, EfCoreOutboxStore>();
+            services.AddScoped<IOutboxStore, EfCoreOutboxStore>();
 
             return services;
         }

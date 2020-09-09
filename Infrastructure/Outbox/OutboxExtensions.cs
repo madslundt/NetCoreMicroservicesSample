@@ -33,7 +33,7 @@ namespace Infrastructure.Outbox
                     throw new Exception($"Outbox type '{options.OutboxType}' is not supported");
             }
 
-            services.AddSingleton<IOutboxListener, OutboxListener>();
+            services.AddScoped<IOutboxListener, OutboxListener>();
             services.AddHostedService<OutboxProcessor>();
 
             return services;

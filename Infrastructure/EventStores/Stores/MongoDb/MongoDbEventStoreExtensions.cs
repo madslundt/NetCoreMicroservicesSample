@@ -11,7 +11,7 @@ namespace Infrastructure.EventStores.Stores.MongoDb
             Configuration.GetSection(nameof(EventStoresOptions)).Bind(options);
             services.Configure<MongoDbEventStoreOptions>(Configuration.GetSection(nameof(EventStoresOptions)));
 
-            services.AddSingleton<IStore, MongoDbEventStore>();
+            services.AddScoped<IStore, MongoDbEventStore>();
 
             return services;
         }
