@@ -18,8 +18,6 @@ namespace Infrastructure.Outbox.Stores.MongoDb
             var client = new MongoClient(options.Value.ConnectionString);
             var database = client.GetDatabase(options.Value.DatabaseName);
             _outboxMessages = database.GetCollection<OutboxMessage>(options.Value.CollectionName);
-
-            BsonDefaults.GuidRepresentation = GuidRepresentation.Standard;
         }
 
         public async Task Add(OutboxMessage message)
