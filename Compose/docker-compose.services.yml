@@ -1,22 +1,5 @@
 version: '3.5'
 
-networks:
-    # Network for api gateway
-    network-gateway:
-      driver: bridge
-      ipam:
-        driver: default
-        config:
-          - subnet: 172.28.2.0/24
-  # Network for microservices
-  network-microservice:
-    #internal: true
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.4.0/24
-
 services:
   users_service:
     build:
@@ -74,5 +57,3 @@ services:
       - db
       - mongo
       - consul
-volumes:
-  elasticsearch-data:

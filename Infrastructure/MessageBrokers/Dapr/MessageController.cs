@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 namespace Infrastructure.MessageBrokers.Dapr
 {
     [Route("dapr/messages")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class MessageController : ControllerBase
     {
         private readonly IEventBus _eventBus;

@@ -60,7 +60,7 @@ namespace Infrastructure.Outbox.Stores.MongoDb
 
             if (result.ModifiedCount == 0)
             {
-                //throw new Exception($"Did not modify message '{id}'");
+                throw new Exception($"Did not modify message '{id}'");
             }
         }
     }
