@@ -5,7 +5,9 @@ namespace Infrastructure.Outbox.Stores.EfCore
     public class EfCoreOutboxContext : DbContext
     {
         public EfCoreOutboxContext(DbContextOptions<EfCoreOutboxContext> options) : base(options)
-        { }
+        {
+            Database.EnsureCreated();
+        }
 
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
 

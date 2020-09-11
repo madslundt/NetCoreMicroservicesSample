@@ -13,8 +13,6 @@ namespace Infrastructure.EventStores.Stores.EfCore
         public EfCoreEventStore(EfCoreEventStoreContext context)
         {
             _context = context;
-
-            _context.Database.EnsureCreated();
         }
 
         public async Task Add(StreamState stream)

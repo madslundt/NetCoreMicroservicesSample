@@ -13,8 +13,6 @@ namespace Infrastructure.Outbox.Stores.EfCore
         public EfCoreOutboxStore(EfCoreOutboxContext context)
         {
             _context = context;
-
-            _context.Database.EnsureCreated();
         }
 
         public async Task Add(OutboxMessage message)

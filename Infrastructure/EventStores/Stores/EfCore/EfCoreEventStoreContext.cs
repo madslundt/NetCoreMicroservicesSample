@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Infrastructure.EventStores.Stores.EfCore
 {
     public class EfCoreEventStoreContext : DbContext
     {
         public EfCoreEventStoreContext(DbContextOptions<EfCoreEventStoreContext> options) : base(options)
-        { }
+        {
+            Database.EnsureCreated();
+        }
 
         public DbSet<StreamState> Streams { get; set; }
 

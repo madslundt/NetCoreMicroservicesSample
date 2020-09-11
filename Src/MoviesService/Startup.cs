@@ -42,8 +42,8 @@ namespace MoviesService
             services
                 .AddConsul(Configuration)
                 .AddMessageBroker(Configuration)
-                .AddEventStore<MovieAggregate>(Configuration)
-                .AddOutbox(Configuration)
+                .AddEventStore<MovieAggregate>(Configuration, options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.EventStore)))
+                .AddOutbox(Configuration, options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.Outbox)))
                 .AddSwagger(Configuration)
                 .AddCore(typeof(Startup), typeof(EventsExtensions), typeof(DatabaseContext)); // Types are needed for mediator to work the different projects. In this case startup is added for this project and DatabaseContext for the DataModel project.
         }
