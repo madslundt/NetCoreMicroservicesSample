@@ -2,14 +2,7 @@
   "GlobalConfiguration": {
     "RequestIdKey": "x-correlation-id",
     "UseServiceDiscovery": true,
-    "DownstreamScheme": "http",
-    "ServiceDiscoveryProvider": {
-      "Type": "Consul",
-      "Host": "http://consul",
-      "Port": 8500,
-      "ConfigurationKey": "ApiGateway_1",
-      "PollingInterval": 100
-    }
+    "DownstreamScheme": "http"
   },
 
   "RateLimitOptions": {

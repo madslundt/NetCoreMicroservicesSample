@@ -5,7 +5,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/movies/{movieId}/reviews",
       "ServiceName": "ReviewsService",
-      "SwaggerKey": "ReviewsService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -16,7 +15,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/movies/{movieId}/reviews/{everything}",
       "ServiceName": "ReviewsService",
-      "SwaggerKey": "ReviewsService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -28,7 +26,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/movies",
       "ServiceName": "MoviesService",
-      "SwaggerKey": "MoviesService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -39,7 +36,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/movies/{everything}",
       "ServiceName": "MoviesService",
-      "SwaggerKey": "MoviesService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"

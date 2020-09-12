@@ -29,8 +29,6 @@ namespace ApiGateway
                 .AddOcelot(Configuration)
                 .AddConsul()
                 .AddConfigStoredInConsul();
-
-            services.AddSwaggerForOcelot(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,18 +37,6 @@ namespace ApiGateway
             app.UseStaticFiles();
 
             app
-                .UseSwaggerForOcelotUI(opt =>
-                {
-                    opt.ReConfigureUpstreamSwaggerJson = (HttpContext context, string swaggerJson) =>
-                    {
-                        var swagger = JObject.Parse(swaggerJson);
-                        return swagger.ToString(Formatting.Indented);
-                    };
-                    opt.DownstreamSwaggerHeaders = new[]
-                    {
-                        new KeyValuePair<string, string>("x-correlation-id", Guid.NewGuid().ToString()),
-                    };
-                })
                 .UseOcelot()
                 .Wait();
         }

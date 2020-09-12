@@ -5,7 +5,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users/{userId}/movies",
       "ServiceName": "MoviesService",
-      "SwaggerKey": "MoviesService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -16,7 +15,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users/{userId}/movies/{everything}",
       "ServiceName": "MoviesService",
-      "SwaggerKey": "MoviesService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -28,7 +26,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users/{userId}/reviews",
       "ServiceName": "ReviewsService",
-      "SwaggerKey": "ReviewsService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -39,7 +36,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users/{userId}/reviews/{everything}",
       "ServiceName": "ReviewsService",
-      "SwaggerKey": "ReviewsService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -51,8 +47,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users",
       "ServiceName": "UsersService",
-      "SwaggerKey": "UsersService",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -63,8 +57,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users/{everything}",
       "ServiceName": "UsersService",
-      "SwaggerKey": "UsersService",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"

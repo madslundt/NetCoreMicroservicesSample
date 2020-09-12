@@ -5,7 +5,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/reviews",
       "ServiceName": "ReviewsService",
-      "SwaggerKey": "ReviewsService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -16,7 +15,6 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/reviews/{everything}",
       "ServiceName": "ReviewsService",
-      "SwaggerKey": "ReviewsService",
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
