@@ -20,7 +20,6 @@
         "Type": "LeastConnection"
       }
     },
-
     {
       "DownstreamPathTemplate": "/api/movies",
       "DownstreamScheme": "http",

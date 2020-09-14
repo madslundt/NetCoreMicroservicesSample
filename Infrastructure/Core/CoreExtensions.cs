@@ -34,6 +34,8 @@ namespace Infrastructure.Core
                 .AddMvc(opt => { opt.Filters.Add<ExceptionFilter>(); })
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblies(assemblies); });
 
+            services.AddHealthChecks();
+
             services.AddControllers()
                 .AddNewtonsoftJson();
 
@@ -47,6 +49,7 @@ namespace Infrastructure.Core
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
 
             return app;

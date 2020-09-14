@@ -56,7 +56,7 @@ namespace Infrastructure.Consul
             // Register service with consul
             var uri = new Uri(address);
             var serviceName = consulConfig.Value.Name ?? AppDomain.CurrentDomain.FriendlyName.Trim().Trim('_');
-            var registration = new AgentServiceRegistration()
+            var registration = new AgentServiceRegistration
             {
                 ID = $"{serviceName.ToLowerInvariant()}-{consulConfig.Value.Id ?? Guid.NewGuid().ToString()}",
                 Name = serviceName,
@@ -64,6 +64,16 @@ namespace Infrastructure.Consul
                 Port = uri.Port,
                 Tags = consulConfig.Value.Tags
             };
+
+            if (consulConfig.Value.EnableAgentCheck)
+            {
+                registration.Check = new AgentServiceCheck
+                {
+                    DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
+                    Interval = TimeSpan.FromSeconds(30),
+                    HTTP = new Uri(uri, "health").OriginalString
+                };
+            }
 
             logger.LogInformation("Registering with Consul");
             consulClient.Agent.ServiceDeregister(registration.ID).Wait();

@@ -36,7 +36,7 @@ namespace Infrastructure.EventStores.Stores.EfCore
                 query.Where(q => q.CreatedUtc == createdUtc);
             }
 
-            var result = await query.ToListAsync();
+            var result = await query.AsNoTracking().ToListAsync();
 
             return result;
         }
@@ -47,7 +47,7 @@ namespace Infrastructure.EventStores.Stores.EfCore
                         where stream.Id == streamId
                         select stream;
 
-            var result = await query.FirstOrDefaultAsync();
+            var result = await query.AsNoTracking().FirstOrDefaultAsync();
 
             return result;
         }

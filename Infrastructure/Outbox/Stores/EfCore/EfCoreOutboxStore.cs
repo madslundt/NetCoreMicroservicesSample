@@ -35,7 +35,7 @@ namespace Infrastructure.Outbox.Stores.EfCore
                         where message.Id == id
                         select message;
 
-            var result = await query.FirstOrDefaultAsync();
+            var result = await query.AsNoTracking().FirstOrDefaultAsync();
 
             return result;
         }
