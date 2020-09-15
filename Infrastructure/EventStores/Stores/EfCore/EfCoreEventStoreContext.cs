@@ -7,7 +7,10 @@ namespace Infrastructure.EventStores.Stores.EfCore
     {
         public EfCoreEventStoreContext(DbContextOptions<EfCoreEventStoreContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            if (!Database.CanConnect())
+            {
+                Database.EnsureCreated();
+            }
         }
 
         public DbSet<StreamState> Streams { get; set; }

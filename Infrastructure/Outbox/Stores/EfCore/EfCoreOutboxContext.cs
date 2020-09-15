@@ -6,7 +6,10 @@ namespace Infrastructure.Outbox.Stores.EfCore
     {
         public EfCoreOutboxContext(DbContextOptions<EfCoreOutboxContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            if (!Database.CanConnect())
+            {
+                Database.EnsureCreated();
+            }
         }
 
         public DbSet<OutboxMessage> OutboxMessages { get; set; }

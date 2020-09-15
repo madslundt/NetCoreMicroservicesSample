@@ -65,7 +65,7 @@ namespace Infrastructure.Consul
                 Tags = consulConfig.Value.Tags
             };
 
-            if (consulConfig.Value.EnableAgentCheck)
+            if (!consulConfig.Value.DisableAgentCheck)
             {
                 registration.Check = new AgentServiceCheck
                 {

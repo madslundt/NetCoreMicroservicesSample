@@ -7,6 +7,6 @@
         public string[] Tags { get; set; }
         public string ConsulAddress { get; set; }
         public string ServiceAddress { get; set; }
-        public bool EnableAgentCheck { get; set; }
+        public bool DisableAgentCheck { get; set; }
     }
 }
