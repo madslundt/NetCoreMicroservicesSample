@@ -47,7 +47,7 @@
       "Config": [
         {
           "Name": "Movies API",
-          "Version": "v0.9",
+          "Version": "v1",
           "Url": "http://localhost:8080/swagger/v1/swagger.movies.json"
         }
       ]
@@ -57,7 +57,7 @@
       "Config": [
         {
           "Name": "Reviews API",
-          "Version": "v0.9",
+          "Version": "v1",
           "Url": "http://localhost:8080/swagger/v1/swagger.reviews.json"
         }
       ]
