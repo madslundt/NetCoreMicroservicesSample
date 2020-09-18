@@ -8,7 +8,8 @@
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
+      },
+      "SwaggerKey": "reviews"
     },
     {
       "DownstreamPathTemplate": "/api/reviews/{everything}",
@@ -18,7 +19,8 @@
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
+      },
+      "SwaggerKey": "reviews"
     }
   ]
 }

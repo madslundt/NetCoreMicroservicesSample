@@ -8,7 +8,8 @@
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
+      },
+      "SwaggerKey": "users"
     },
     {
       "DownstreamPathTemplate": "/api/users/{userId}/movies/{everything}",
@@ -18,7 +19,8 @@
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
+      },
+      "SwaggerKey": "users"
     },
 
     {
@@ -29,7 +31,8 @@
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
+      },
+      "SwaggerKey": "users"
     },
     {
       "DownstreamPathTemplate": "/api/users/{userId}/reviews/{everything}",
@@ -39,7 +42,8 @@
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
+      },
+      "SwaggerKey": "users"
     },
 
     {
@@ -50,7 +54,8 @@
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
+      },
+      "SwaggerKey": "users"
     },
     {
       "DownstreamPathTemplate": "/api/users/{everything}",
@@ -60,7 +65,8 @@
       "FileCacheOptions": { "TtlSeconds": 15 },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      }
+      },
+      "SwaggerKey": "users"
     }
   ]
 }
