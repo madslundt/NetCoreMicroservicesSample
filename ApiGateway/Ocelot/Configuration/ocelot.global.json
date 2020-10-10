@@ -38,7 +38,7 @@
         {
           "Name": "Users API",
           "Version": "v1",
-          "Url": "http://localhost:8080/swagger/v1/swagger.users.json"
+          "Url": "http://localhost:8080/swagger/docs/v1/users/swagger.json"
         }
       ]
     },
@@ -58,7 +58,7 @@
         {
           "Name": "Reviews API",
           "Version": "v1",
-          "Url": "http://localhost:8080/swagger/v1/swagger.reviews.json"
+          "Url": "http://localhost:8080/swagger/v1/swagger.json"
         }
       ]
     }

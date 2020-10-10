@@ -13,13 +13,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace UsersService
 {
     public class Startup
     {
         private readonly IConfigurationRoot Configuration;
+        private readonly IWebHostEnvironment environment;
 
         public Startup(IWebHostEnvironment env)
         {
@@ -32,11 +35,19 @@ namespace UsersService
             Configuration = builder.Build();
 
             Log.Logger = LoggingExtensions.AddLogging(Configuration);
+
+            environment = env;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Users Service API", Description = "Users Service", Version = "v1" });
+                // c.IncludeXmlComments($"{environment.ContentRootPath}/UsersService.xml");
+            });
 
             services
                 .AddConsul(Configuration)
@@ -53,13 +64,46 @@ namespace UsersService
                 app.UseDeveloperExceptionPage();
             }
 
+            UpdateDatabase(app);
+            app.UseRouting();
+
             app
                 .UseLogging(Configuration, loggerFactory)
+                .UseRouting()
+                .UseEndpoints(endpoints => { endpoints.MapControllers(); })
                 .UseSwagger(Configuration)
+                // .UseSwaggerUI(c =>
+                // {
+                //     c.SwaggerEndpoint("/api/users/swagger/v1/swagger.json", "Users Service");
+                // })
                 .UseConsul(lifetime)
                 .UseCore();
 
+            // app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            // app.UseSwaggerUI(c =>
+            // {
+            //     c.SwaggerEndpoint("/api/users/swagger/v1/swagger.json", "Users Service");
+            // });
+            // .UseRouting()
+            // .UseEndpoints(endpoints =>
+            // {
+            //     endpoints.MapControllers();
+            // })
+
             app.UseSubscribeAllEvents();
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<DatabaseContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }
