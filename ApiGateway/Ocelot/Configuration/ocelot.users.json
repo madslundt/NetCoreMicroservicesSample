@@ -68,19 +68,6 @@
         "Type": "LeastConnection"
       },
       "SwaggerKey": "users"
-    },
-    
-    {
-      "DownstreamPathTemplate": "/swagger/docs/v1/users/swagger.json",
-      "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/api/users/swagger/v1/swagger.json",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
-      "ServiceName": "UsersService",
-      "FileCacheOptions": { "TtlSeconds": 15 },
-      "LoadBalancerOptions": {
-        "Type": "LeastConnection"
-      },
-      "SwaggerKey": "users"
     }
   ]
 }

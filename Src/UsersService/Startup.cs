@@ -1,3 +1,6 @@
+using System;
+using System.Reflection;
+using System.IO;
 using DataModel;
 using Events;
 using Infrastructure.Consul;
@@ -42,12 +45,6 @@ namespace UsersService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringKeys.App)));
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Users Service API", Description = "Users Service", Version = "v1" });
-                // c.IncludeXmlComments($"{environment.ContentRootPath}/UsersService.xml");
-            });
 
             services
                 .AddConsul(Configuration)
@@ -65,30 +62,12 @@ namespace UsersService
             }
 
             UpdateDatabase(app);
-            app.UseRouting();
 
             app
                 .UseLogging(Configuration, loggerFactory)
-                .UseRouting()
-                .UseEndpoints(endpoints => { endpoints.MapControllers(); })
                 .UseSwagger(Configuration)
-                // .UseSwaggerUI(c =>
-                // {
-                //     c.SwaggerEndpoint("/api/users/swagger/v1/swagger.json", "Users Service");
-                // })
                 .UseConsul(lifetime)
                 .UseCore();
-
-            // app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            // app.UseSwaggerUI(c =>
-            // {
-            //     c.SwaggerEndpoint("/api/users/swagger/v1/swagger.json", "Users Service");
-            // });
-            // .UseRouting()
-            // .UseEndpoints(endpoints =>
-            // {
-            //     endpoints.MapControllers();
-            // })
 
             app.UseSubscribeAllEvents();
         }

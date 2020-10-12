@@ -38,7 +38,7 @@
         {
           "Name": "Users API",
           "Version": "v1",
-          "Url": "http://localhost:8080/swagger/docs/v1/users/swagger.json"
+          "Url": "http://users_service/swagger/v1/swagger.json"
         }
       ]
     },
@@ -48,7 +48,7 @@
         {
           "Name": "Movies API",
           "Version": "v1",
-          "Url": "http://localhost:8080/swagger/v1/swagger.movies.json"
+          "Url": "http://movies_service/swagger/v1/swagger.json"
         }
       ]
     },
@@ -58,7 +58,7 @@
         {
           "Name": "Reviews API",
           "Version": "v1",
-          "Url": "http://localhost:8080/swagger/v1/swagger.json"
+          "Url": "http://reviews_service/swagger/v1/swagger.json"
         }
       ]
     }
