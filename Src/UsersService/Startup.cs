@@ -1,3 +1,6 @@
+using System;
+using System.Reflection;
+using System.IO;
 using DataModel;
 using Events;
 using Infrastructure.Consul;
@@ -13,13 +16,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace UsersService
 {
     public class Startup
     {
         private readonly IConfigurationRoot Configuration;
+        private readonly IWebHostEnvironment environment;
 
         public Startup(IWebHostEnvironment env)
         {
@@ -32,6 +38,8 @@ namespace UsersService
             Configuration = builder.Build();
 
             Log.Logger = LoggingExtensions.AddLogging(Configuration);
+
+            environment = env;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -53,6 +61,8 @@ namespace UsersService
                 app.UseDeveloperExceptionPage();
             }
 
+            UpdateDatabase(app);
+
             app
                 .UseLogging(Configuration, loggerFactory)
                 .UseSwagger(Configuration)
@@ -60,6 +70,19 @@ namespace UsersService
                 .UseCore();
 
             app.UseSubscribeAllEvents();
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<DatabaseContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }

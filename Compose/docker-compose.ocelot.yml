@@ -14,5 +14,6 @@ services:
       - users_service
       - movies_service
       - reviews_service
+      - consul
     depends_on:
       - consul

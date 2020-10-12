@@ -55,6 +55,8 @@ namespace ReviewsService
                 app.UseDeveloperExceptionPage();
             }
 
+            UpdateDatabase(app);
+
             app
                 .UseLogging(Configuration, loggerFactory)
                 .UseSwagger(Configuration)
@@ -63,5 +65,18 @@ namespace ReviewsService
 
             app.UseSubscribeAllEvents();
         } 
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<DatabaseContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
+        }
     }
 }

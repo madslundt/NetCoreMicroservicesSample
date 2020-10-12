@@ -29,5 +29,38 @@
     "ExceptionsAllowedBeforeBreaking": 3,
     "DurationOfBreak": 10000,
     "TimeoutValue": 5000
-  }
+  },
+
+  "SwaggerEndPoints": [
+    {
+      "Key": "users",
+      "Config": [
+        {
+          "Name": "Users API",
+          "Version": "v1",
+          "Url": "http://users_service/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "movies",
+      "Config": [
+        {
+          "Name": "Movies API",
+          "Version": "v1",
+          "Url": "http://movies_service/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "reviews",
+      "Config": [
+        {
+          "Name": "Reviews API",
+          "Version": "v1",
+          "Url": "http://reviews_service/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
 }

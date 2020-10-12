@@ -92,6 +92,8 @@ services:
     image: consul
     container_name: consul
     restart: on-failure
+    volumes:
+    - consul-data:/consul/config
     ports:
      - "8500:8500"
     networks:
@@ -99,3 +101,4 @@ services:
 
 volumes:
   elasticsearch-data:
+  consul-data:

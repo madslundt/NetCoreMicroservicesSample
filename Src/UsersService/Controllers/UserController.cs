@@ -54,5 +54,17 @@ namespace UsersService.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet, Route("")]
+        public async Task<ActionResult<GetUsersQuery.Result>> CreateUser(CancellationToken cancellationToken)
+        {
+            var query = new GetUsersQuery.Query
+            {
+            };
+
+            var result = await _queryBus.Send(query, cancellationToken);
+
+            return Ok(result);
+        }
     }
 }

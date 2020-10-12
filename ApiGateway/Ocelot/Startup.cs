@@ -53,6 +53,7 @@ namespace ApiGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddSwaggerForOcelot(Configuration)
                 .AddOcelot(Configuration)
                 .AddConsul()
                 .AddConfigStoredInConsul();
@@ -62,6 +63,10 @@ namespace ApiGateway
         public void Configure(IApplicationBuilder app)
         {
             app.UseStaticFiles();
+
+            app.UseSwaggerForOcelotUI(opt => {
+                opt.PathToSwaggerGenerator = "/swagger/docs";
+            });
 
             app
                 .UseOcelot()
