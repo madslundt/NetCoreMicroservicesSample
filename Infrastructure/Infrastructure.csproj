@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
-    <PackageReference Include="MongoDB.Driver" Version="2.11.2" />
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     <PackageReference Include="RawRabbit" Version="2.0.0-rc5" />
     <PackageReference Include="RawRabbit.DependencyInjection.ServiceCollection" Version="2.0.0-rc5" />
     <PackageReference Include="RawRabbit.Operations.Publish" Version="2.0.0-rc5" />
